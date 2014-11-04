@@ -1,4 +1,4 @@
-materialdrive
+Material Drive
 =============
 
-google drive with angular material
+Google Drive with angular-material
