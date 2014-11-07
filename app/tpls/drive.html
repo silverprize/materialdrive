@@ -1,0 +1,28 @@
+<div layout="vertical" layout-fill style="padding-bottom: 15px;">
+
+  <md-toolbar>
+    <div class="md-toolbar-tools" layout-align="center">
+      <md-button>My Drive</md-button>
+      <md-button>Incoming</md-button>
+      <md-button>Recent</md-button>
+      <md-button>Starred</md-button>
+      <md-button>Trash</md-button>
+    </div>
+  </md-toolbar>
+
+  <md-content class="md-padding">
+    <md-list>
+      <md-item ng-repeat="file in drive.fileList">
+        <md-item-content>
+          <div class="md-tile-left">
+            <img ng-src="{{file.iconLink}}">
+          </div>
+          <div class="md-tile-content">
+            {{file.title}}
+          </div>
+        </md-item-content>
+      </md-item>
+    </md-list>
+  </md-content>
+
+</div>
