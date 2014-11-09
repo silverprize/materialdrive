@@ -21,10 +21,10 @@
     <title>Material Drive</title>
   </head>
 
-  <body layout="horizontal">
+  <body>
     <!-- <a id="forkme_banner" href="https://github.com/silverprize/materialdrive">View on GitHub</a> -->
 
-    <div ng-view layout="vertical" layout-align="center" layout-fill></div>
+    <div ng-view layout="horizontal" layout-fill></div>
 
     <script type="text/javascript" src="bower_components/angular/angular.js"></script>
     <script type="text/javascript" src="bower_components/angular-aria/angular-aria.js"></script>
@@ -38,7 +38,7 @@
     <script type="text/javascript" src="app/js/controller.js"></script>
     <script type="text/javascript" src="app/js/service.js"></script>
 
-    <script type="text/javascript" src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
+    <script type="text/javascript" src="https://apis.google.com/js/client.js"></script>
     <script type="text/javascript">
       var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
       document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));

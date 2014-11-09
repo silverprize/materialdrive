@@ -9,36 +9,30 @@ function setupRoute($routeProvider) {
     controller: 'DriveCtrl',
     controllerAs: 'drive',
     resolve: {
-      google: ['$q', '$location', 'google', function($q, $location, google) {
-        var deferred = $q.defer();
-        if (google.inited()) {
-          deferred.resolve(google);
-        } else {
-          deferred.reject();
-          $location.url('/');
-        }
-        return deferred.promise;
+      google: ['google', function(google) {
+        return google.prepare();
       }]
     }
   }).otherwise({
     templateUrl: 'app/tpls/gate.html',
     controller: 'GateCtrl',
-    controllerAs: 'gate'
+    controllerAs: 'gate',
+    resolve: {
+      auth: ['google', function(google) {
+        return google.prepare();
+      }]
+    }
   });
 }
 
 function setupHttp($httpProvider) {
-  $httpProvider.interceptors.push(function() {
+  $httpProvider.interceptors.push(['$q', '$location', function($q, $location) {
     return {
-      'request': function(config) {
-        console.log(config);
-        return config;
-      },
-      'response': function(response) {
-        console.log(response);
-        return response;
+      responseError: function(rejection) {
+        $location.path('/');
+        return $q.reject(rejection);
       }
     }
-  });
+  }]);
 }
 })(angular);

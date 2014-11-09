@@ -1,13 +1,12 @@
-<div layout="vertical" layout-fill style="padding-bottom: 15px;">
-
-  <md-toolbar>
-    <div class="md-toolbar-tools" layout-align="center">
-      <md-button>My Drive</md-button>
-      <md-button>Incoming</md-button>
-      <md-button>Recent</md-button>
-      <md-button>Starred</md-button>
-      <md-button>Trash</md-button>
-    </div>
+<div layout-fill>
+  <md-toolbar layout="horizontal" layout-fill>
+    <md-tabs layout-fill selected="drive.topFolder.selectedIndex" center>
+      <md-tab label="My Drive" ng-click="drive.changeTopFolder('mydrive')"></md-tab>
+      <md-tab label="Incoming" ng-click="drive.changeTopFolder('incoming')"></md-tab>
+      <md-tab label="Recent" ng-click="drive.changeTopFolder('recent')"></md-tab>
+      <md-tab label="Starred" ng-click="drive.changeTopFolder('starred')"></md-tab>
+      <md-tab label="Trash" ng-click="drive.changeTopFolder('trash')"></md-tab>
+    </md-tabs>
   </md-toolbar>
 
   <md-content class="md-padding">

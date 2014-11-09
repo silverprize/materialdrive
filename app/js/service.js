@@ -1,4 +1,5 @@
 (function() {'use strict';
+
 var CLIENT_ID = '627339111893-b6jkfk9kqp489tkamgjjrlpuuj6lrurj.apps.googleusercontent.com';
 var SCOPES = [
   'https://www.googleapis.com/auth/drive',
@@ -13,49 +14,70 @@ var SCOPES = [
 
 var FILE_LIST = 'https://www.googleapis.com/drive/v2/files';
 
-var CONFIG;
+var OAUTH_TOKEN;
 
 angular.module('materialDrive')
-.factory('google', ['$http', '$q', function($http, $q) {
-  var inited = false;
-  var deferred, authData;
+.factory('google', [
+  '$http', '$q', '$interval', '$location', '$routeParams',
+  GoogleService
+]);
+
+function GoogleService($http, $q, $interval, $location, $routeParams) {
+  var authData;
   return {
-    auth: function() {
-      checkAuth(false);
-      deferred = $q.defer()
+    prepare: function() {
+      var self = this;
+      var deferred = $q.defer();
+      var interval = $interval(function() {
+        if (self.isReady()) {
+          $interval.cancel(interval);
+          deferred.resolve(self);
+        }
+      }, 100);
+
+      return deferred.promise.then(function(google) {
+        google.authorize(true).then(function() {
+          $location.path('/drive/' + ($routeParams.folder || 'mydrive'));
+        });
+        return self;
+      });
+    },
+    isReady: function() {
+      return angular.isDefined(gapi.auth);
+    },
+    authorize: function(immediate) {
+      var deferred = $q.defer();
+
+      gapi.auth.authorize({
+        'client_id': CLIENT_ID,
+        'scope': SCOPES,
+        'immediate': angular.isDefined(immediate) ? immediate : false
+      }, function(authResult) {
+        if (authResult && authResult.access_token) {
+          deferred.resolve(authResult);
+        } else {
+          deferred.reject();
+        }
+      });
+
       return deferred.promise.then(function(authResult) {
         authData = authResult;
-
-        CONFIG = {
+        OAUTH_TOKEN = {
           params: {'alt': 'json'},
           headers: {
             'Authorization': 'Bearer ' + authData.access_token,
             'GData-Version': '3.0'
           }
         };
-        return authData;
       });
     },
-    inited: function() {
-      return CONFIG;
+    isAuthenticated: function() {
+      return OAUTH_TOKEN;
     },
-    getFileList: function(args) {
-      var query = 'trashed = ' + (args.trashed || 'false') + ' and \''+ args.folder +'\' in parents';
-      return $http.get(FILE_LIST + '?q=' + encodeURIComponent(query), CONFIG);
-    }
+    getFileList: function(query) {
+      return $http.get(FILE_LIST + '?q=' + encodeURIComponent(query), OAUTH_TOKEN);
+    },
   };
+}
 
-  function checkAuth(immediate) {
-    gapi.auth.authorize({
-      'client_id': CLIENT_ID,
-      'scope': SCOPES,
-      'immediate': angular.isDefined(immediate) ? immediate : false
-    }, handleAuthResult);
-  }
-
-  function handleAuthResult(authResult) {
-    deferred.resolve(authResult);
-  }
-
-}]);
 })();
