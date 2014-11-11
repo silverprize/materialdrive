@@ -2,7 +2,7 @@
 
 angular.module('materialDrive')
 .controller('GateCtrl', ['$route', '$location', 'google', GateCtrl])
-.controller('DriveCtrl', ['$scope', '$location', '$routeParams', 'google', DriveCtrl]);
+.controller('DriveCtrl', ['$scope', '$location', '$routeParams', '$filter', 'google', DriveCtrl]);
 
 function GateCtrl($route, $location, google) {
   var vm = this;
@@ -16,7 +16,7 @@ function GateCtrl($route, $location, google) {
   }
 }
 
-function DriveCtrl($scope, $location, $routeParams, google) {
+function DriveCtrl($scope, $location, $routeParams, $filter, google) {
   var vm = this;
 
   vm.topMenuList = [{
@@ -65,7 +65,17 @@ function DriveCtrl($scope, $location, $routeParams, google) {
     }
 
     google.getFileList(query).success(function(data) {
-      vm.fileList = data.items;
+      vm.folderList = [];
+      vm.fileList = [];
+      angular.forEach(data.items, function(item) {
+        if (item.mimeType == 'application/vnd.google-apps.folder') {
+          vm.folderList.push(item);
+        } else {
+          vm.fileList.push(item);
+        }
+      });
+      vm.folderList = $filter('orderBy')(vm.folderList, 'title');
+      vm.fileList = $filter('orderBy')(vm.fileList, 'title');
     });
   }
 }

@@ -12,8 +12,20 @@
   </md-toolbar>
 
   <md-content>
+    <md-list ng-repeat="folder in vm.folderList">
+      <md-button ng-click="vm.selectItem(folder)" layout-fill>
+        <md-item-content>
+          <div class="md-tile-left">
+            <img ng-src="{{folder.iconLink}}">
+          </div>
+          <div class="md-tile-content" style="text-align: left;">
+            {{folder.title}}
+          </div>
+        </md-item-content>
+      </md-button>
+    </md-list>
     <md-list ng-repeat="file in vm.fileList">
-      <md-button href layout-fill>
+      <md-button ng-click="vm.selectItem(file)" layout-fill>
         <md-item-content>
           <div class="md-tile-left">
             <img ng-src="{{file.iconLink}}">
