@@ -4,10 +4,10 @@ angular.module('materialDrive')
 .config(['$httpProvider', setupHttp]);
 
 function setupRoute($routeProvider) {
-  $routeProvider.when('/drive/:folder', {
+  $routeProvider.when('/drive/:category', {
     templateUrl: 'app/tpls/drive.html',
     controller: 'DriveCtrl',
-    controllerAs: 'drive',
+    controllerAs: 'vm',
     resolve: {
       google: ['google', function(google) {
         return google.prepare();
@@ -16,7 +16,7 @@ function setupRoute($routeProvider) {
   }).otherwise({
     templateUrl: 'app/tpls/gate.html',
     controller: 'GateCtrl',
-    controllerAs: 'gate',
+    controllerAs: 'vm',
     resolve: {
       auth: ['google', function(google) {
         return google.prepare();
@@ -29,7 +29,7 @@ function setupHttp($httpProvider) {
   $httpProvider.interceptors.push(['$q', '$location', function($q, $location) {
     return {
       responseError: function(rejection) {
-        $location.path('/');
+        $location.url('/');
         return $q.reject(rejection);
       }
     }

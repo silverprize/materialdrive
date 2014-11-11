@@ -1,26 +1,28 @@
-<div layout-fill>
-  <md-toolbar layout="horizontal" layout-fill>
-    <md-tabs layout-fill selected="drive.topFolder.selectedIndex" center>
-      <md-tab label="My Drive" ng-click="drive.changeTopFolder('mydrive')"></md-tab>
-      <md-tab label="Incoming" ng-click="drive.changeTopFolder('incoming')"></md-tab>
-      <md-tab label="Recent" ng-click="drive.changeTopFolder('recent')"></md-tab>
-      <md-tab label="Starred" ng-click="drive.changeTopFolder('starred')"></md-tab>
-      <md-tab label="Trash" ng-click="drive.changeTopFolder('trash')"></md-tab>
-    </md-tabs>
+<div layout="vertical" layout-fill>
+
+  <md-toolbar md-theme="indigo">
+    <div class="md-toolbar-tools" layout-align="center center">
+      <md-button href="{{topMenu.route}}"
+        ng-class="{'md-raised':topMenu.selected}"
+        ng-repeat="topMenu in vm.topMenuList"
+        md-theme="lime">
+        {{topMenu.label}}
+      </md-button>
+    </div>
   </md-toolbar>
 
-  <md-content class="md-padding">
-    <md-list>
-      <md-item ng-repeat="file in drive.fileList">
+  <md-content>
+    <md-list ng-repeat="file in vm.fileList">
+      <md-button href layout-fill>
         <md-item-content>
           <div class="md-tile-left">
             <img ng-src="{{file.iconLink}}">
           </div>
-          <div class="md-tile-content">
+          <div class="md-tile-content" style="text-align: left;">
             {{file.title}}
           </div>
         </md-item-content>
-      </md-item>
+      </md-button>
     </md-list>
   </md-content>
 

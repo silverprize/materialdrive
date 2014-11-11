@@ -5,55 +5,68 @@ angular.module('materialDrive')
 .controller('DriveCtrl', ['$scope', '$location', '$routeParams', 'google', DriveCtrl]);
 
 function GateCtrl($route, $location, google) {
-  var gate = this;
+  var vm = this;
 
-  gate.auth = function() {
+  vm.authorize = authorize;
+
+  function authorize() {
     google.authorize(false).then(function() {
       $location.url('/drive/mydrive');
     });
-  };
+  }
 }
 
 function DriveCtrl($scope, $location, $routeParams, google) {
-  var drive = this;
+  var vm = this;
 
-  drive.changeTopFolder = changeTopFolder;
+  vm.topMenuList = [{
+    label: 'My Drive',
+    route: '#drive/mydrive'
+  }, {
+    label: 'Incoming',
+    route: '#drive/incoming'
+  }, {
+    label: 'Recent',
+    route: '#drive/recent'
+  }, {
+    label: 'Starred',
+    route: '#drive/starred'
+  }, {
+    label: 'Trash',
+    route: '#drive/trash'
+  }];
 
   init();
 
   function init() {
-    drive.topFolder = {};
+    vm.topFolder = {};
     var query;
-    switch ($routeParams.folder) {
+    switch ($routeParams.category) {
       case 'incoming':
-        drive.topFolder.selectedIndex = 1;
+        vm.topMenuList[1].selected = true;
         query = 'trashed = false and not \'me\' in owners and sharedWithMe';
         break;
       case 'recent':
-        drive.topFolder.selectedIndex = 2;
+        vm.topMenuList[2].selected = true;
         query = '(not mimeType = \'application/vnd.google-apps.folder\') and lastViewedByMeDate > \'1970-01-01T00:00:00Z\' and trashed = false';
         break;
       case 'starred':
-        drive.topFolder.selectedIndex = 3;
+        vm.topMenuList[3].selected = true;
         query = 'trashed = false and starred = true';
         break;
       case 'trash':
-        drive.topFolder.selectedIndex = 4;
+        vm.topMenuList[4].selected = true;
         query = 'trashed = true and explicitlyTrashed = true';
         break;
       default:
-        drive.topFolder.selectedIndex = 0;
+        vm.topMenuList[0].selected = true;
         query = 'trashed = false and \'root\' in parents';
         break;
     }
 
     google.getFileList(query).success(function(data) {
-      drive.fileList = data.items;
+      vm.fileList = data.items;
     });
-  }
-
-  function changeTopFolder(alias) {
-    $location.path('/drive/' + alias);
   }
 }
 

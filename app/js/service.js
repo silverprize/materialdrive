@@ -1,6 +1,7 @@
 (function() {'use strict';
 
-var CLIENT_ID = '627339111893-b6jkfk9kqp489tkamgjjrlpuuj6lrurj.apps.googleusercontent.com';
+var CLIENT_ID = '627339111893-9us5a8ovdeovt4p8blm07hgjamu1i0np.apps.googleusercontent.com';
+// var CLIENT_ID = '627339111893-b6jkfk9kqp489tkamgjjrlpuuj6lrurj.apps.googleusercontent.com';
 var SCOPES = [
   'https://www.googleapis.com/auth/drive',
   'https://www.googleapis.com/auth/drive.file',
@@ -28,19 +29,22 @@ function GoogleService($http, $q, $interval, $location, $routeParams) {
     prepare: function() {
       var self = this;
       var deferred = $q.defer();
+      var promise = deferred.promise;
+
       var interval = $interval(function() {
         if (self.isReady()) {
           $interval.cancel(interval);
           deferred.resolve(self);
+          promise.then(function(google) {
+            google.authorize(true).then(function() {
+              $location.url('/drive/' + ($routeParams.category || 'mydrive'));
+            });
+            return self;
+          });
         }
       }, 100);
 
-      return deferred.promise.then(function(google) {
-        google.authorize(true).then(function() {
-          $location.path('/drive/' + ($routeParams.folder || 'mydrive'));
-        });
-        return self;
-      });
+      return promise;
     },
     isReady: function() {
       return angular.isDefined(gapi.auth);
@@ -75,7 +79,7 @@ function GoogleService($http, $q, $interval, $location, $routeParams) {
       return OAUTH_TOKEN;
     },
     getFileList: function(query) {
-      return $http.get(FILE_LIST + '?q=' + encodeURIComponent(query), OAUTH_TOKEN);
+      return $http.get(FILE_LIST + '?q=' + encodeURIComponent(query) + '&sortBy=FOLDERS_FIRST&secondarySortBy=LAST_MODIFIED', OAUTH_TOKEN);
     },
   };
 }
