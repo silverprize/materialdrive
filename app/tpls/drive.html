@@ -12,8 +12,20 @@
   </md-toolbar>
 
   <md-content>
+    <md-list ng-if="vm.parentFolder">
+      <md-button ng-click="vm.upToParentFolder()" layout-fill>
+        <md-item-content>
+          <div class="md-tile-left">
+            <span class="fa fa-level-up"></span>
+          </div>
+          <div class="md-tile-content" style="text-align: left;">
+            ...
+          </div>
+        </md-item-content>
+      </md-button>
+    </md-list>
     <md-list ng-repeat="folder in vm.folderList">
-      <md-button ng-click="vm.selectItem(folder)" layout-fill>
+      <md-button ng-click="vm.clickItem(folder)" layout-fill>
         <md-item-content>
           <div class="md-tile-left">
             <img ng-src="{{folder.iconLink}}">
@@ -25,7 +37,7 @@
       </md-button>
     </md-list>
     <md-list ng-repeat="file in vm.fileList">
-      <md-button ng-click="vm.selectItem(file)" layout-fill>
+      <md-button ng-click="vm.clickItem(file)" layout-fill>
         <md-item-content>
           <div class="md-tile-left">
             <img ng-src="{{file.iconLink}}">

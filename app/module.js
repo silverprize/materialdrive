@@ -1,3 +1,5 @@
-(function(angular) {'use strict';
-angular.module('materialDrive', ['ngMaterial', 'ngRoute']);
-})(angular);
+(function() {
+  'use strict';
+
+  angular.module('materialDrive', ['ngMaterial', 'ngRoute']);
+})();

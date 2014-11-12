@@ -1,83 +1,122 @@
-(function(angular) {'use strict';
+(function() {
+  'use strict';
 
-angular.module('materialDrive')
-.controller('GateCtrl', ['$route', '$location', 'google', GateCtrl])
-.controller('DriveCtrl', ['$scope', '$location', '$routeParams', '$filter', 'google', DriveCtrl]);
+  angular.module('materialDrive')
+  .controller('GateCtrl', ['$location', '$routeParams', 'google', GateCtrl])
+  .controller('DriveCtrl', ['$location', '$routeParams', '$filter', '$window', '$q', 'google', DriveCtrl]);
 
-function GateCtrl($route, $location, google) {
-  var vm = this;
+  function GateCtrl($location, $routeParams, google) {
+    var vm = this;
 
-  vm.authorize = authorize;
+    vm.authorize = authorize;
 
-  function authorize() {
-    google.authorize(false).then(function() {
-      $location.url('/drive/mydrive');
-    });
+    function authorize() {
+      google.authorize(false).then(function() {
+        var redirect = $routeParams.redirect || '/drive/mydrive';
+        $location.url(redirect);
+      });
+    }
   }
-}
 
-function DriveCtrl($scope, $location, $routeParams, $filter, google) {
-  var vm = this;
+  function DriveCtrl($location, $routeParams, $filter, $window, $q, google) {
+    var vm = this;
 
-  vm.topMenuList = [{
-    label: 'My Drive',
-    route: '#drive/mydrive'
-  }, {
-    label: 'Incoming',
-    route: '#drive/incoming'
-  }, {
-    label: 'Recent',
-    route: '#drive/recent'
-  }, {
-    label: 'Starred',
-    route: '#drive/starred'
-  }, {
-    label: 'Trash',
-    route: '#drive/trash'
-  }];
+    vm.topMenuList = [{
+      label: 'My Drive',
+      route: '#drive/mydrive'
+    }, {
+      label: 'Incoming',
+      route: '#drive/incoming'
+    }, {
+      label: 'Recent',
+      route: '#drive/recent'
+    }, {
+      label: 'Starred',
+      route: '#drive/starred'
+    }, {
+      label: 'Trash',
+      route: '#drive/trash'
+    }];
 
-  init();
+    vm.clickItem = clickItem;
 
-  function init() {
-    vm.topFolder = {};
-    var query;
-    switch ($routeParams.category) {
-      case 'incoming':
-        vm.topMenuList[1].selected = true;
-        query = 'trashed = false and not \'me\' in owners and sharedWithMe';
-        break;
-      case 'recent':
-        vm.topMenuList[2].selected = true;
-        query = '(not mimeType = \'application/vnd.google-apps.folder\') and lastViewedByMeDate > \'1970-01-01T00:00:00Z\' and trashed = false';
-        break;
-      case 'starred':
-        vm.topMenuList[3].selected = true;
-        query = 'trashed = false and starred = true';
-        break;
-      case 'trash':
-        vm.topMenuList[4].selected = true;
-        query = 'trashed = true and explicitlyTrashed = true';
-        break;
-      default:
-        vm.topMenuList[0].selected = true;
-        query = 'trashed = false and \'root\' in parents';
-        break;
+    vm.upToParentFolder = upToParentFolder;
+
+    init();
+
+    function init() {
+      vm.topFolder = {};
+      var query;
+      switch ($routeParams.category) {
+        case 'incoming':
+          vm.topMenuList[1].selected = true;
+          query = 'trashed = false and not \'me\' in owners and sharedWithMe';
+          break;
+        case 'recent':
+          vm.topMenuList[2].selected = true;
+          query = '(not mimeType = \'application/vnd.google-apps.folder\') and lastViewedByMeDate > \'1970-01-01T00:00:00Z\' and trashed = false';
+          break;
+        case 'starred':
+          vm.topMenuList[3].selected = true;
+          query = 'trashed = false and starred = true';
+          break;
+        case 'trash':
+          vm.topMenuList[4].selected = true;
+          query = 'trashed = true and explicitlyTrashed = true';
+          break;
+        case 'folder':
+          query = 'trashed = false and \'' + $routeParams.itemId + '\' in parents';
+          break;
+        default:
+          vm.topMenuList[0].selected = true;
+          query = 'trashed = false and \'root\' in parents';
+          break;
+      }
+
+      var promises = [];
+      if ($routeParams.itemId) {
+        promises.push(google.filesGet($routeParams.itemId));
+      }
+      promises.push(google.filesList(query));
+
+      $q.all(promises).then(function(responses) {
+        var data;
+        if (responses.length == 2) {
+          vm.parentFolder = responses[0].data.parents[0];
+          data = responses[1].data;
+        } else {
+          data = responses[0].data;
+        }
+
+        vm.folderList = [];
+        vm.fileList = [];
+        angular.forEach(data.items, function(item) {
+          if (item.mimeType == 'application/vnd.google-apps.folder') {
+            vm.folderList.push(item);
+          } else {
+            vm.fileList.push(item);
+          }
+        });
+        vm.folderList = $filter('orderBy')(vm.folderList, 'title');
+        vm.fileList = $filter('orderBy')(vm.fileList, 'title');
+      });
     }
 
-    google.getFileList(query).success(function(data) {
-      vm.folderList = [];
-      vm.fileList = [];
-      angular.forEach(data.items, function(item) {
-        if (item.mimeType == 'application/vnd.google-apps.folder') {
-          vm.folderList.push(item);
-        } else {
-          vm.fileList.push(item);
-        }
-      });
-      vm.folderList = $filter('orderBy')(vm.folderList, 'title');
-      vm.fileList = $filter('orderBy')(vm.fileList, 'title');
-    });
-  }
-}
+    function clickItem(item) {
+      if (item.labels.trashed) {
+        return;
+      }
 
-})(angular);
+      if (item.mimeType == 'application/vnd.google-apps.folder') {
+        $location.url('/drive/folder/' + item.id);
+      } else {
+        $window.open('https://docs.google.com/file/d/' + item.id);
+      }
+    }
+
+    function upToParentFolder() {
+      $location.url('/drive/folder/' + vm.parentFolder.id);
+    }
+  }
+
+})();
