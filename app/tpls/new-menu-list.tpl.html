@@ -1,0 +1,16 @@
+<md-bottom-sheet class="md-list md-has-header">
+  <md-subheader>New</md-subheader>
+  <md-list>
+    <md-item ng-repeat="item in vm.items">
+
+      <md-button aria-label="{{item.name}}" ng-click="vm.listItemClick($index)">
+        <span class="fa fa-stack fa-lg">
+          <span class="fa fa-circle fa-stack-2x {{item.icon.bg}}"></span>
+          <span class="fa fa-stack-1x fa-inverse {{item.icon.class}}"></span>
+        </span>
+        <span class="md-inline-list-icon-label">{{item.name}}</span>
+      </md-button>
+
+    </md-item>
+  </md-list>
+</md-bottom-sheet>

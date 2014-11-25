@@ -2,8 +2,24 @@
   'use strict';
 
   angular.module('materialDrive')
-  .controller('GateCtrl', ['$location', '$routeParams', 'google', GateCtrl])
-  .controller('DriveCtrl', ['$location', '$routeParams', '$filter', '$window', '$q', 'google', DriveCtrl]);
+  .controller('GateCtrl', [
+    '$location',
+    '$routeParams',
+    'google',
+    GateCtrl])
+  .controller('DriveCtrl', [
+    '$location',
+    '$routeParams',
+    '$filter',
+    '$window',
+    '$q',
+    '$mdBottomSheet',
+    'google',
+    DriveCtrl])
+  .controller('GridBottomSheetCtrl', [
+    '$scope',
+    '$mdBottomSheet',
+    GridBottomSheetCtrl]);
 
   function GateCtrl($location, $routeParams, google) {
     var vm = this;
@@ -18,7 +34,7 @@
     }
   }
 
-  function DriveCtrl($location, $routeParams, $filter, $window, $q, google) {
+  function DriveCtrl($location, $routeParams, $filter, $window, $q, $mdBottomSheet, google) {
     var vm = this;
 
     vm.topMenuList = [{
@@ -41,6 +57,8 @@
     vm.clickItem = clickItem;
 
     vm.upToParentFolder = upToParentFolder;
+
+    vm.showNewMenu = showNewMenu;
 
     init();
 
@@ -117,6 +135,46 @@
     function upToParentFolder() {
       $location.url('/drive/folder/' + vm.parentFolder.id);
     }
+
+    function showNewMenu($event) {
+      $mdBottomSheet.show({
+        templateUrl: 'app/tpls/new-menu-list.tpl.html',
+        controller: 'GridBottomSheetCtrl',
+        controllerAs: 'vm',
+        targetEvent: $event
+      }).then(function(clickedItem) {
+        $scope.alert = clickedItem.name + ' clicked!';
+      });
+    }
+  }
+
+  function GridBottomSheetCtrl($scope, $mdBottomSheet) {
+    var vm = this;
+
+    vm.items = [{
+      name: 'Document',
+      icon: {
+        class: 'fa-file-word-o',
+        bg: 'file-word-bg'
+      }
+    }, {
+      name: 'Spreadsheet',
+      icon: {
+        class: 'fa-file-excel-o',
+        bg: 'file-spreadsheet-bg'
+      }
+    }, {
+      name: 'Presentation',
+      icon: {
+        class: 'fa-file-powerpoint-o',
+        bg: 'file-presentation-bg'
+      }
+    }];
+
+    vm.listItemClick = function($index) {
+      var clickedItem = $scope.items[$index];
+      $mdBottomSheet.hide(clickedItem);
+    };
   }
 
 })();

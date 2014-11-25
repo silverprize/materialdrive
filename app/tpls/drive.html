@@ -30,7 +30,7 @@
           <div class="md-tile-left">
             <img ng-src="{{folder.iconLink}}">
           </div>
-          <div class="md-tile-content" style="text-align: left;">
+          <div class="md-tile-content" style="text-align: left; overflow: hidden;">
             {{folder.title}}
           </div>
         </md-item-content>
@@ -42,12 +42,16 @@
           <div class="md-tile-left">
             <img ng-src="{{file.iconLink}}">
           </div>
-          <div class="md-tile-content" style="text-align: left;">
+          <div class="md-tile-content" style="text-align: left; overflow: hidden;">
             {{file.title}}
           </div>
         </md-item-content>
       </md-button>
     </md-list>
   </md-content>
+
+  <md-button class="md-fab md-primary" aria-label="Edit" style="position: absolute; right: 16px; bottom: 16px;" ng-click="vm.showNewMenu($event)">
+    <span class="fa fa-plus"></span>
+  </md-button>
 
 </div>
