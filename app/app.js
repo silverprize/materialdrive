@@ -7,15 +7,16 @@
 
   function setupRoute($routeProvider) {
     $routeProvider.when('/drive/:category/:itemId?', {
-      templateUrl: 'app/tpls/drive.html',
+      templateUrl: 'app/tpls/drive.tpl.html',
       controller: 'DriveCtrl',
       controllerAs: 'vm',
       resolve: {
         google: ['$injector', function($injector) {
-          var $q = $injector.get('$q');
-          var $location = $injector.get('$location');
-          var google = $injector.get('google');
-          var deferred = $q.defer();
+          var $q = $injector.get('$q'),
+              $location = $injector.get('$location'),
+              google = $injector.get('google'),
+              deferred = $q.defer();
+
           google.authorize(true).then(function() {
             deferred.resolve(google);
           }, function() {
@@ -28,15 +29,16 @@
         }]
       }
     }).when('/sign', {
-      templateUrl: 'app/tpls/gate.html',
+      templateUrl: 'app/tpls/gate.tpl.html',
       controller: 'GateCtrl',
       controllerAs: 'vm',
       resolve: {
         auth: ['$injector', function($injector) {
-          var $q = $injector.get('$q');
-          var $location = $injector.get('$location');
-          var $routeParams = $injector.get('$routeParams');
-          var google = $injector.get('google');
+          var $q = $injector.get('$q'),
+              $location = $injector.get('$location'),
+              $routeParams = $injector.get('$routeParams'),
+              google = $injector.get('google');
+
           return google.prepareGapi().then(function(google) {
             return google.authorize(true).then(function() {
               var redirect = $routeParams.redirect || '/drive/mydrive';

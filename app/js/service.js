@@ -3,6 +3,7 @@
 
   // var CLIENT_ID = '627339111893-9us5a8ovdeovt4p8blm07hgjamu1i0np.apps.googleusercontent.com';
   var CLIENT_ID = '627339111893-b6jkfk9kqp489tkamgjjrlpuuj6lrurj.apps.googleusercontent.com';
+
   var SCOPES = [
     'https://www.googleapis.com/auth/drive',
     'https://www.googleapis.com/auth/drive.file',
@@ -16,6 +17,8 @@
 
   var FILES_LIST = 'https://www.googleapis.com/drive/v2/files';
   var FILES_GET = 'https://www.googleapis.com/drive/v2/files/fileId';
+  var INSERT_FILE = 'https://www.googleapis.com/upload/drive/v2/files';
+  var INSERT_METADATA = 'https://www.googleapis.com/drive/v2/files';
 
   var OAUTH_TOKEN;
 
@@ -26,12 +29,14 @@
   ]);
 
   function GoogleService($injector, $q, $interval) {
-    var $http = $injector.get('$http');
-    var authData;
+    var $http = $injector.get('$http'),
+        authData;
+
     return {
       prepareGapi: function() {
-        var self = this;
-        var deferred = $q.defer();
+        var self = this,
+            deferred = $q.defer();
+
         if (!self.isReady()) {
           var interval = $interval(function() {
             if (self.isReady()) {
@@ -50,6 +55,7 @@
       },
       authorize: function(immediate) {
         var deferred = $q.defer();
+
         this.prepareGapi().then(function() {
           gapi.auth.authorize({
             'client_id': CLIENT_ID,
@@ -83,6 +89,16 @@
       },
       filesGet: function(fileId) {
         return $http.get(FILES_GET + '?fileId=' + encodeURIComponent(fileId), OAUTH_TOKEN);
+      },
+      newFile: function(args) {
+        return $http.post(
+          INSERT_METADATA, {
+            title: args.title,
+            mimeType: args.mimeType,
+            parents: args.parents ? [args.parents] : ''
+          },
+          OAUTH_TOKEN
+        );
       }
     };
   }

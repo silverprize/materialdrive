@@ -14,17 +14,14 @@
     '$window',
     '$q',
     '$mdBottomSheet',
+    '$mdDialog',
     'google',
-    DriveCtrl])
-  .controller('GridBottomSheetCtrl', [
-    '$scope',
-    '$mdBottomSheet',
-    GridBottomSheetCtrl]);
+    DriveCtrl]);
 
   function GateCtrl($location, $routeParams, google) {
-    var vm = this;
+    var self = this;
 
-    vm.authorize = authorize;
+    self.authorize = authorize;
 
     function authorize() {
       google.authorize(false).then(function() {
@@ -34,10 +31,10 @@
     }
   }
 
-  function DriveCtrl($location, $routeParams, $filter, $window, $q, $mdBottomSheet, google) {
-    var vm = this;
+  function DriveCtrl($location, $routeParams, $filter, $window, $q, $mdBottomSheet, $mdDialog, google) {
+    var self = this;
 
-    vm.topMenuList = [{
+    self.topMenuList = [{
       label: 'My Drive',
       route: '#drive/mydrive'
     }, {
@@ -54,69 +51,75 @@
       route: '#drive/trash'
     }];
 
-    vm.clickItem = clickItem;
+    self.currentFolder = {
+      isRoot: true
+    };
 
-    vm.upToParentFolder = upToParentFolder;
+    self.clickItem = clickItem;
 
-    vm.showNewMenu = showNewMenu;
+    self.upToParentFolder = upToParentFolder;
+
+    self.showNewMenu = showNewMenu;
 
     init();
 
     function init() {
-      vm.topFolder = {};
-      var query;
+      var query, promises;
+
       switch ($routeParams.category) {
         case 'incoming':
-          vm.topMenuList[1].selected = true;
+          self.topMenuList[1].selected = true;
           query = 'trashed = false and not \'me\' in owners and sharedWithMe';
           break;
         case 'recent':
-          vm.topMenuList[2].selected = true;
+          self.topMenuList[2].selected = true;
           query = '(not mimeType = \'application/vnd.google-apps.folder\') and lastViewedByMeDate > \'1970-01-01T00:00:00Z\' and trashed = false';
           break;
         case 'starred':
-          vm.topMenuList[3].selected = true;
+          self.topMenuList[3].selected = true;
           query = 'trashed = false and starred = true';
           break;
         case 'trash':
-          vm.topMenuList[4].selected = true;
+          self.topMenuList[4].selected = true;
           query = 'trashed = true and explicitlyTrashed = true';
           break;
         case 'folder':
-          query = 'trashed = false and \'' + $routeParams.itemId + '\' in parents';
+          query = 'trashed = false and \''.concat($routeParams.itemId).concat('\' in parents');
           break;
         default:
-          vm.topMenuList[0].selected = true;
+          self.topMenuList[0].selected = true;
           query = 'trashed = false and \'root\' in parents';
           break;
       }
 
-      var promises = [];
+      promises = [];
       if ($routeParams.itemId) {
         promises.push(google.filesGet($routeParams.itemId));
       }
       promises.push(google.filesList(query));
 
       $q.all(promises).then(function(responses) {
-        var data;
-        if (responses.length == 2) {
-          vm.parentFolder = responses[0].data.parents[0];
+        var folderList = [],
+            fileList = [],
+            data;
+
+        if (responses.length === 2) {
+          self.currentFolder = responses[0].data;
+          self.currentFolder.isRoot = self.currentFolder.parents.length === 0;
           data = responses[1].data;
         } else {
           data = responses[0].data;
         }
 
-        vm.folderList = [];
-        vm.fileList = [];
         angular.forEach(data.items, function(item) {
-          if (item.mimeType == 'application/vnd.google-apps.folder') {
-            vm.folderList.push(item);
+          if (item.mimeType === 'application/vnd.google-apps.folder') {
+            folderList.push(item);
           } else {
-            vm.fileList.push(item);
+            fileList.push(item);
           }
         });
-        vm.folderList = $filter('orderBy')(vm.folderList, 'title');
-        vm.fileList = $filter('orderBy')(vm.fileList, 'title');
+        self.folderList = $filter('orderBy')(folderList, 'title');
+        self.fileList = $filter('orderBy')(fileList, 'title');
       });
     }
 
@@ -125,55 +128,98 @@
         return;
       }
 
-      if (item.mimeType == 'application/vnd.google-apps.folder') {
-        $location.url('/drive/folder/' + item.id);
+      if (item.mimeType === 'application/vnd.google-apps.folder') {
+        $location.url('/drive/folder/'.concat(item.id));
       } else {
-        $window.open('https://docs.google.com/file/d/' + item.id);
+        $window.open(item.alternateLink);
       }
     }
 
     function upToParentFolder() {
-      $location.url('/drive/folder/' + vm.parentFolder.id);
+      $location.url('/drive/folder/'.concat(self.currentFolder.parents[0].id));
     }
 
     function showNewMenu($event) {
       $mdBottomSheet.show({
         templateUrl: 'app/tpls/new-menu-list.tpl.html',
-        controller: 'GridBottomSheetCtrl',
+        controller: ['$scope', '$mdBottomSheet', 'google', BottomSheetCtrl],
         controllerAs: 'vm',
         targetEvent: $event
       }).then(function(clickedItem) {
-        $scope.alert = clickedItem.name + ' clicked!';
+        $mdDialog.show({
+          controller: NameDialogCtrl,
+          controllerAs: 'vm',
+          templateUrl: 'app/tpls/name-dialog.tpl.html',
+          targetEvent: $event,
+          locals: {
+            item: clickedItem
+          }
+        }).then(function(name) {
+          google.newFile({
+            title: name,
+            mimeType: clickedItem.mimeType,
+            parents: self.currentFolder.isRoot ? '' : self.currentFolder
+          }).success(function(data) {
+            if (data.mimeType !== 'application/vnd.google-apps.folder') {
+              $window.open(data.alternateLink);
+            }
+            init();
+          });
+        });
       });
     }
   }
 
-  function GridBottomSheetCtrl($scope, $mdBottomSheet) {
-    var vm = this;
+  function BottomSheetCtrl($scope, $mdBottomSheet, google) {
+    var self = this;
 
-    vm.items = [{
+    self.items = [{
+      name: 'Folder',
+      icon: {
+        class: 'fa-folder',
+        bg: ''
+      },
+      mimeType: 'application/vnd.google-apps.folder'
+    }, {
       name: 'Document',
       icon: {
         class: 'fa-file-word-o',
         bg: 'file-word-bg'
-      }
+      },
+      mimeType: 'application/vnd.google-apps.document'
     }, {
       name: 'Spreadsheet',
       icon: {
         class: 'fa-file-excel-o',
         bg: 'file-spreadsheet-bg'
-      }
+      },
+      mimeType: 'application/vnd.google-apps.spreadsheet'
     }, {
       name: 'Presentation',
       icon: {
         class: 'fa-file-powerpoint-o',
         bg: 'file-presentation-bg'
-      }
+      },
+      mimeType: 'application/vnd.google-apps.presentation'
     }];
 
-    vm.listItemClick = function($index) {
-      var clickedItem = vm.items[$index];
+    self.listItemClick = function($index) {
+      var clickedItem = self.items[$index];
       $mdBottomSheet.hide(clickedItem);
+    };
+  }
+
+  function NameDialogCtrl($scope, $mdDialog, item) {
+    var self = this;
+
+    self.item = item;
+
+    self.ok = function() {
+      $mdDialog.hide(self.fileName);
+    };
+
+    self.cancel = function() {
+      $mdDialog.cancel();
     };
   }
 

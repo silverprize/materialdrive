@@ -12,7 +12,7 @@
   </md-toolbar>
 
   <md-content>
-    <md-list ng-if="vm.parentFolder">
+    <md-list ng-if="!vm.currentFolder.isRoot">
       <md-button ng-click="vm.upToParentFolder()" layout-fill>
         <md-item-content>
           <div class="md-tile-left">
