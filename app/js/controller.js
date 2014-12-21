@@ -172,7 +172,7 @@
     }];
 
     vm.listItemClick = function($index) {
-      var clickedItem = $scope.items[$index];
+      var clickedItem = vm.items[$index];
       $mdBottomSheet.hide(clickedItem);
     };
   }
