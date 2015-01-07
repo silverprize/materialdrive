@@ -1,0 +1,9 @@
+<md-toolbar md-theme="indigo">
+  <div class="md-toolbar-tools" layout-align="center center">
+    <md-tabs md-selected="navbarCtrl.selectedMenu.index">
+      <md-tab ng-repeat="menu in navbarCtrl.topMenuList">
+        <md-button md-no-ink="true" href="{{menu.href}}" layout="column" layout-fill ng-click="navbarCtrl.onMenuSelect(menu)">{{::menu.label}}</md-button>
+      </md-tab>
+    </md-tabs>
+  </div>
+</md-toolbar>

@@ -7,9 +7,9 @@
 
   function setupRoute($routeProvider) {
     $routeProvider.when('/drive/:category/:itemId?', {
-      templateUrl: 'app/tpls/drive.tpl.html',
-      controller: 'DriveCtrl',
-      controllerAs: 'vm',
+      templateUrl: 'app/drive/drive.tpl.html',
+      controller: 'DriveController',
+      controllerAs: 'driveCtrl',
       resolve: {
         google: ['$injector', function($injector) {
           var $q = $injector.get('$q'),
@@ -29,9 +29,9 @@
         }]
       }
     }).when('/sign', {
-      templateUrl: 'app/tpls/gate.tpl.html',
-      controller: 'GateCtrl',
-      controllerAs: 'vm',
+      templateUrl: 'app/gate/gate.tpl.html',
+      controller: 'GateController',
+      controllerAs: 'gateCtrl',
       resolve: {
         auth: ['$injector', function($injector) {
           var $q = $injector.get('$q'),
@@ -42,7 +42,7 @@
           return google.prepareGapi().then(function(google) {
             return google.authorize(true).then(function() {
               var redirect = $routeParams.redirect || '/drive/mydrive';
-              $location.url(redirect);
+              // $location.url(redirect);
             }, function() {
               var deferred = $q.defer();
               deferred.resolve();

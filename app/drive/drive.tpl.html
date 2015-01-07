@@ -1,0 +1,38 @@
+<div>
+  <md-list class="drive-list-item" layout="column" ng-if="!driveCtrl.currentFolder.isRoot">
+    <md-button ng-click="driveCtrl.upToParentFolder()">
+      <md-item-content>
+        <div class="md-tile-left">
+          <span class="fa fa-level-up"></span>
+        </div>
+        <div class="md-tile-content" style="text-align: left;">
+          ...
+        </div>
+      </md-item-content>
+    </md-button>
+  </md-list>
+  <md-list class="drive-list-item" layout="column" ng-repeat="folder in driveCtrl.folderList">
+    <md-button ng-class="{selected: folder.isSelected}" ng-dblclick="driveCtrl.onItemDoubleClicked(folder)" ng-click="driveCtrl.onItemClicked(folder)">
+      <md-item-content>
+        <div class="md-tile-left">
+          <img ng-src="{{folder.iconLink}}">
+        </div>
+        <div class="md-tile-content" style="text-align: left; overflow: hidden;">
+          {{folder.title}}
+        </div>
+      </md-item-content>
+    </md-button>
+  </md-list>
+  <md-list class="drive-list-item" layout="column" ng-repeat="file in driveCtrl.fileList">
+    <md-button ng-class="{selected: file.isSelected}" ng-dblclick="driveCtrl.onItemDoubleClicked(file)" ng-click="driveCtrl.onItemClicked(file)">
+      <md-item-content>
+        <div class="md-tile-left">
+          <img ng-src="{{file.iconLink}}">
+        </div>
+        <div class="md-tile-content" style="text-align: left; overflow: hidden;">
+          {{file.title}}
+        </div>
+      </md-item-content>
+    </md-button>
+  </md-list>
+</div>
