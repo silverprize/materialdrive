@@ -1,0 +1,10 @@
+<md-dialog>
+  <md-content>
+    <md-subheader>Input:</md-subheader>
+    <div class="row">
+      <form ng-submit="ok()" novalidate>
+        <input type="text" placeholder="{{::vm.item.name}}" ng-model="vm.fileName" autofocus>
+      </form>
+    </div>
+  </md-content>
+</md-dialog>

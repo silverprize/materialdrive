@@ -1,9 +1,5 @@
 <div layout="column" layout-fill tabindex="-1" role="main" ng-controller="BaseController">
   <navbar ng-if="base.config.useNavbar"></navbar>
   <md-content md-scroll-y ng-view ng-class="base.config.ngViewClass"></md-content>
-  <div class="fab-container" ng-if="base.config.useFab">
-    <md-button class="md-fab md-primary" aria-label="Edit" ng-click="base.showNewItemMenu($event)">
-      <span class="fa fa-plus"></span>
-    </md-button>
-  </div>
+  <div class="fab-container" ng-if="base.config.useFab" ng-include="base.config.fabTemplateUrl"></div>
 </div>

@@ -19,7 +19,8 @@
 
     $scope.base.config = {
       useNavbar: true,
-      useFab: true
+      useFab: true,
+      fabTemplateUrl: 'app/drive/new-item-fab.tpl.html'
     };
 
     self.selectedItemMap = {};
