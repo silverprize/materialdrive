@@ -1,7 +1,12 @@
 Material Drive
-=============
+=
 Google Drive with angular-material
 - Demo http://silverprize.github.io/materialdrive
+
+Available features
+=
+- File navigation
+- new document or folder by fab
 
 Consist of
 =
