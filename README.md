@@ -5,6 +5,7 @@ Google Drive with angular-material
 
 Available features
 =
+- Google oauth2
 - File navigation
 - new document or folder by fab
 
