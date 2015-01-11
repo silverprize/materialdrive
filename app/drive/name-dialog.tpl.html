@@ -1,9 +1,12 @@
 <md-dialog>
   <md-content>
-    <md-subheader>Input:</md-subheader>
+    <md-subheader>{{::vm.item.name}}</md-subheader>
     <div class="row">
       <form ng-submit="ok()" novalidate>
-        <input type="text" placeholder="{{::vm.item.name}}" ng-model="vm.fileName" autofocus>
+        <md-input-container>
+          <label>Name</label>
+          <input type="text" ng-model="vm.fileName" autofocus>
+        </md-input-container>
       </form>
     </div>
   </md-content>
