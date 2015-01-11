@@ -20,13 +20,24 @@
     $scope.base.config = {
       useNavbar: true,
       useFab: true,
-      fabTemplateUrl: 'app/drive/new-item-fab.tpl.html'
+      fabTemplateUrl: 'app/drive/new-item-fab.tpl.html',
+      ngViewClass: 'drive-body-container'
     };
 
     self.selectedItemMap = {};
 
     self.currentFolder = {
       isRoot: true
+    };
+
+    self.contextMenuList = [
+      {name: 'Copy'},
+      {name: 'Move'},
+      {name: 'Delete'}
+    ];
+
+    self.onContextMenuSelected = function() {
+
     };
 
     self.onItemClicked = onItemClicked;

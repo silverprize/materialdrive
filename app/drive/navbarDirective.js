@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('materialDrive')
-  .directive('navbar', [function() {
+  .directive('mtdNavbar', [function() {
     return {
       restrict: 'E',
       replace: true,

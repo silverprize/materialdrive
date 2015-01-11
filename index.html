@@ -2,20 +2,22 @@
 <html ng-app="materialDrive">
   <head>
     <title>Material Drive</title>
+    <link rel="sourtcut icon" type="image/x-icon" href="favicon.ico">
 
     <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1;IE=9">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1;IE=edge">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="description" content="Material Drive : google drive with angular material">
 
     <link rel="stylesheet/less" type="text/css" href="assets/less/materialdrive.less">
     <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.0.0/less.min.js"></script>
-
     <link rel="stylesheet" type="text/css" href="bower_components/angular-material/angular-material.css">
+    <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
+    <link href="bower_components/polymer/polymer.html" rel="import">
   </head>
 
   <body layout="row">
-    <div frame></div>
+    <div mtd-frame></div>
     <a id="forkme_banner" href="https://github.com/silverprize/materialdrive">View on GitHub</a>
 
     <script type="text/javascript" src="bower_components/angular/angular.js"></script>
@@ -29,13 +31,14 @@
     <script type="text/javascript" src="app/module.js"></script>
     <script type="text/javascript" src="app/app.js"></script>
     <script type="text/javascript" src="app/base/baseService.js"></script>
-    <script type="text/javascript" src="app/base/baseDirective.js"></script>
     <script type="text/javascript" src="app/base/baseController.js"></script>
+    <script type="text/javascript" src="app/base/frameDirective.js"></script>
     <script type="text/javascript" src="app/shared/googleService.js"></script>
     <script type="text/javascript" src="app/gate/gateController.js"></script>
     <script type="text/javascript" src="app/drive/navbarDirective.js"></script>
     <script type="text/javascript" src="app/drive/driveController.js"></script>
     <script type="text/javascript" src="app/drive/newItemFabController.js"></script>
+    <script type="text/javascript" src="app/components/contextMenuDirective.js"></script>
 
     <script type="text/javascript" src="https://apis.google.com/js/client.js"></script>
     <script type="text/javascript">

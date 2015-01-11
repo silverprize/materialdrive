@@ -1,4 +1,4 @@
-<div>
+<md-content class="drive-body" md-scroll-y mtd-context-menu class="context-menu" menu-list="driveCtrl.contextMenuList" on-menu-selected="driveCtrl.onMenuSelected()">
   <md-list class="drive-list-item" layout="column" ng-if="!driveCtrl.currentFolder.isRoot">
     <md-button ng-click="driveCtrl.upToParentFolder()">
       <md-item-content>
@@ -35,4 +35,4 @@
       </md-item-content>
     </md-button>
   </md-list>
-</div>
+</md-content>

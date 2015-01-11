@@ -1,0 +1,14 @@
+<link href="bower_components/core-icons/core-icons.html" rel="import">
+<link href="bower_components/core-menu/core-menu.html" rel="import">
+<link href="bower_components/paper-button/paper-button.html" rel="import">
+<link href="bower_components/paper-dropdown/paper-dropdown.html" rel="import">
+<link href="bower_components/paper-icon-button/paper-icon-button.html" rel="import">
+<link href="bower_components/paper-item/paper-item.html" rel="import">
+<link href="bower_components/paper-menu-button/paper-menu-button.html" rel="import">
+<link href="bower_components/paper-shadow/paper-shadow.html" rel="import">
+
+<paper-shadow z="1">
+  <core-menu ng-repeat="menu in menuList" class="dropdown-menu-item">
+    <paper-item ng-click="onMenuSelected(menu)">{{menu.name}}</paper-item>
+  </core-menu>
+<paper-shadow>

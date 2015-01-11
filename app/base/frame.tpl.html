@@ -1,5 +1,5 @@
 <div layout="column" layout-fill tabindex="-1" role="main" ng-controller="BaseController">
-  <navbar ng-if="base.config.useNavbar"></navbar>
-  <md-content md-scroll-y ng-view ng-class="base.config.ngViewClass"></md-content>
+  <mtd-navbar class="navbar" ng-if="base.config.useNavbar"></mtd-navbar>
+  <div ng-view ng-class="base.config.ngViewClass"></div>
   <div class="fab-container" ng-if="base.config.useFab" ng-include="base.config.fabTemplateUrl"></div>
 </div>

@@ -3,6 +3,32 @@
 @import "variables.less";
 @import "github.less";
 
+.navbar {
+  max-height: @navbar-height;
+}
+
+.drive-body-container {
+  position: absolute;
+  top: 0;
+  padding-top: @navbar-height;
+  width: 100%;
+  height: 100%;
+}
+
+.drive-body {
+  height: 100%;
+}
+
+.context-menu {
+  background-color: white;
+  position: fixed;
+}
+
+.dropdown-menu-item {
+  overflow: hidden;
+  margin: 0;
+}
+
 .file-word-bg {
   color: #4285f4;
 }
