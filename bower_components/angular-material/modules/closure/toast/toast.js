@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.6.1
+ * v0.7.0-rc2-master-9a0b3c3
  */
 goog.provide('ng.material.components.toast');
 goog.require('ng.material.components.button');
@@ -37,7 +37,7 @@ function MdToastDirective() {
  * @module material.components.toast
  *
  * @description
- * `$mdToast` is a service to butild a toast nofication on any position 
+ * `$mdToast` is a service to build a toast nofication on any position
  * on the screen with an optional duration, and provides a simple promise API.
  *
  *
@@ -60,9 +60,22 @@ function MdToastDirective() {
  * app.controller('MyController', function($scope, $mdToast) {
  *   $scope.openToast = function($event) {
  *     $mdToast.show($mdToast.simple().content('Hello!'));
+ *     // Could also do $mdtoast.showSimple('Hello');
  *   };
  * });
  * </hljs>
+ */
+
+/**
+ * @ngdoc method
+ * @name $mdToast#showSimple
+ * 
+ * @description
+ * Convenience method which builds and shows a simple toast.
+ *
+ * @returns {promise} A promise that can be resolved with `$mdToast.hide()` or
+ * rejected with `$mdToast.cancel()`.
+ *
  */
 
  /**
@@ -96,7 +109,7 @@ function MdToastDirective() {
  *
  * @description Shows the toast.
  *
- * @param {object} optionsOrPreset Either provide an `$mdToastPreset` returned from `simple()` 
+ * @param {object} optionsOrPreset Either provide an `$mdToastPreset` returned from `simple()`
  * and `build()`, or an options object with the following properties:
  *
  *   - `templateUrl` - `{string=}`: The url of an html template file that will
@@ -119,6 +132,8 @@ function MdToastDirective() {
  *   - `resolve` - `{object=}`: Similar to locals, except it takes promises as values
  *     and the toast will not open until the promises resolve.
  *   - `controllerAs` - `{string=}`: An alias to assign the controller to on the scope.
+ *   - `parent` - `{element=}`: The element to append the toast to. Defaults to appending
+ *     to the root element of the application.
  *
  * @returns {promise} A promise that can be resolved with `$mdToast.hide()` or
  * rejected with `$mdToast.cancel()`.
@@ -164,7 +179,7 @@ function MdToastProvider($$interimElementProvider) {
             '<md-toast ng-class="{\'md-capsule\': toast.capsule}">',
               '<span flex>{{ toast.content }}</span>',
               '<md-button ng-if="toast.action" ng-click="toast.resolve()" ng-class="{\'md-action\': toast.highlightAction}">',
-                '{{toast.action}}',
+                '{{ toast.action }}',
               '</md-button>',
             '</md-toast>'
           ].join(''),
