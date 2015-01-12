@@ -12,7 +12,27 @@
     'notifier',
     'google',
     DriveController
-  ]);
+  ])
+  .directive('mtdRightClick', ['$parse', '$rootScope', function($parse, $rootScope) {
+    return {
+      restrict: 'A',
+      compile: function($element, attr) {
+        var fn = $parse(attr.mtdRightClick, /* interceptorFn */ null, /* expensiveChecks */ true);
+        return function EventHandler(scope, element) {
+          element.on('contextmenu', function(event) {
+            var callback = function() {
+              fn(scope, {$event:event});
+            };
+            if ($rootScope.$$phase) {
+              scope.$evalAsync(callback);
+            } else {
+              scope.$apply(callback);
+            }
+          });
+        };
+      }
+    };
+  }]);
 
   function DriveController($scope, $location, $routeParams, $filter, $window, $q, notifier, google) {
     var self = this;
@@ -30,20 +50,21 @@
       isRoot: true
     };
 
-    self.contextMenuList = [
-      {name: 'Copy'},
-      {name: 'Move'},
-      {name: 'Delete'}
-    ];
+    self.contextMenuList = [{
+      name: 'Make a copy',
+      enabled: true
+    }, {
+      name: 'Move',
+      enabled: true
+    }, {
+      name: 'Remove',
+      enabled: true
+    }];
 
-    self.onContextMenuSelected = function() {
-
-    };
-
+    self.onContextMenuPopup = onContextMenuPopup;
+    self.onContextMenuSelected = onContextMenuSelected;
     self.onItemClicked = onItemClicked;
-
     self.onItemDoubleClicked = onItemDoubleClicked;
-
     self.upToParentFolder = upToParentFolder;
 
     notifier.addListener('newItem', {
@@ -112,11 +133,17 @@
       });
     }
 
-    function onItemClicked(item) {
-      if (self.selectedItemMap[item.id]) {
-        delete self.selectedItemMap[item.id];
-        item.isSelected = false;
-      } else {
+    function onItemClicked(item, add) {
+      if (add) {
+        if (self.selectedItemMap[item.id]) {
+          delete self.selectedItemMap[item.id];
+          item.isSelected = false;
+        } else {
+          self.selectedItemMap[item.id] = item;
+          item.isSelected = true;
+        }
+      } else if (!self.selectedItemMap[item.id]) {
+        emptySelectedItem();
         self.selectedItemMap[item.id] = item;
         item.isSelected = true;
       }
@@ -147,6 +174,72 @@
         if (data.mimeType !== 'application/vnd.google-apps.folder') {
           $window.open(data.alternateLink);
         }
+        init();
+      });
+    }
+
+    function onContextMenuPopup() {
+      var countItem = 0,
+          hasFolder = false;
+
+      angular.forEach(self.selectedItemMap, function(item) {
+        countItem++;
+        if (item.mimeType === 'application/vnd.google-apps.folder') {
+          hasFolder = true;
+        }
+      });
+
+      if (countItem > 1 || hasFolder) {
+        self.contextMenuList[0].enabled = false;
+      } else {
+        self.contextMenuList[0].enabled = true;
+      }
+    }
+
+    function onContextMenuSelected(menu) {
+      switch (menu.name) {
+      case 'Make a copy':
+        duplicateFiles();
+        break;
+      case 'Remove':
+        trashFiles();
+        break;
+      }
+    }
+
+    function emptySelectedItem() {
+      angular.forEach(self.selectedItemMap, function(item) {
+        item.isSelected = false;
+      });
+      self.selectedItemMap = {};
+    }
+
+    function countSelectedItems() {
+      var count = 0;
+      angular.forEach(self.selectedItemMap, function() {
+        count++;
+      });
+      return count;
+    }
+
+    function duplicateFiles() {
+      var promise;
+      angular.forEach(self.selectedItemMap, function(item, itemId) {
+        promise = google.duplicateFile({fileId: itemId});
+      });
+      promise.success(function() {
+        emptySelectedItem();
+        init();
+      });
+    }
+
+    function trashFiles() {
+      var promise;
+      angular.forEach(self.selectedItemMap, function(item, itemId) {
+        promise = google.moveToTrash({fileId: itemId});
+      });
+      promise.success(function() {
+        emptySelectedItem();
         init();
       });
     }

@@ -1,4 +1,4 @@
-<md-content class="drive-body" md-scroll-y mtd-context-menu class="context-menu" menu-list="driveCtrl.contextMenuList" on-menu-selected="driveCtrl.onMenuSelected()">
+<md-content class="drive-body" md-scroll-y mtd-context-menu class="context-menu" menu-list="driveCtrl.contextMenuList" on-menu-selected="driveCtrl.onContextMenuSelected(menu)" on-popup="driveCtrl.onContextMenuPopup()">
   <md-list class="drive-list-item" layout="column" ng-if="!driveCtrl.currentFolder.isRoot">
     <md-button ng-click="driveCtrl.upToParentFolder()">
       <md-item-content>
@@ -12,7 +12,7 @@
     </md-button>
   </md-list>
   <md-list class="drive-list-item" layout="column" ng-repeat="folder in driveCtrl.folderList">
-    <md-button ng-class="{selected: folder.isSelected}" ng-dblclick="driveCtrl.onItemDoubleClicked(folder)" ng-click="driveCtrl.onItemClicked(folder)">
+    <md-button ng-class="{selected: folder.isSelected}" ng-dblclick="driveCtrl.onItemDoubleClicked(folder)" ng-click="driveCtrl.onItemClicked(folder, true)" mtd-right-click="driveCtrl.onItemClicked(folder, false)">
       <md-item-content>
         <div class="md-tile-left">
           <img ng-src="{{folder.iconLink}}">
@@ -24,7 +24,7 @@
     </md-button>
   </md-list>
   <md-list class="drive-list-item" layout="column" ng-repeat="file in driveCtrl.fileList">
-    <md-button ng-class="{selected: file.isSelected}" ng-dblclick="driveCtrl.onItemDoubleClicked(file)" ng-click="driveCtrl.onItemClicked(file)">
+    <md-button ng-class="{selected: file.isSelected}" ng-dblclick="driveCtrl.onItemDoubleClicked(file)" ng-click="driveCtrl.onItemClicked(file, true)" mtd-right-click="driveCtrl.onItemClicked(file, false)">
       <md-item-content>
         <div class="md-tile-left">
           <img ng-src="{{file.iconLink}}">
