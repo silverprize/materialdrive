@@ -42,8 +42,8 @@
       elem.on('contextmenu', function(event) {
         event.preventDefault();
         scope.contextMenuState.left = [event.clientX, 'px'].join('');
-          scope.contextMenuState.top = [event.clientY, 'px'].join('');
-          scope.contextMenuState.display = 'block';
+        scope.contextMenuState.top = [event.clientY, 'px'].join('');
+        scope.contextMenuState.display = 'block';
         scope.$digest();
       });
 
@@ -56,29 +56,6 @@
       scope.onMenuSelected = function(menu) {
         scope.callback({menu: menu});
       };
-    }
-  }])
-  .directive('mtdDropdown', [function() {
-    return {
-      restrict: 'EA',
-      scope: {
-        menuList: '=',
-        callback: '&onMenuSelected'
-      },
-      templateUrl: 'app/components/dropdown.tpl.html',
-      controller: ['$scope', DropdownController],
-      controllerAs: 'dropdownCtrl',
-      link: link
-    };
-
-    function DropdownController($scope) {
-
-    }
-
-    function link(scope, elem, attrs) {
-      scope.onMenuSelected = function(menu) {
-        scope.callback({menu: menu});
-      }
     }
   }]);
 
