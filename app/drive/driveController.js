@@ -9,9 +9,15 @@
     '$filter',
     '$window',
     '$q',
+    '$mdDialog',
     'notifier',
     'google',
     DriveController
+  ])
+  .controller('FileNavigationDialogController', [
+    '$scope',
+    '$mdDialog',
+    FileNavigationDialogController
   ])
   .directive('mtdRightClick', ['$parse', '$rootScope', function($parse, $rootScope) {
     return {
@@ -34,7 +40,7 @@
     };
   }]);
 
-  function DriveController($scope, $location, $routeParams, $filter, $window, $q, notifier, google) {
+  function DriveController($scope, $location, $routeParams, $filter, $window, $q, $mdDialog, notifier, google) {
     var self = this;
 
     $scope.base.config = {
@@ -54,7 +60,7 @@
       name: 'Make a copy',
       enabled: true
     }, {
-      name: 'Move',
+      name: 'Move to',
       enabled: true
     }, {
       name: 'Remove',
@@ -180,6 +186,9 @@
       case 'Remove':
         trashFiles();
         break;
+      case 'Move to':
+        moveToFiles();
+        break;
       }
     }
 
@@ -219,6 +228,34 @@
         init();
       });
     }
+
+    function moveToFiles() {
+      $mdDialog.show({
+        controller: 'FileNavigationDialogController',
+        controllerAs: 'vm',
+        templateUrl: 'app/drive/file-navigation-dialog.tpl.html',
+      }).then(function(folder) {
+        var promise;
+        angular.forEach(self.selectedItemMap, function(item, itemId) {
+          promise = google.moveTo({
+            fileId: itemId,
+            fromFolderId: item.parents[0].id,
+            toFolderId: folder.id,
+            locals: {
+              google: google
+            }
+          });
+        });
+        promise.success(function() {
+          emptySelectedItem();
+          init();
+        });
+      });
+    }
+  }
+
+  function FileNavigationDialogController($scope, $mdDialog, google) {
+
   }
 
 })();

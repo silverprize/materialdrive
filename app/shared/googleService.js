@@ -1,8 +1,8 @@
 (function() {
   'use strict';
 
-  // var CLIENT_ID = '627339111893-9us5a8ovdeovt4p8blm07hgjamu1i0np.apps.googleusercontent.com',
-  var CLIENT_ID = '627339111893-b6jkfk9kqp489tkamgjjrlpuuj6lrurj.apps.googleusercontent.com',
+  var CLIENT_ID = '627339111893-9us5a8ovdeovt4p8blm07hgjamu1i0np.apps.googleusercontent.com',
+  // var CLIENT_ID = '627339111893-b6jkfk9kqp489tkamgjjrlpuuj6lrurj.apps.googleusercontent.com',
       SCOPES = [
         'https://www.googleapis.com/auth/drive',
         'https://www.googleapis.com/auth/drive.file',
@@ -20,7 +20,8 @@
         INSERT_METADATA: 'https://www.googleapis.com/drive/v2/files',
         FILES_COPY: 'https://www.googleapis.com/drive/v2/files/%s/copy',
         FILES_DELETE: 'https://www.googleapis.com/drive/v2/files/%s',
-        FILES_TRASH: 'https://www.googleapis.com/drive/v2/files/%s/trash'
+        FILES_TRASH: 'https://www.googleapis.com/drive/v2/files/%s/trash',
+        FILES_PATCH: 'https://www.googleapis.com/drive/v2/files/%s'
       },
       OAUTH_TOKEN;
 
@@ -98,10 +99,10 @@
       },
       query: query,
       filesList: function(query) {
-        return $http.get(API.FILES_LIST + '?q=' + encodeURIComponent(query), OAUTH_TOKEN);
+        return $http.get([API.FILES_LIST, '?q=', encodeURIComponent(query)].join(''), OAUTH_TOKEN);
       },
       filesGet: function(fileId) {
-        return $http.get(API.FILES_GET + '?fileId=' + encodeURIComponent(fileId), OAUTH_TOKEN);
+        return $http.get([API.FILES_GET , '?fileId=', encodeURIComponent(fileId)].join(''), OAUTH_TOKEN);
       },
       newFile: function(args) {
         return $http.post(
@@ -118,6 +119,15 @@
       },
       moveToTrash: function(args) {
         return $http.post(API.FILES_TRASH.replace('%s', args.fileId), null, OAUTH_TOKEN);
+      },
+      moveTo: function(args) {
+        return $http.patch([
+          API.FILES_PATCH.replace('%s', args.fileId),
+          '?addParents=', args.toFolderId,
+          '&removeParents=', args.fromFolderId
+        ].join(''),
+        null,
+        OAUTH_TOKEN);
       }
     };
   }
