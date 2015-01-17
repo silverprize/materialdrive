@@ -94,3 +94,30 @@ md-list.drive-list-item:last-child {
   right: 0;
   bottom: 0;
 }
+
+.file-navigation-dialog {
+  .header {
+    background-color: @text-primary;
+    margin: 0;
+    padding: 10px;
+  }
+
+  .disabled {
+    opacity: 0.25;
+  }
+
+  .current-folder {
+    margin: 0;
+    padding: 10px;
+    box-shadow: 0px 2px 4px 0 rgba(0, 0, 0, 0.16);
+    z-index: 1;
+  }
+
+  .md-dialog.md-default-theme.md-content-overflow .md-actions {
+    border-top-color: rgba(0,0,0,0.12);
+  }
+}
+
+.clickable {
+  cursor: pointer;
+}

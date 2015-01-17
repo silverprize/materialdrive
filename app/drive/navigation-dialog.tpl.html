@@ -1,0 +1,22 @@
+<md-dialog class="file-navigation-dialog md-content-overflow">
+  <h2 class="header">Move to</h2>
+  <md-divider></md-divider>
+  <h4 class="current-folder clickable" ng-click="vm.goToParent()">
+    <span class="fa fa-arrow-left" ng-if="!vm.currentFolder.isRoot"></span>&nbsp;
+    <span ng-bind="vm.currentFolder.title"></span>
+  </h4>
+  <md-content>
+    <md-list class="clickable" ng-repeat="folder in vm.folderList">
+      <md-item-content ng-click="!vm.selectedItemMap[folder.id] && vm.exapnd(folder)" ng-class="{disabled: vm.selectedItemMap[folder.id]}">
+        <div class="md-tile-left">
+          <img ng-src="{{folder.iconLink}}">
+        </div>
+        <div class="md-tile-content list-item-content" ng-bind="folder.title"></div>
+      </md-item-content>
+      <md-divider ng-if="!$last"></md-divider>
+    </md-list>
+  </md-content>
+  <div class="md-actions" layout="row">
+    <md-button ng-click="vm.selectFolder()" class="md-primary">Select</md-button>
+  </div>
+</md-dialog>

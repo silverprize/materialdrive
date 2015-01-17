@@ -31,6 +31,7 @@
     '$q',
     '$interval',
     'query',
+    'mimeType',
     GoogleService
   ])
   .constant('query', {
@@ -38,10 +39,13 @@
     recent: '(not mimeType = \'application/vnd.google-apps.folder\') and lastViewedByMeDate > \'1970-01-01T00:00:00Z\' and trashed = false',
     starred: 'trashed = false and starred = true',
     trash: 'trashed = true and explicitlyTrashed = true',
-    folder: 'trashed = false and \'%s\' in parents',
+    folder: 'trashed = false and \'%s\' in parents'
+  })
+  .constant('mimeType', {
+    folder : 'application/vnd.google-apps.folder'
   });
 
-  function GoogleService($injector, $q, $interval, query) {
+  function GoogleService($injector, $q, $interval, query, mimeType) {
     var $http = $injector.get('$http'),
         authData;
 
@@ -97,9 +101,14 @@
       isAuthenticated: function() {
         return angular.isDefined(OAUTH_TOKEN);
       },
+      mimeType: mimeType,
       query: query,
-      filesList: function(query) {
-        return $http.get([API.FILES_LIST, '?q=', encodeURIComponent(query)].join(''), OAUTH_TOKEN);
+      filesList: function(query, mimeType) {
+        query = encodeURIComponent(query);
+        if (mimeType) {
+          query = [query, ' and mimeType = \'', mimeType, '\''].join('');
+        }
+        return $http.get([API.FILES_LIST, '?q=', query].join(''), OAUTH_TOKEN);
       },
       filesGet: function(fileId) {
         return $http.get([API.FILES_GET , '?fileId=', encodeURIComponent(fileId)].join(''), OAUTH_TOKEN);

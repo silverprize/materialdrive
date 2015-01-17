@@ -10,14 +10,16 @@
     '$window',
     '$q',
     '$mdDialog',
+    '$injector',
     'notifier',
     'google',
     DriveController
   ])
-  .controller('FileNavigationDialogController', [
+  .controller('NavigationDialogController', [
     '$scope',
     '$mdDialog',
-    FileNavigationDialogController
+    '$injector',
+    NavigationDialogController
   ])
   .directive('mtdRightClick', ['$parse', '$rootScope', function($parse, $rootScope) {
     return {
@@ -40,7 +42,7 @@
     };
   }]);
 
-  function DriveController($scope, $location, $routeParams, $filter, $window, $q, $mdDialog, notifier, google) {
+  function DriveController($scope, $location, $routeParams, $filter, $window, $q, $mdDialog, $injector, notifier, google) {
     var self = this;
 
     $scope.base.config = {
@@ -58,12 +60,15 @@
 
     self.contextMenuList = [{
       name: 'Make a copy',
+      icon: 'content-copy',
       enabled: true
     }, {
       name: 'Move to',
+      icon: 'folder-open',
       enabled: true
     }, {
       name: 'Remove',
+      icon: 'delete',
       enabled: true
     }];
 
@@ -208,45 +213,67 @@
     }
 
     function duplicateFiles() {
-      var promise;
+      var promises = [];
+
       angular.forEach(self.selectedItemMap, function(item, itemId) {
-        promise = google.duplicateFile({fileId: itemId});
+        promises.push(google.duplicateFile({fileId: itemId}));
       });
-      promise.success(function() {
+
+      $q.all(promises).then(function() {
         emptySelectedItem();
         init();
       });
     }
 
     function trashFiles() {
-      var promise;
+      var confirm = $mdDialog.confirm().title('Will be removed').ok('Yes').cancel('Cancel'),
+          content = '';
+
       angular.forEach(self.selectedItemMap, function(item, itemId) {
-        promise = google.moveToTrash({fileId: itemId});
+        content = [content, '"', item.title, '", '].join('');
       });
-      promise.success(function() {
-        emptySelectedItem();
-        init();
+      confirm.content(content.substring(0, content.lastIndexOf(',')));
+
+      $mdDialog.show(confirm).then(function() {
+        var promises = [];
+
+        angular.forEach(self.selectedItemMap, function(item, itemId) {
+          promises.push(google.moveToTrash({fileId: itemId}));
+        });
+
+        $q.all(promises).then(function() {
+          emptySelectedItem();
+          init();
+        });
       });
     }
 
     function moveToFiles() {
       $mdDialog.show({
-        controller: 'FileNavigationDialogController',
+        controller: 'NavigationDialogController',
         controllerAs: 'vm',
-        templateUrl: 'app/drive/file-navigation-dialog.tpl.html',
+        templateUrl: 'app/drive/navigation-dialog.tpl.html',
+        bindToController: true,
+        locals: {
+          selectedItemMap: self.selectedItemMap
+        },
+        resolve: function() {
+          return {
+            '$injector': $injector
+          };
+        }
       }).then(function(folder) {
-        var promise;
+        var promises = [];
+
         angular.forEach(self.selectedItemMap, function(item, itemId) {
-          promise = google.moveTo({
+          promises.push(google.moveTo({
             fileId: itemId,
             fromFolderId: item.parents[0].id,
-            toFolderId: folder.id,
-            locals: {
-              google: google
-            }
-          });
+            toFolderId: folder.id
+          }));
         });
-        promise.success(function() {
+
+        $q.all(promises).then(function() {
           emptySelectedItem();
           init();
         });
@@ -254,8 +281,54 @@
     }
   }
 
-  function FileNavigationDialogController($scope, $mdDialog, google) {
+  function NavigationDialogController($scope, $mdDialog, $injector) {
+    var self = this,
+        $q = $injector.get('$q'),
+        $filter = $injector.get('$filter'),
+        google = $injector.get('google');
 
+    self.currentFolder = {
+      title: 'My Drive',
+      id: 'root',
+      isRoot: true
+    };
+
+    self.path = [self.currentFolder];
+
+    self.selectFolder = selectFolder;
+
+    self.exapnd = expand;
+
+    self.goToParent = goToParent;
+
+    getList(self.currentFolder.id);
+
+    function selectFolder() {
+      $mdDialog.hide(self.currentFolder);
+    }
+
+    function goToParent() {
+      if (self.path.length > 1) {
+        self.path.pop();
+      }
+      self.currentFolder = self.path[self.path.length - 1];
+      getList(self.currentFolder.id);
+    }
+
+    function expand(folder) {
+      self.path.push(folder);
+      self.currentFolder = folder;
+      getList(folder.id);
+    }
+
+    function getList(id) {
+      google.filesList(
+        google.query.folder.replace('%s', id),
+        google.mimeType.folder
+      ).success(function (data) {
+        self.folderList = $filter('orderBy')(data.items, 'title');
+      });
+    }
   }
 
 })();
