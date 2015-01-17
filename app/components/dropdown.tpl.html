@@ -7,8 +7,11 @@
 <link href="bower_components/paper-menu-button/paper-menu-button.html" rel="import">
 <link href="bower_components/paper-shadow/paper-shadow.html" rel="import">
 
-<paper-shadow z="1">
+<paper-shadow>
   <core-menu ng-repeat="menu in menuList" class="dropdown-menu-item" ng-click="onMenuSelected(menu)" ng-if="menu.enabled">
-    <paper-item >{{menu.name}}</paper-item>
+    <paper-item >
+      <core-icon icon="{{::menu.icon}}" ng-if="menu.icon"></core-icon>&nbsp;
+      <span ng-bind="menu.name"></span>
+    </paper-item>
   </core-menu>
 <paper-shadow>
