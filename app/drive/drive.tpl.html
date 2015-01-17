@@ -17,9 +17,7 @@
         <div class="md-tile-left">
           <img ng-src="{{folder.iconLink}}">
         </div>
-        <div class="md-tile-content list-item-content">
-          {{folder.title}}
-        </div>
+        <div class="md-tile-content list-item-content" ng-bind="folder.title"></div>
       </md-item-content>
     </md-button>
   </md-list>
@@ -29,8 +27,7 @@
         <div class="md-tile-left">
           <img ng-src="{{file.iconLink}}">
         </div>
-        <div class="md-tile-content list-item-content">
-          {{file.title}}
+        <div class="md-tile-content list-item-content" ng-bind="file.title">
         </div>
       </md-item-content>
     </md-button>
