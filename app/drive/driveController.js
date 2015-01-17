@@ -79,46 +79,22 @@
     init();
 
     function init() {
-      var query, promises;
+      var query = (google.query[$routeParams.category] || google.query.folder).replace('%s', $routeParams.itemId || 'root'),
+          promises = [];
 
-      switch ($routeParams.category) {
-        case 'incoming':
-          query = 'trashed = false and not \'me\' in owners and sharedWithMe';
-          break;
-        case 'recent':
-          query = '(not mimeType = \'application/vnd.google-apps.folder\') and lastViewedByMeDate > \'1970-01-01T00:00:00Z\' and trashed = false';
-          break;
-        case 'starred':
-          query = 'trashed = false and starred = true';
-          break;
-        case 'trash':
-          query = 'trashed = true and explicitlyTrashed = true';
-          break;
-        case 'folder':
-          query = 'trashed = false and \''.concat($routeParams.itemId).concat('\' in parents');
-          break;
-        default:
-          query = 'trashed = false and \'root\' in parents';
-          break;
-      }
-
-      promises = [];
+      promises.push(google.filesList(query));
       if ($routeParams.itemId) {
         promises.push(google.filesGet($routeParams.itemId));
       }
-      promises.push(google.filesList(query));
 
       $q.all(promises).then(function(responses) {
         var folderList = [],
             fileList = [],
-            data;
+            data = responses[0].data;
 
         if (responses.length === 2) {
-          self.currentFolder = responses[0].data;
+          self.currentFolder = responses[1].data;
           self.currentFolder.isRoot = self.currentFolder.parents.length === 0;
-          data = responses[1].data;
-        } else {
-          data = responses[0].data;
         }
 
         angular.forEach(data.items, function(item) {

@@ -29,10 +29,18 @@
     '$injector',
     '$q',
     '$interval',
+    'query',
     GoogleService
-  ]);
+  ])
+  .constant('query', {
+    incoming: 'trashed = false and not \'me\' in owners and sharedWithMe',
+    recent: '(not mimeType = \'application/vnd.google-apps.folder\') and lastViewedByMeDate > \'1970-01-01T00:00:00Z\' and trashed = false',
+    starred: 'trashed = false and starred = true',
+    trash: 'trashed = true and explicitlyTrashed = true',
+    folder: 'trashed = false and \'%s\' in parents',
+  });
 
-  function GoogleService($injector, $q, $interval) {
+  function GoogleService($injector, $q, $interval, query) {
     var $http = $injector.get('$http'),
         authData;
 
@@ -88,6 +96,7 @@
       isAuthenticated: function() {
         return angular.isDefined(OAUTH_TOKEN);
       },
+      query: query,
       filesList: function(query) {
         return $http.get(API.FILES_LIST + '?q=' + encodeURIComponent(query), OAUTH_TOKEN);
       },
