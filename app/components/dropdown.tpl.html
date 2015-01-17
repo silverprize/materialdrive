@@ -8,10 +8,8 @@
 <link href="bower_components/paper-shadow/paper-shadow.html" rel="import">
 
 <paper-shadow>
-  <core-menu ng-repeat="menu in menuList" class="dropdown-menu-item" ng-click="onMenuSelected(menu)" ng-if="menu.enabled">
-    <paper-item >
-      <core-icon icon="{{::menu.icon}}" ng-if="menu.icon"></core-icon>&nbsp;
-      <span ng-bind="menu.name"></span>
-    </paper-item>
-  </core-menu>
+  <paper-item ng-repeat="menu in menuList" class="dropdown-menu-item" ng-click="onMenuSelected(menu)" ng-if="menu.enabled">
+    <core-icon icon="{{::menu.icon}}" ng-if="menu.icon"></core-icon>&nbsp;
+    <span ng-bind="menu.name"></span>
+  </paper-item>
 <paper-shadow>

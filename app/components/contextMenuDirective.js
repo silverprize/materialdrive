@@ -23,17 +23,13 @@
     function ContextMenuController($scope, $document, $compile) {
       var self = this;
 
-      var fnDestroyMenu = function() {
-        if (self._menuListElem) {
-          self._menuListElem.remove();
-        }
-      };
-
       $scope.onDropdownMenuSelected = function(menu) {
         $scope.onMenuSelected({menu: menu});
       };
 
-      $scope.$on('$destroy', fnDestroyMenu);
+      $scope.$on('$destroy', function() {
+        self._menuListElem.remove();
+      });
 
       $scope.contextMenuState = {
         left: 0,
@@ -42,29 +38,24 @@
       };
 
       self.init = function(elem) {
-        var bodyElem = angular.element($document[0].body);
+        var menuListElem = angular.element('<mtd-dropdown></mtd-dropdown>'),
+            bodyElem = angular.element($document[0].body);
+
+        menuListElem.attr({
+          'class': 'context-menu',
+          'menu-list': 'menuList',
+          'on-menu-selected': 'onDropdownMenuSelected(menu)',
+          'ng-style': 'contextMenuState'
+        });
+        $compile(menuListElem)($scope);
+        bodyElem.append(menuListElem);
 
         bodyElem.on('click', function() {
-          fnDestroyMenu();
           $scope.contextMenuState.display = 'none';
           $scope.$digest();
         });
 
         elem.on('contextmenu', function(event) {
-          var menuListElem = angular.element('<mtd-dropdown></mtd-dropdown>');
-
-          fnDestroyMenu();
-
-          menuListElem.attr({
-            'class': 'context-menu',
-            'menu-list': 'menuList',
-            'on-menu-selected': 'onDropdownMenuSelected(menu)',
-            'ng-style': 'contextMenuState'
-          });
-          $compile(menuListElem)($scope);
-          bodyElem.append(menuListElem);
-          self._menuListElem = menuListElem;
-
           $scope.onPopup();
           $scope.contextMenuState.left = [event.clientX, 'px'].join('');
           $scope.contextMenuState.top = [event.clientY, 'px'].join('');
@@ -72,7 +63,9 @@
           $scope.$digest();
           event.preventDefault();
         });
+
         self._elem = elem;
+        self._menuListElem = menuListElem;
       };
     }
 
