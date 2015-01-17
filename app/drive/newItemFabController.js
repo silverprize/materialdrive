@@ -8,6 +8,14 @@
     '$mdDialog',
     NewItemFabController
   ])
+  .controller('BottomSheetController', [
+    '$scope',
+    '$mdBottomSheet',
+    '$mdDialog',
+    'google',
+    'notifier',
+    BottomSheetController
+  ])
   .controller('NameDialogController', [
     '$scope',
     '$mdDialog',
@@ -22,21 +30,14 @@
     function showNewItemMenu($event) {
       $mdBottomSheet.show({
         templateUrl: 'app/drive/new-item-menu-sheet.tpl.html',
-        controller: [
-          '$scope',
-          '$mdBottomSheet',
-          '$mdDialog',
-          'google',
-          'notifier',
-          BottomSheetCtrl
-        ],
+        controller: 'BottomSheetController',
         controllerAs: 'vm',
         targetEvent: $event
       });
     }
   }
 
-  function BottomSheetCtrl($scope, $mdBottomSheet, $mdDialog, google, notifier) {
+  function BottomSheetController($scope, $mdBottomSheet, $mdDialog, google, notifier) {
     var self = this;
 
     self.items = [{
@@ -77,7 +78,6 @@
         controller: 'NameDialogController',
         controllerAs: 'vm',
         templateUrl: 'app/drive/name-dialog.tpl.html',
-        targetEvent: $event,
         bindToController: true,
         locals: {
           item: clickedItem
