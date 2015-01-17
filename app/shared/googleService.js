@@ -74,17 +74,34 @@
         var deferred = $q.defer();
 
         this.prepareGapi().then(function() {
-          gapi.auth.authorize({
-            'client_id': CLIENT_ID,
-            'scope': SCOPES,
-            'immediate': angular.isDefined(immediate) ? immediate : false
-          }, function(authResult) {
-            if (authResult && authResult.access_token) {
-              deferred.resolve(authResult);
-            } else {
-              deferred.reject();
-            }
-          });
+          var authorize = function() {
+            gapi.auth.authorize({
+              'client_id': CLIENT_ID,
+              'scope': SCOPES,
+              'immediate': angular.isDefined(immediate) ? immediate : false
+            }, function(authResult) {
+              if (authResult && authResult.access_token) {
+                deferred.resolve(authResult);
+              } else {
+                deferred.reject();
+              }
+            });
+          };
+
+          if (!authData) {
+            authorize();
+          } else {
+            gapi.auth.checkSessionState({
+              'client_id': CLIENT_ID,
+              'session_state': null
+            }, function(result) {
+              if (result) {
+                authorize();
+              } else {
+                deferred.resolve(authData);
+              }
+            });
+          }
         });
 
         return deferred.promise.then(function(authResult) {
