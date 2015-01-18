@@ -934,11 +934,11 @@ function mdCompilerService($q, $http, $injector, $compile, $controller, $templat
     *      * `key` - `{string}`: a name of a dependency to be injected into the controller.
     *      * `factory` - `{string|function}`: If `string` then it is an alias for a service.
     *        Otherwise if function, then it is injected and the return value is treated as the
-    *        dependency. If the result is a promise, it is resolved before its value is 
+    *        dependency. If the result is a promise, it is resolved before its value is
     *        injected into the controller.
     *
     * @returns {object=} promise A promise, which will be resolved with a `compileData` object.
-    * `compileData` has the following properties: 
+    * `compileData` has the following properties:
     *
     *   - `element` - `{element}`: an uncompiled element matching the provided template.
     *   - `link` - `{function(scope)}`: A link function, which, when called, will compile
@@ -957,7 +957,7 @@ function mdCompilerService($q, $http, $injector, $compile, $controller, $templat
     var transformTemplate = options.transformTemplate || angular.identity;
     var bindToController = options.bindToController;
 
-    // Take resolve values and invoke them.  
+    // Take resolve values and invoke them.
     // Resolves can either be a string (value: 'MyRegisteredAngularConst'),
     // or an invokable 'factory' of sorts: (value: function ValueGetter($dependency) {})
     angular.forEach(resolve, function(value, key) {
@@ -2517,7 +2517,7 @@ function ThemingProvider($mdColorPalette) {
 
       self.foregroundPalette = self.isDark ? LIGHT_FOREGROUND : DARK_FOREGROUND;
       self.foregroundShadow = self.isDark ? DARK_SHADOW : LIGHT_SHADOW;
-      
+
       // Light and dark themes have different default hues.
       // Go through each existing color type for this theme, and for every
       // hue value that is still the default hue value from the previous light/dark setting,
@@ -3254,7 +3254,7 @@ function MdButtonDirective($mdInkRipple, $mdTheming, $mdAria) {
   function isAnchor(attr) {
     return angular.isDefined(attr.href) || angular.isDefined(attr.ngHref);
   }
-  
+
   function getTemplate(element, attr) {
     return isAnchor(attr) ?
            '<a class="md-button" ng-transclude></a>' :
@@ -3271,7 +3271,7 @@ function MdButtonDirective($mdInkRipple, $mdTheming, $mdAria) {
       $mdAria.expect(element, 'aria-label');
     }
 
-    // For anchor elements, we have to set tabindex manually when the 
+    // For anchor elements, we have to set tabindex manually when the
     // element is disabled
     if (isAnchor(attr) && angular.isDefined(attr.ngDisabled) ) {
       scope.$watch(attr.ngDisabled, function(isDisabled) {
@@ -3405,7 +3405,7 @@ function MdCheckboxDirective(inputDirective, $mdInkRipple, $mdAria, $mdConstant,
     restrict: 'E',
     transclude: true,
     require: '?ngModel',
-    template: 
+    template:
       '<div class="md-container" md-ink-ripple md-ink-ripple-checkbox>' +
         '<div class="md-icon"></div>' +
       '</div>' +
@@ -4166,7 +4166,7 @@ angular.module('material.components.input', [
  * @description
  * `<md-input-container>` is the parent of any input or textarea element.
  *
- * Input and textarea elements will not behave properly unless the md-input-container 
+ * Input and textarea elements will not behave properly unless the md-input-container
  * parent is provided.
  *
  * @usage
@@ -4242,7 +4242,7 @@ function labelDirective() {
  * @module material.components.input
  *
  * @description
- * Must be placed as a child of an `<md-input-container>`. 
+ * Must be placed as a child of an `<md-input-container>`.
  *
  * Behaves like the [AngularJS input directive](https://docs.angularjs.org/api/ng/directive/input).
  *
@@ -4277,7 +4277,7 @@ function labelDirective() {
  * @module material.components.input
  *
  * @description
- * Must be placed as a child of an `<md-input-container>`. 
+ * Must be placed as a child of an `<md-input-container>`.
  *
  * Behaves like the [AngularJS input directive](https://docs.angularjs.org/api/ng/directive/textarea).
  *
@@ -4310,7 +4310,7 @@ function inputTextareaDirective($mdUtil, $window, $compile, $animate) {
     require: ['^?mdInputContainer', '?ngModel'],
     link: postLink
   };
-  
+
   function postLink(scope, element, attr, ctrls) {
 
     var containerCtrl = ctrls[0];
@@ -4344,7 +4344,7 @@ function inputTextareaDirective($mdUtil, $window, $compile, $animate) {
     scope.$watch(function() {
       return ngModelCtrl.$dirty && ngModelCtrl.$invalid;
     }, containerCtrl.setInvalid);
-      
+
     ngModelCtrl.$parsers.push(ngModelPipelineCheckValue);
     ngModelCtrl.$formatters.push(ngModelPipelineCheckValue);
 
@@ -4420,14 +4420,14 @@ function mdMaxlengthDirective($animate) {
     var containerCtrl = ctrls[1];
     var charCountEl = angular.element('<div class="md-char-counter">');
 
-    // Stop model from trimming. This makes it so whitespace 
+    // Stop model from trimming. This makes it so whitespace
     // over the maxlength still counts as invalid.
     attr.$set('ngTrim', 'false');
     containerCtrl.element.append(charCountEl);
 
     ngModelCtrl.$formatters.push(renderCharCount);
     ngModelCtrl.$viewChangeListeners.push(renderCharCount);
-    element.on('input keydown', function() { 
+    element.on('input keydown', function() {
       renderCharCount(); //make sure it's called with no args
     });
 
@@ -4435,7 +4435,7 @@ function mdMaxlengthDirective($animate) {
       maxlength = value;
       if (angular.isNumber(value) && value > 0) {
         if (!charCountEl.parent().length) {
-          $animate.enter(charCountEl, containerCtrl.element, 
+          $animate.enter(charCountEl, containerCtrl.element,
                          angular.element(containerCtrl.element[0].lastElementChild));
         }
         renderCharCount();
@@ -4745,7 +4745,7 @@ function MdProgressLinearDirective($$rAF, $mdConstant, $mdTheming) {
       '</div>',
     compile: compile
   };
-  
+
   function compile(tElement, tAttrs, transclude) {
     tElement.attr('aria-valuemin', 0);
     tElement.attr('aria-valuemax', 100);
@@ -5953,7 +5953,7 @@ function MdSticky($document, $mdConstant, $compile, $$rAF, $mdUtil) {
         return a.top < b.top ? -1 : 1;
       });
 
-      // Find which item in the list should be active, 
+      // Find which item in the list should be active,
       // based upon the content's current scroll position
       var item;
       var currentScrollTop = contentEl.prop('scrollTop');
@@ -5974,7 +5974,7 @@ function MdSticky($document, $mdConstant, $compile, $$rAF, $mdUtil) {
     // Find the `top` of an item relative to the content element,
     // and also the height.
     function refreshPosition(item) {
-      // Find the top of an item by adding to the offsetHeight until we reach the 
+      // Find the top of an item by adding to the offsetHeight until we reach the
       // content element.
       var current = item.element[0];
       item.top = 0;
@@ -6012,7 +6012,7 @@ function MdSticky($document, $mdConstant, $compile, $$rAF, $mdUtil) {
             translate(self.current, null);
           }
         }
-        
+
       // Scrolling up with a current sticky item?
       } else if (!isScrollingDown && self.current) {
         if (scrollTop < self.current.top) {
@@ -6032,7 +6032,7 @@ function MdSticky($document, $mdConstant, $compile, $$rAF, $mdUtil) {
         }
       }
     }
-     
+
    function setCurrentItem(item) {
      if (self.current === item) return;
      // Deactivate currently active item
@@ -6076,7 +6076,7 @@ function MdSticky($document, $mdConstant, $compile, $$rAF, $mdUtil) {
      } else {
        item.translateY = amount;
        item.clone.css(
-         $mdConstant.CSS.TRANSFORM, 
+         $mdConstant.CSS.TRANSFORM,
          'translate3d(' + item.left + 'px,' + amount + 'px,0)'
        );
      }
@@ -6103,7 +6103,7 @@ function MdSticky($document, $mdConstant, $compile, $$rAF, $mdUtil) {
 
   // Android 4.4 don't accurately give scroll events.
   // To fix this problem, we setup a fake scroll event. We say:
-  // > If a scroll or touchmove event has happened in the last DELAY milliseconds, 
+  // > If a scroll or touchmove event has happened in the last DELAY milliseconds,
   //   then send a `$scroll` event every animationFrame.
   // Additionally, we add $scrollstart and $scrollend events.
   function setupAugmentedScrollEvents(element) {
@@ -6189,7 +6189,7 @@ function MdSubheaderDirective($mdSticky, $compile, $mdTheming) {
     restrict: 'E',
     replace: true,
     transclude: true,
-    template: 
+    template:
       '<h2 class="md-subheader">' +
         '<span class="md-subheader-content"></span>' +
       '</h2>',
@@ -6652,7 +6652,7 @@ function mdTextFloatDirective($mdTheming, $mdUtil, $parse, $log) {
     },
     compile : function(element, attr) {
 
-      $log.warn('<md-text-float> is deprecated. Please use `<md-input-container>` and `<input>`.' + 
+      $log.warn('<md-text-float> is deprecated. Please use `<md-input-container>` and `<input>`.' +
                 'More information at http://material.angularjs.org/#/api/material.components.input/directive/mdInputContainer');
 
       if ( angular.isUndefined(attr.mdFid) ) {
@@ -6685,7 +6685,7 @@ function mdInputGroupDirective($log) {
     restrict: 'CE',
     controller: ['$element', function($element) {
 
-      $log.warn('<md-input-group> is deprecated. Please use `<md-input-container>` and `<input>`.' + 
+      $log.warn('<md-input-group> is deprecated. Please use `<md-input-container>` and `<input>`.' +
                 'More information at http://material.angularjs.org/#/api/material.components.input/directive/mdInputContainer');
       this.setFocused = function(isFocused) {
         $element.toggleClass('md-input-focused', !!isFocused);
@@ -6708,7 +6708,7 @@ function mdInputDirective($mdUtil, $log) {
     link: function(scope, element, attr, ctrls) {
       if ( !ctrls[0] ) return;
 
-      $log.warn('<md-input> is deprecated. Please use `<md-input-container>` and `<input>`.' + 
+      $log.warn('<md-input> is deprecated. Please use `<md-input-container>` and `<input>`.' +
                 'More information at http://material.angularjs.org/#/api/material.components.input/directive/mdInputContainer');
 
       var inputGroupCtrl = ctrls[0];
@@ -6829,7 +6829,7 @@ function MdToastDirective() {
 /**
  * @ngdoc method
  * @name $mdToast#showSimple
- * 
+ *
  * @description
  * Convenience method which builds and shows a simple toast.
  *
@@ -7592,14 +7592,14 @@ function TabPaginationDirective($mdConstant, $window, $$rAF, $$q, $timeout, $mdM
     function calculateTabData(noAdjust) {
       var clientWidth = element.parent().prop('offsetWidth');
       var tabsWidth = clientWidth - PAGINATORS_WIDTH - 1;
-      var $tabs = angular.element(tabs);
+      var tabs = element.find('md-tab');
       var totalWidth = 0;
       var max = 0;
       var tabData = [];
       var pages = [];
       var currentPage;
 
-      $tabs.css('max-width', '');
+      tabs.css('max-width', '');
       angular.forEach(tabs, function (tab, index) {
         var tabWidth = Math.min(tabsWidth, tab.offsetWidth);
         var data = {
@@ -7634,7 +7634,7 @@ function TabPaginationDirective($mdConstant, $window, $$rAF, $$q, $timeout, $mdM
         max = Math.max(max, tabWidth);
         tabData.push(data);
       });
-      $tabs.css('max-width', tabsWidth + 'px');
+      tabs.css('max-width', tabsWidth + 'px');
 
       if (!noAdjust && shouldStretchTabs()) {
         return adjustForStretchedTabs();
@@ -7653,7 +7653,7 @@ function TabPaginationDirective($mdConstant, $window, $$rAF, $$q, $timeout, $mdM
         var canvasWidth = pages.length === 1 ? clientWidth : tabsWidth;
         var tabsPerPage = Math.min(Math.floor(canvasWidth / max), tabs.length);
         var tabWidth    = Math.floor(canvasWidth / tabsPerPage);
-        $tabs.css('width', tabWidth + 'px');
+        tabs.css('width', tabWidth + 'px');
         return calculateTabData(true);
       }
     }
@@ -7722,7 +7722,7 @@ function TabItemController($scope, $element, $attrs, $compile, $animate, $mdUtil
   function isDisabled() {
     return disabledParsed($scope.$parent);
   }
-  
+
   /**
    * Add the tab's content to the DOM container area in the tabs,
    * @param contentArea the contentArea to add the content of the tab to
@@ -8350,7 +8350,7 @@ function TabsDirective($mdTheming) {
         if (tabsCtrl.inRange(newIndex)) {
           var newTab = tabsCtrl.itemAt(newIndex);
           while (newTab && newTab.isDisabled()) {
-            newTab = newIndex > oldIndex 
+            newTab = newIndex > oldIndex
                 ? tabsCtrl.next(newTab)
                 : tabsCtrl.previous(newTab);
           }
