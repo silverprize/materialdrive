@@ -79,7 +79,7 @@
           }
           return $q.reject(rejection);
         }
-      }
+      };
     }]);
   }
 })();

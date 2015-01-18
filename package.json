@@ -1,0 +1,28 @@
+{
+  "name": "materialdrive",
+  "version": "0.0.1",
+  "description": "Material Drive = Google Drive with angular-material - Demo http://silverprize.github.io/materialdrive",
+  "main": "gulpfile.js",
+  "devDependencies": {
+    "del": "^1.1.1",
+    "gulp": "^3.8.10",
+    "gulp-jshint": "^1.9.0",
+    "gulp-less": "^2.0.1",
+    "gulp-recess": "^1.1.1",
+    "jshint-stylish": "^1.0.0",
+    "run-sequence": "^1.0.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/silverprize/materialdrive.git"
+  },
+  "author": "silverprize@outlook.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/silverprize/materialdrive/issues"
+  },
+  "homepage": "https://github.com/silverprize/materialdrive"
+}

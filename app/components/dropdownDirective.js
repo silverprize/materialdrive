@@ -22,7 +22,7 @@
     function link(scope, elem, attrs) {
       scope.onMenuSelected = function(menu) {
         scope.callback({menu: menu});
-      }
+      };
     }
   }]);
 })();

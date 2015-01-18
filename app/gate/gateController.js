@@ -15,7 +15,7 @@
 
     $scope.base.config = {
       ngViewClass: 'gate'
-    }
+    };
 
     self.authorize = authorize;
 
