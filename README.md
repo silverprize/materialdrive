@@ -8,7 +8,7 @@ Available features
 - Google oauth2
 - File navigation
 - File delete, copy, move
-- Fab for new document or folder
+- Fab for new document or folder and upload files
 
 Consist of
 =
