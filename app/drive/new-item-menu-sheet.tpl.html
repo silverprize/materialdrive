@@ -12,7 +12,7 @@
           </div>
           <p class="md-grid-text text-overflow">Upload</p>
         </md-button>
-        <ng-file-select ng-file-change="vm.onFileSelected($files, $event)"></ng-file-select>
+        <ng-file-select ng-multiple="true" ng-file-change="vm.onFileSelected($files, $event)"></ng-file-select>
       </div>
     </md-item>
     <md-item ng-repeat="item in vm.items" >
