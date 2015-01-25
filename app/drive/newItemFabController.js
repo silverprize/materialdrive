@@ -70,9 +70,14 @@
       mimeType: 'application/vnd.google-apps.presentation'
     }];
 
-    self.listItemClick = function($event, $index) {
+    self.onFileSelected = function ($files, $event) {
       $mdBottomSheet.hide();
+      notifier.notify('upload', {
+        fileList: $files
+      });
+    };
 
+    self.listItemClick = function($event, $index) {
       var clickedItem = self.items[$index];
       $mdDialog.show({
         controller: 'NameDialogController',
@@ -83,6 +88,7 @@
           item: clickedItem
         }
       }).then(function(name) {
+        $mdBottomSheet.hide();
         notifier.notify('newItem', {
           name: name,
           mimeType: clickedItem.mimeType

@@ -1,13 +1,27 @@
-<md-bottom-sheet class="md-list md-has-header">
+<md-bottom-sheet class="md-grid md-has-header">
   <md-subheader>New</md-subheader>
   <md-list>
+    <md-item>
+      <md-button class="md-grid-item-content" aria-label="Upload">
+        <div class="md-icon-container">
+          <span class="fa fa-stack fa-lg">
+            <span class="fa fa-circle fa-stack-2x"></span>
+            <span class="fa fa-stack-1x fa-inverse fa-cloud-upload"></span>
+          </span>
+        </div>
+        <p class="md-grid-text text-overflow">Upload</p>
+        <ng-file-select ng-file-change="vm.onFileSelected($files, $event)"></ng-file-select>
+      </md-button>
+    </md-item>
     <md-item ng-repeat="item in vm.items" >
-      <md-button aria-label="{{item.name}}" ng-click="vm.listItemClick($event, $index)">
-        <span class="fa fa-stack">
-          <span class="fa fa-circle fa-stack-2x {{item.icon.bg}}"></span>
-          <span class="fa fa-stack-1x fa-inverse {{item.icon.class}}"></span>
-        </span>
-        <span class="md-inline-list-icon-label">{{item.name}}</span>
+      <md-button aria-label="{{::item.name}}" ng-click="vm.listItemClick($event, $index)">
+        <div class="md-icon-container">
+          <span class="fa fa-stack fa-lg">
+            <span class="fa fa-circle fa-stack-2x {{::item.icon.bg}}"></span>
+            <span class="fa fa-stack-1x fa-inverse {{::item.icon.class}}"></span>
+          </span>
+        </div>
+        <p class="md-grid-text text-overflow">{{::item.name}}</p>
       </md-button>
     </md-item>
   </md-list>

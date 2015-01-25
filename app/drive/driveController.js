@@ -80,11 +80,17 @@
 
     notifier.addListener('newItem', {
       listener: self,
-      callback: callbackNewItemEvent
+      callback: onCreateNewItem
+    });
+
+    notifier.addListener('upload', {
+      listener: self,
+      callback: onUploadFile
     });
 
     $scope.$on('$destroy', function() {
       notifier.removeListener('newItem', self);
+      notifier.removeListener('upload', self);
     });
 
     init();
@@ -152,7 +158,7 @@
       $location.url('/drive/folder/'.concat(self.currentFolder.parents[0].id));
     }
 
-    function callbackNewItemEvent(data) {
+    function onCreateNewItem(data) {
       google.newFile({
         title: data.name,
         mimeType: data.mimeType,
@@ -162,6 +168,60 @@
           $window.open(data.alternateLink);
         }
         init();
+      });
+    }
+
+    function onUploadFile(data) {
+      $mdDialog.show({
+        locals: {
+          currentFolder: self.currentFolder
+        },
+        templateUrl: 'app/drive/upload-progress-dialog.tpls.html',
+        escapeToClose: false,
+        clickOutsideToClose: false,
+        controllerAs: 'vm',
+        controller: function($scope, $mdDialog, currentFolder) {
+          var self = this,
+              endpointPromises = [],
+              uploadPromises = [];
+
+          self.abort = function() {
+            if (self.prepared) {
+              uploadPromises.forEach(function(promise) {
+                promise.abort();
+              });
+            }
+            $mdDialog.cancel();
+          };
+
+          data.fileList.forEach(function(file) {
+            var promise = google.getUploadEndpoint({
+              file: file,
+              parents: currentFolder.isRoot ? '' : currentFolder
+            }).then(function(response) {
+              return {
+                response: response,
+                file: file
+              };
+            });
+            endpointPromises.push(promise);
+          });
+
+          $q.all(endpointPromises).then(function(results) {
+            results.forEach(function(result) {
+              uploadPromises.push(google.uploadFile({
+                endpoint: result.response.headers().location,
+                file: result.file
+              }));
+            });
+            $q.all(uploadPromises).then(function(responses) {
+              $mdDialog.hide();
+              emptySelectedItem();
+              init();
+            });
+            self.prepared = true;
+          });
+        }
       });
     }
 

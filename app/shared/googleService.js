@@ -47,6 +47,7 @@
 
   function GoogleService($injector, $q, $interval, query, mimeType) {
     var $http = $injector.get('$http'),
+        $upload = $injector.get('$upload'),
         authData;
 
     return {
@@ -125,10 +126,10 @@
         if (mimeType) {
           query = [query, ' and mimeType = \'', mimeType, '\''].join('');
         }
-        return $http.get([API.FILES_LIST, '?q=', query].join(''), OAUTH_TOKEN);
+        return $http.get([API.FILES_LIST, '?q=', query].join(''), angular.copy(OAUTH_TOKEN));
       },
       filesGet: function(fileId) {
-        return $http.get([API.FILES_GET , '?fileId=', encodeURIComponent(fileId)].join(''), OAUTH_TOKEN);
+        return $http.get([API.FILES_GET , '?fileId=', encodeURIComponent(fileId)].join(''), angular.copy(OAUTH_TOKEN));
       },
       newFile: function(args) {
         return $http.post(
@@ -137,14 +138,40 @@
             mimeType: args.mimeType,
             parents: args.parents ? [args.parents] : ''
           },
-          OAUTH_TOKEN
+          angular.copy(OAUTH_TOKEN)
         );
       },
+      getUploadEndpoint: function(args) {
+        return $http({
+          url: API.INSERT_FILE.concat('?uploadType=resumable'),
+          method: 'POST',
+          headers: OAUTH_TOKEN.headers,
+          data: {
+            title: args.file.fileName || args.file.name,
+            mimeType: args.file.type || 'application/octet-stream',
+            parents: args.parents ? [args.parents] : ''
+          }
+        });
+      },
+      uploadFile: function (args) {
+        var offset = 0,
+            end = args.file.size;
+
+        return $upload.http({
+          url: args.endpoint,
+          method: 'PUT',
+          headers: angular.extend({
+            'Content-Range': ['bytes ', offset, '-', (end - 1), '/', args.file.size].join(''),
+            'X-Upload-Content-Type': args.file.type
+          }, OAUTH_TOKEN.headers),
+          data: args.file.slice(offset, end)
+        });
+      },
       duplicateFile: function(args) {
-        return $http.post(API.FILES_COPY.replace('%s', args.fileId), null, OAUTH_TOKEN);
+        return $http.post(API.FILES_COPY.replace('%s', args.fileId), null, angular.copy(OAUTH_TOKEN));
       },
       moveToTrash: function(args) {
-        return $http.post(API.FILES_TRASH.replace('%s', args.fileId), null, OAUTH_TOKEN);
+        return $http.post(API.FILES_TRASH.replace('%s', args.fileId), null, angular.copy(OAUTH_TOKEN));
       },
       moveTo: function(args) {
         return $http.patch([
@@ -153,7 +180,7 @@
           '&removeParents=', args.fromFolderId
         ].join(''),
         null,
-        OAUTH_TOKEN);
+        angular.copy(OAUTH_TOKEN));
       }
     };
   }
