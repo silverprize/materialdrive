@@ -11,6 +11,7 @@
     '$q',
     '$mdDialog',
     '$injector',
+    '$cacheFactory',
     'notifier',
     'google',
     DriveController
@@ -42,8 +43,14 @@
     };
   }]);
 
-  function DriveController($scope, $location, $routeParams, $filter, $window, $q, $mdDialog, $injector, notifier, google) {
-    var self = this;
+  function DriveController($scope, $location, $routeParams, $filter, $window, $q, $mdDialog, $injector, $cacheFactory, notifier, google) {
+    var self = this,
+        cache = $cacheFactory.get('drive');
+
+    if (!cache) {
+      cache = $cacheFactory('drive');
+      cache.put('breadcrumb', []);
+    }
 
     $scope.base.config = {
       useNavbar: true,
@@ -71,6 +78,8 @@
       icon: 'delete',
       enabled: true
     }];
+
+    self.breadcrumb = cache.get('breadcrumb');
 
     self.onContextMenuPopup = onContextMenuPopup;
     self.onContextMenuSelected = onContextMenuSelected;
@@ -114,6 +123,13 @@
           self.currentFolder.isRoot = self.currentFolder.parents.length === 0;
         }
 
+        if (self.currentFolder.isRoot) {
+          self.breadcrumb.splice(0, self.breadcrumb.length);
+        } else {
+          $scope.base.config.ngViewClass = $scope.base.config.ngViewClass.concat(' double-toolbar');
+          makeBreadcrumb();
+        }
+
         angular.forEach(data.items, function(item) {
           if (item.mimeType === google.mimeType.folder) {
             folderList.push(item);
@@ -124,6 +140,24 @@
         self.folderList = $filter('orderBy')(folderList, 'title');
         self.fileList = $filter('orderBy')(fileList, 'title');
       });
+    }
+
+    function makeBreadcrumb() {
+      var breadcrumb = [self.currentFolder];
+      var getParent = function(parent) {
+        if (!parent || parent.isRoot) {
+          self.breadcrumb.splice(0, self.breadcrumb.length);
+          breadcrumb.reverse().forEach(function(item) {
+            self.breadcrumb.push(item);
+          });
+        } else {
+          google.filesGet(parent.id).success(function(data) {
+            breadcrumb.push(data);
+            getParent(data.parents[0]);
+          });
+        }
+      };
+      getParent(self.currentFolder.parents[0]);
     }
 
     function onItemClicked(item, add) {

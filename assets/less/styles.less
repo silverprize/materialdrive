@@ -10,6 +10,36 @@
   height: 100%;
 }
 
+.drive-body-container.double-toolbar {
+  padding-top: @navbar-height * 2;
+}
+
+.second-toolbar {
+  position: absolute;
+  top: @navbar-height;
+}
+
+.breadcrumb {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  .breadcrumb-item {
+    min-width: 60px;
+    display: inline-block;
+  }
+
+  .breadcrumb-item+.breadcrumb-item:before {
+    margin-right: 5px;
+    content: "";
+    display: inline-block;
+  }
+
+  .breadcrumb-separator {
+    height: 12px;
+  }
+}
+
 .drive-body {
   height: 100%;
 }

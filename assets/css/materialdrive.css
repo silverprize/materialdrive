@@ -1694,6 +1694,30 @@
   width: 100%;
   height: 100%;
 }
+.drive-body-container.double-toolbar {
+  padding-top: 128px;
+}
+.second-toolbar {
+  position: absolute;
+  top: 64px;
+}
+.breadcrumb {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.breadcrumb .breadcrumb-item {
+  min-width: 60px;
+  display: inline-block;
+}
+.breadcrumb .breadcrumb-item + .breadcrumb-item:before {
+  margin-right: 5px;
+  content: "";
+  display: inline-block;
+}
+.breadcrumb .breadcrumb-separator {
+  height: 12px;
+}
 .drive-body {
   height: 100%;
 }
