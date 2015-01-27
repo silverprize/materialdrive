@@ -42,7 +42,10 @@
     folder: 'trashed = false and \'%s\' in parents'
   })
   .constant('mimeType', {
-    folder : 'application/vnd.google-apps.folder'
+    folder : 'application/vnd.google-apps.folder',
+    document: 'application/vnd.google-apps.document',
+    spreadsheet: 'application/vnd.google-apps.spreadsheet',
+    presentation: 'application/vnd.google-apps.presentation'
   });
 
   function GoogleService($injector, $q, $interval, query, mimeType) {

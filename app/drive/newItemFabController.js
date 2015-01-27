@@ -46,28 +46,28 @@
         class: 'fa-folder',
         bg: ''
       },
-      mimeType: 'application/vnd.google-apps.folder'
+      mimeType: google.mimeType.folder
     }, {
       name: 'Document',
       icon: {
         class: 'fa-file-word-o',
         bg: 'file-word-bg'
       },
-      mimeType: 'application/vnd.google-apps.document'
+      mimeType: google.mimeType.document
     }, {
       name: 'Spreadsheet',
       icon: {
         class: 'fa-file-excel-o',
         bg: 'file-spreadsheet-bg'
       },
-      mimeType: 'application/vnd.google-apps.spreadsheet'
+      mimeType: google.mimeType.spreadsheet
     }, {
       name: 'Presentation',
       icon: {
         class: 'fa-file-powerpoint-o',
         bg: 'file-presentation-bg'
       },
-      mimeType: 'application/vnd.google-apps.presentation'
+      mimeType: google.mimeType.presentation
     }];
 
     self.onFileSelected = function ($files, $event) {

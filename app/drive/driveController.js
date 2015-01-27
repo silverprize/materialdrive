@@ -115,7 +115,7 @@
         }
 
         angular.forEach(data.items, function(item) {
-          if (item.mimeType === 'application/vnd.google-apps.folder') {
+          if (item.mimeType === google.mimeType.folder) {
             folderList.push(item);
           } else {
             fileList.push(item);
@@ -147,7 +147,7 @@
         return;
       }
 
-      if (item.mimeType === 'application/vnd.google-apps.folder') {
+      if (item.mimeType === google.mimeType.folder) {
         $location.url('/drive/folder/'.concat(item.id));
       } else {
         $window.open(item.alternateLink);
@@ -164,7 +164,7 @@
         mimeType: data.mimeType,
         parents: self.currentFolder.isRoot ? '' : self.currentFolder
       }).success(function(data) {
-        if (data.mimeType !== 'application/vnd.google-apps.folder') {
+        if (data.mimeType !== google.mimeType.folder) {
           $window.open(data.alternateLink);
         }
         init();
@@ -231,7 +231,7 @@
 
       angular.forEach(self.selectedItemMap, function(item) {
         countItem++;
-        if (item.mimeType === 'application/vnd.google-apps.folder') {
+        if (item.mimeType === google.mimeType.folder) {
           hasFolder = true;
         }
       });
