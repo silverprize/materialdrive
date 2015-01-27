@@ -16,3 +16,7 @@ Consist of
 - https://www.angularjs.org
 - https://material.angularjs.org
 - https://www.polymer-project.org/components/paper-elements/demo.html
+
+Libraries
+=
+- [angular-file-upload](https://github.com/danialfarid/angular-file-upload)
