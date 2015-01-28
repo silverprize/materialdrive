@@ -19,4 +19,5 @@ Consist of
 
 Libraries
 =
+- [Font awesome](http://fontawesome.io/)
 - [angular-file-upload](https://github.com/danialfarid/angular-file-upload)
