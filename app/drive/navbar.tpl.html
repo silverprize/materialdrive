@@ -1,9 +1,15 @@
-<md-toolbar>
-  <div class="md-toolbar-tools" layout-align="center center">
-    <md-tabs md-selected="navbarCtrl.selectedMenu.index">
-      <md-tab ng-repeat="menu in navbarCtrl.topMenuList">
-        <md-button md-no-ink="true" href="{{menu.href}}" layout="column" layout-fill ng-click="navbarCtrl.onMenuSelect(menu)">{{::menu.label}}</md-button>
-      </md-tab>
-    </md-tabs>
+<div class="md-toolbar-tools" layout="row" layout-align="space-between center">
+  <div>
+    <md-button ng-click="navbarCtrl.toggleSidenav()">
+      <span class="fa fa-bars fa-lg"></span>
+    </md-button>
   </div>
-</md-toolbar>
+  <div>
+    <md-button>
+      <span class="fa fa-search fa-lg"></span>
+    </md-button>
+    <md-button>
+      <span class="fa fa-info-circle fa-lg"></span>
+    </md-button>
+  </div>
+</div>

@@ -14,6 +14,7 @@
         'https://www.googleapis.com/auth/userinfo.profile',
       ],
       API = {
+        ABOUT: 'https://www.googleapis.com/drive/v2/about',
         FILES_LIST: 'https://www.googleapis.com/drive/v2/files',
         FILES_GET: 'https://www.googleapis.com/drive/v2/files/fileId',
         INSERT_FILE: 'https://www.googleapis.com/upload/drive/v2/files',
@@ -124,6 +125,9 @@
       },
       mimeType: mimeType,
       query: query,
+      about: function() {
+        return $http.get(API.ABOUT, angular.copy(OAUTH_TOKEN));
+      },
       filesList: function(query, mimeType) {
         query = encodeURIComponent(query);
         if (mimeType) {

@@ -1,0 +1,28 @@
+<md-content>
+  <md-list>
+    <md-item>
+      <md-item-content>
+        <div class="md-tile-left">
+            <img ng-src="{{sidenavCtrl.user.picture.url}}" class="face" alt="{{sidenavCtrl.user.displayName}}">
+        </div>
+        <div class="md-tile-content">
+          <h3>{{::sidenavCtrl.user.emailAddress}}</h3>
+          <h4>{{::sidenavCtrl.user.displayName}}</h4>
+        </div>
+      </md-item-content>
+    </md-item>
+    <md-divider></md-divider>
+    <md-item ng-repeat="menu in sidenavCtrl.menuList">
+      <md-button style="padding: 20px;" ng-href="{{menu.href}}" class="md-hue-1 md-primary" ng-class="{'md-raised': menu.selected}" layout="column" ng-click="sidenavCtrl.onMenuSelect(menu)">
+        <div layout="row">
+          <div flex="33">
+            <span ng-class="menu.icon"></span>
+          </div>
+          <div flex style="text-align:left;">
+            <span>{{::menu.label}}</span>
+          </div>
+        </div>
+      </md-button>
+    </md-item>
+  </md-list>
+</md-content>

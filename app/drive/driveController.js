@@ -2,6 +2,15 @@
   'use strict';
 
   angular.module('materialDrive')
+  .controller('NavbarController', [
+    '$mdSidenav',
+    NavbarController
+  ])
+  .controller('SidenavController', [
+    '$cacheFactory',
+    'google',
+    SidenavController
+  ])
   .controller('DriveController', [
     '$scope',
     '$location',
@@ -43,18 +52,102 @@
     };
   }]);
 
+  function NavbarController($mdSidenav) {
+    var self = this;
+
+    self.toggleSidenav = toggleSidenav;
+
+    function toggleSidenav() {
+      $mdSidenav('sidenav').toggle();
+    }
+  }
+
+  function SidenavController($cacheFactory, google) {
+    var self = this;
+
+    self.menuList = $cacheFactory.get('sidenav').get('menuList');
+
+    self.selectedMenu = self.menuList.filter(function(menu) {
+      return menu.selected;
+    })[0];
+
+    self.onMenuSelect = onMenuSelect;
+
+    google.about().success(function(data) {
+      self.user = data.user;
+    });
+
+    function onMenuSelect(menu) {
+      self.selectedMenu.selected = false;
+      menu.selected = true;
+      self.selectedMenu = menu;
+    }
+  }
+
   function DriveController($scope, $location, $routeParams, $filter, $window, $q, $mdDialog, $injector, $cacheFactory, notifier, google) {
     var self = this,
-        cache = $cacheFactory.get('drive');
+        driveCache = $cacheFactory.get('drive'),
+        sidenavCache = $cacheFactory.get('sidenav');
 
-    if (!cache) {
-      cache = $cacheFactory('drive');
-      cache.put('breadcrumb', []);
+    if (!driveCache) {
+      driveCache = $cacheFactory('drive');
+      driveCache.put('breadcrumb', []);
+    }
+
+    if (!sidenavCache) {
+      var menuList = [{
+        icon: 'fa fa-folder fa-lg',
+        label: 'My Drive',
+        href: '#drive/mydrive',
+        index: 0
+      }, {
+        icon: 'fa fa-users fa-lg',
+        label: 'Share with me',
+        href: '#drive/incoming',
+        index: 1
+      }, {
+        icon: 'fa fa-clock-o fa-lg',
+        label: 'Recent',
+        href: '#drive/recent',
+        index: 2
+      }, {
+        icon: 'fa fa-star fa-lg',
+        label: 'Starred',
+        href: '#drive/starred',
+        index: 3
+      }, {
+        icon: 'fa fa-trash fa-lg',
+        label: 'Trash',
+        href: '#drive/trash',
+        index: 4
+      }];
+
+      sidenavCache = $cacheFactory('sidenav');
+      switch ($routeParams.category) {
+        case 'incoming':
+          menuList[1].selected = true;
+          break;
+        case 'recent':
+          menuList[2].selected = true;
+          break;
+        case 'starred':
+          menuList[3].selected = true;
+          break;
+        case 'trash':
+          menuList[4].selected = true;
+          break;
+        default:
+          menuList[0].selected = true;
+          break;
+      }
+
+      sidenavCache.put('menuList', menuList);
     }
 
     $scope.base.config = {
       useNavbar: true,
       useFab: true,
+      useSidenav: true,
       fabTemplateUrl: 'app/drive/new-item-fab.tpl.html',
       ngViewClass: 'drive-body-container'
     };
@@ -79,7 +172,7 @@
       enabled: true
     }];
 
-    self.breadcrumb = cache.get('breadcrumb');
+    self.breadcrumb = driveCache.get('breadcrumb');
 
     self.onContextMenuPopup = onContextMenuPopup;
     self.onContextMenuSelected = onContextMenuSelected;
