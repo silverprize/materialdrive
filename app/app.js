@@ -41,17 +41,8 @@
 
           return google.prepareGapi().then(function(google) {
             return google.authorize(true).then(function() {
-              var redirect = $routeParams.redirect || '/drive/mydrive';
-              // $location.url(redirect);
-            }, function() {
-              var deferred = $q.defer();
-              deferred.resolve();
-              return deferred.promise;
+              $location.url($routeParams.redirect || '/drive/mydrive');
             });
-          }, function() {
-            var deferred = $q.defer();
-            deferred.resolve();
-            return deferred.promise;
           });
         }]
       }
@@ -66,11 +57,12 @@
     $httpProvider.interceptors.push(['$injector', function($injector) {
       return {
         responseError: function(rejection) {
-          var google = $injector.get('google');
-          var $q = $injector.get('$q');
-          var $location = $injector.get('$location');
-          var $route = $injector.get('$route');
-          if (rejection.status == 401) {
+          var google = $injector.get('google'),
+              $q = $injector.get('$q'),
+              $location = $injector.get('$location'),
+              $route = $injector.get('$route');
+
+          if (rejection.status === 401) {
             google.authorize(true).then(function() {
               $route.reload();
             }, function() {
