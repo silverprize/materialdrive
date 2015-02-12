@@ -42,6 +42,8 @@
           return google.prepareGapi().then(function(google) {
             return google.authorize(true).then(function() {
               $location.url($routeParams.redirect || '/drive/mydrive');
+            }, function() {
+              return $q.when();
             });
           });
         }]
