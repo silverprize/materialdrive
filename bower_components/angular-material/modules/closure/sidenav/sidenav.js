@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.7.0-rc3-master-ec53d1a
+ * v0.7.1
  */
 goog.provide('ng.material.components.sidenav');
 goog.require('ng.material.components.backdrop');
@@ -33,21 +33,31 @@ angular.module('material.components.sidenav', [
  * @module material.components.sidenav
  *
  * @description
- * $mdSidenav makes it easy to interact with multiple sidenavs
+ * `$mdSidenav` makes it easy to interact with multiple sidenavs
  * in an app.
  *
  * @usage
- *
- * ```javascript
+ * <hljs lang="js">
  * // Toggle the given sidenav
  * $mdSidenav(componentId).toggle();
- *
+ * </hljs>
+ * <hljs lang="js">
  * // Open the given sidenav
  * $mdSidenav(componentId).open();
- *
+ * </hljs>
+ * <hljs lang="js">
  * // Close the given sidenav
  * $mdSidenav(componentId).close();
- * ```
+ * </hljs>
+ * <hljs lang="js">
+ * // Exposes whether given sidenav is set to be open
+ * $mdSidenav(componentId).isOpen();
+ * </hljs>
+ * <hljs lang="js">
+ * // Exposes whether given sidenav is locked open
+ * // If this is true, the sidenav will be open regardless of isOpen()
+ * $mdSidenav(componentId).isLockedOpen();
+ * </hljs>
  */
 function SidenavService($mdComponentRegistry, $q) {
   return function(handle) {
@@ -62,6 +72,9 @@ function SidenavService($mdComponentRegistry, $q) {
     return {
       isOpen: function() {
         return instance && instance.isOpen();
+      },
+      isLockedOpen: function() {
+        return instance && instance.isLockedOpen();
       },
       toggle: function() {
         return instance ? instance.toggle() : $q.reject(errorMsg);
@@ -180,6 +193,7 @@ function SidenavDirective($timeout, $animate, $parse, $mdMedia, $mdConstant, $co
      * @param isLocked
      */
     function updateIsLocked(isLocked, oldValue) {
+      scope.isLockedOpen = isLocked;
       if (isLocked === oldValue) {
         element.toggleClass('md-locked-open', !!isLocked);
       } else {
@@ -292,6 +306,7 @@ function SidenavController($scope, $element, $attrs, $mdComponentRegistry, $q) {
 
   self.$toggleOpen = function() { return $q.when($scope.isOpen); };
   self.isOpen = function() { return !!$scope.isOpen; };
+  self.isLockedOpen = function() { return !!$scope.isLockedOpen; };
   self.open   = function() { return self.$toggleOpen( true );  };
   self.close  = function() { return self.$toggleOpen( false ); };
   self.toggle = function() { return self.$toggleOpen( !$scope.isOpen );  };

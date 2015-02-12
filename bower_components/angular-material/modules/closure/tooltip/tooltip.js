@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.7.0-rc3-master-ec53d1a
+ * v0.7.1
  */
 goog.provide('ng.material.components.tooltip');
 goog.require('ng.material.core');
@@ -95,7 +95,7 @@ function MdTooltipDirective($timeout, $window, $$rAF, $document, $mdUtil, $mdThe
       else hideTooltip();
     });
 
-    var debouncedOnResize = $$rAF.debounce(function windowResize() {
+    var debouncedOnResize = $$rAF.throttle(function windowResize() {
       // Reposition on resize
       if (scope.visible) positionTooltip();
     });
