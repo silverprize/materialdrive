@@ -86,6 +86,9 @@
         bindToController: true,
         locals: {
           item: clickedItem
+        },
+        onComplete: function(scope, elem, options) {
+          elem.find('input').focus();
         }
       }).then(function(name) {
         $mdBottomSheet.hide();
