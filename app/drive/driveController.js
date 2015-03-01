@@ -3,7 +3,14 @@
 
   angular.module('materialDrive')
   .controller('NavbarController', [
+    '$scope',
+    '$window',
+    '$document',
+    '$location',
+    '$q',
+    '$cacheFactory',
     '$mdSidenav',
+    'google',
     NavbarController
   ])
   .controller('SidenavController', [
@@ -50,15 +57,65 @@
         };
       }
     };
+  }])
+  .directive('focus', ['$timeout', function($timeout) {
+    return {
+      restrict: 'A',
+      link: function(scope, elem, attrs) {
+        attrs.$observe('focus', function(newValue) {
+          if (newValue === 'on') {
+            $timeout(function() {
+              elem.find('input').focus();
+            });
+          }
+        });
+      }
+    };
   }]);
 
-  function NavbarController($mdSidenav) {
+  function NavbarController($scope, $window, $document, $location, $q, $cacheFactory, $mdSidenav, google) {
     var self = this;
 
     self.toggleSidenav = toggleSidenav;
 
+    self.querySearchText = querySearchText;
+
+    self.searchItemSelected = searchItemSelected;
+
+    self.breadcrumb = $cacheFactory.get('drive').get('breadcrumb');
+
+    $scope.$on('$routeChangeSuccess', function() {
+      self.queryFormState = '';
+      self.searchText = '';
+    });
+
     function toggleSidenav() {
       $mdSidenav('sidenav').toggle();
+    }
+
+    function querySearchText(searchText) {
+      var deferred = $q.defer();
+
+      google.filesList({
+        query: 'fullText contains \'' + searchText + '\' and trashed = false',
+        maxResults: 30
+      }).then(function(response) {
+        deferred.resolve(response.data.items);
+      }, deferred.reject);
+
+      return deferred.promise;
+    }
+
+    function searchItemSelected() {
+      if (!self.selectedItem) {
+        return;
+      }
+
+      if (self.selectedItem.mimeType === google.mimeType.folder) {
+        $location.url('/drive/folder/' + self.selectedItem.id);
+      } else {
+        $window.open(self.selectedItem.alternateLink);
+      }
     }
   }
 
@@ -144,14 +201,6 @@
       sidenavCache.put('menuList', menuList);
     }
 
-    $scope.base.config = {
-      useNavbar: true,
-      useFab: true,
-      useSidenav: true,
-      fabTemplateUrl: 'app/drive/new-item-fab.tpl.html',
-      ngViewClass: 'drive-body-container'
-    };
-
     self.selectedItemMap = {};
 
     self.currentFolder = {
@@ -173,6 +222,17 @@
     }];
 
     self.breadcrumb = driveCache.get('breadcrumb');
+
+    $scope.base.config = {
+      useNavbar: true,
+      useFab: true,
+      useSidenav: true,
+      fabTemplateUrl: 'app/drive/new-item-fab.tpl.html',
+      navbarTemplateUrl: 'app/drive/navbar.tpl.html',
+      sidenavTemplateUrl: 'app/drive/sidenav.tpl.html',
+      ngViewClass: 'drive-body-container',
+      navbarClass: self.breadcrumb && self.breadcrumb.length > 0 ? ' md-tall' : ''
+    };
 
     self.onContextMenuPopup = onContextMenuPopup;
     self.onContextMenuSelected = onContextMenuSelected;
@@ -201,7 +261,7 @@
       var query = (google.query[$routeParams.category] || google.query.folder).replace('%s', $routeParams.itemId || 'root'),
           promises = [];
 
-      promises.push(google.filesList(query));
+      promises.push(google.filesList({query: query}));
       if ($routeParams.itemId) {
         promises.push(google.filesGet($routeParams.itemId));
       }
@@ -218,8 +278,10 @@
 
         if (self.currentFolder.isRoot) {
           self.breadcrumb.splice(0, self.breadcrumb.length);
+          $scope.base.config.navbarClass = '';
         } else {
-          $scope.base.config.ngViewClass = $scope.base.config.ngViewClass.concat(' double-toolbar');
+          $scope.base.config.ngViewClass += ' double-toolbar';
+          $scope.base.config.navbarClass = ' md-tall';
           makeBreadcrumb();
         }
 
@@ -275,14 +337,14 @@
       }
 
       if (item.mimeType === google.mimeType.folder) {
-        $location.url('/drive/folder/'.concat(item.id));
+        $location.url('/drive/folder/' + item.id);
       } else {
         $window.open(item.alternateLink);
       }
     }
 
     function upToParentFolder() {
-      $location.url('/drive/folder/'.concat(self.currentFolder.parents[0].id));
+      $location.url('/drive/folder/' + self.currentFolder.parents[0].id);
     }
 
     function onCreateNewItem(data) {
@@ -509,10 +571,10 @@
     }
 
     function getList(id) {
-      google.filesList(
-        google.query.folder.replace('%s', id),
-        google.mimeType.folder
-      ).success(function (data) {
+      google.filesList({
+        query: google.query.folder.replace('%s', id),
+        mimeType: google.mimeType.folder
+      }).success(function (data) {
         self.folderList = $filter('orderBy')(data.items, 'title');
       });
     }

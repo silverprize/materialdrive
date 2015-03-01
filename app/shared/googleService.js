@@ -128,10 +128,13 @@
       about: function() {
         return $http.get(API.ABOUT, angular.copy(OAUTH_TOKEN));
       },
-      filesList: function(query, mimeType) {
-        query = encodeURIComponent(query);
-        if (mimeType) {
-          query = [query, ' and mimeType = \'', mimeType, '\''].join('');
+      filesList: function(args) {
+        query = encodeURIComponent(args.query);
+        if (args.mimeType) {
+          query = [' and mimeType = \'', mimeType, '\''].join('');
+        }
+        if (args.maxResults) {
+          query += '&maxResults=' + args.maxResults;
         }
         return $http.get([API.FILES_LIST, '?q=', query].join(''), angular.copy(OAUTH_TOKEN));
       },
