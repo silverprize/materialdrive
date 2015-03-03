@@ -9,6 +9,7 @@ Available features
 - File navigation
 - File delete, copy, move
 - Fab for new document/folder and upload files
+- Incremental search
 
 Consist of
 =
