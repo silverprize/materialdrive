@@ -1675,7 +1675,7 @@
   position: absolute;
   bottom: 0;
   left: 10px;
-  z-index: 7;
+  z-index: 999999;
   padding: 10px 50px 10px 10px;
   color: #fff;
   background: url('../images/github/blacktocat.png') #0090ff no-repeat 95% 50%;
@@ -1697,10 +1697,6 @@
 .drive-body-container.double-toolbar {
   padding-top: 128px;
 }
-.second-toolbar {
-  position: absolute;
-  top: 64px;
-}
 .breadcrumb {
   padding: 0;
   margin: 0;
@@ -1710,8 +1706,11 @@
   min-width: 60px;
   display: inline-block;
 }
+.breadcrumb .breadcrumb-item .breadcrumb-item-inner {
+  margin: 0;
+  vertical-align: middle;
+}
 .breadcrumb .breadcrumb-item + .breadcrumb-item:before {
-  margin-right: 5px;
   content: "";
   display: inline-block;
 }
@@ -1753,17 +1752,25 @@
   right: 24px;
   bottom: 24px;
 }
-md-list.drive-list-item {
+.drive-list {
   padding: 0;
-  border-bottom: 1px solid #eee;
 }
-md-list.drive-list-item .list-item-content {
+.drive-list .drive-list-item .icon {
+  vertical-align: middle;
+  padding-right: 10px;
+}
+.drive-list .drive-list-item .name {
+  font-size: 15px;
+}
+.drive-list .drive-list-item .md-button {
+  border-radius: 0;
   text-align: left;
   overflow: hidden;
   text-transform: none;
+  background: transparent;
 }
-md-list.drive-list-item:last-child {
-  border-bottom: 0;
+.drive-list .drive-list-item .md-button:not([disabled]):hover {
+  background: rgba(158, 158, 158, 0.2);
 }
 .gate {
   position: absolute;
@@ -1775,6 +1782,10 @@ md-list.drive-list-item:last-child {
 .btn-gate {
   width: 150px !important;
   height: 150px !important;
+}
+.btn-gate .icon-gate {
+  width: 60px;
+  height: 70px;
 }
 [fill-parent] {
   position: absolute;
@@ -1823,4 +1834,27 @@ input-file input[type="file"] {
   border: 1px solid #ddd;
   width: 48px;
   margin: 16px;
+}
+.sidenav-menu-list-container {
+  padding: 0;
+}
+.sidenav-menu-list-container .list-item {
+  padding: 0;
+}
+.sidenav-menu-list-container .list-item .list-item-inner {
+  min-height: 48px;
+  line-height: 48px;
+  margin: 0;
+  text-align: left;
+  padding-left: 40px;
+}
+.new-menu-list .new-menu-list-item .new-menu-list-item-inner {
+  width: auto;
+}
+.new-menu-list .new-menu-list-item .new-menu-list-item-inner .icon {
+  margin-top: 5px;
+  width: 100%;
+}
+.new-menu-list .new-menu-list-item .new-menu-list-item-inner .name {
+  width: auto;
 }

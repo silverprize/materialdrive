@@ -1,8 +1,8 @@
 <div layout="row" layout-fill tabindex="-1" role="main" ng-controller="BaseController">
-  <md-sidenav ng-if="base.config.useSidenav" class="md-sidenav-left md-whiteframe-z1" md-component-id="sidenav" md-is-locked-open="$media('gt-md')" ng-include="base.config.sidenavTemplateUrl"></md-sidenav>
+  <md-sidenav ng-if="base.config.useSidenav" class="md-sidenav-left md-whiteframe-z2" md-component-id="sidenav" md-is-locked-open="$mdMedia('gt-md')" ng-include="base.config.sidenavTemplateUrl"></md-sidenav>
   <div flex style="position: relative;">
-    <md-toolbar ng-if="base.config.useNavbar" class="navbar" ng-class="base.config.navbarClass" ng-include="base.config.navbarTemplateUrl"></md-toolbar>
-    <div ng-view ng-class="base.config.ngViewClass"></div>
+    <md-toolbar ng-if="base.config.useNavbar" class="navbar md-whiteframe-z2" ng-class="base.config.navbarClass" ng-include="base.config.navbarTemplateUrl"></md-toolbar>
+    <div ng-view ng-class="base.config.ngViewClass" layout="column"></div>
     <div ng-if="base.config.useFab" class="fab-container" ng-include="base.config.fabTemplateUrl"></div>
   </div>
 </div>

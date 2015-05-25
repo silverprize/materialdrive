@@ -1,30 +1,28 @@
 <md-bottom-sheet class="md-grid md-has-header">
   <md-subheader>New</md-subheader>
-  <md-list>
-    <md-item>
-      <div style="position: relative;">
-        <md-button class="md-grid-item-content" aria-label="Upload">
-          <div class="md-icon-container">
-            <span class="fa fa-stack fa-lg">
-              <span class="fa fa-circle fa-stack-2x"></span>
-              <span class="fa fa-stack-1x fa-inverse fa-cloud-upload"></span>
-            </span>
-          </div>
-          <p class="md-grid-text text-overflow">Upload</p>
-        </md-button>
+  <md-list class="new-menu-list">
+    <md-list-item class="new-menu-list-item">
+      <md-button class="md-grid-item-content new-menu-list-item-inner" aria-label="Upload">
+        <div class="md-icon-container icon">
+          <span class="fa fa-stack fa-lg">
+            <span class="fa fa-circle fa-stack-2x"></span>
+            <span class="fa fa-stack-1x fa-inverse fa-cloud-upload"></span>
+          </span>
+        </div>
+        <div class="md-grid-text name">Upload</div>
         <ng-file-select ng-multiple="true" ng-file-change="vm.onFileSelected($files, $event)"></ng-file-select>
-      </div>
-    </md-item>
-    <md-item ng-repeat="item in vm.items" >
-      <md-button aria-label="{{::item.name}}" ng-click="vm.listItemClick($event, $index)">
-        <div class="md-icon-container">
+      </md-button>
+    </md-list-item>
+    <md-list-item ng-repeat="item in vm.items" class="new-menu-list-item">
+      <md-button class="md-grid-item-content new-menu-list-item-inner" aria-label="{{::item.name}}" ng-click="vm.listItemClick($event, $index)">
+        <div class="md-icon-container icon">
           <span class="fa fa-stack fa-lg">
             <span class="fa fa-circle fa-stack-2x {{::item.icon.bg}}"></span>
             <span class="fa fa-stack-1x fa-inverse {{::item.icon.class}}"></span>
           </span>
         </div>
-        <p class="md-grid-text text-overflow">{{::item.name}}</p>
+        <div class="md-grid-text name">{{::item.name}}</div>
       </md-button>
-    </md-item>
+    </md-list-item>
   </md-list>
 </md-bottom-sheet>

@@ -153,27 +153,27 @@
 
     if (!sidenavCache) {
       var menuList = [{
-        icon: 'fa fa-folder fa-lg',
+        icon: 'fa fa-folder fa-2x',
         label: 'My Drive',
         href: '#drive/mydrive',
         index: 0
       }, {
-        icon: 'fa fa-users fa-lg',
+        icon: 'fa fa-users fa-2x',
         label: 'Share with me',
         href: '#drive/incoming',
         index: 1
       }, {
-        icon: 'fa fa-clock-o fa-lg',
+        icon: 'fa fa-clock-o fa-2x',
         label: 'Recent',
         href: '#drive/recent',
         index: 2
       }, {
-        icon: 'fa fa-star fa-lg',
+        icon: 'fa fa-star fa-2x',
         label: 'Starred',
         href: '#drive/starred',
         index: 3
       }, {
-        icon: 'fa fa-trash fa-lg',
+        icon: 'fa fa-trash fa-2x',
         label: 'Trash',
         href: '#drive/trash',
         index: 4
@@ -503,6 +503,7 @@
         controllerAs: 'vm',
         templateUrl: 'app/drive/navigation-dialog.tpl.html',
         bindToController: true,
+        clickOutsideToClose: true,
         locals: {
           selectedItemMap: self.selectedItemMap
         },

@@ -84,6 +84,8 @@
         controllerAs: 'vm',
         templateUrl: 'app/drive/name-dialog.tpl.html',
         bindToController: true,
+        clickOutsideToClose: true,
+        targetEvent: $event,
         locals: {
           item: clickedItem
         },

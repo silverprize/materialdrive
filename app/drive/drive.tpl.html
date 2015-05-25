@@ -1,35 +1,18 @@
 <md-content class="drive-body" md-scroll-y mtd-context-menu class="context-menu" menu-list="driveCtrl.contextMenuList" on-menu-selected="driveCtrl.onContextMenuSelected(menu)" on-popup="driveCtrl.onContextMenuPopup()">
-  <md-list class="drive-list-item" layout="column" ng-if="!driveCtrl.currentFolder.isRoot">
-    <md-button ng-click="driveCtrl.upToParentFolder()">
-      <md-item-content>
-        <div class="md-tile-left">
-          <span class="fa fa-level-up"></span>
-        </div>
-        <div class="md-tile-content" style="text-align: left;">
-          ...
-        </div>
-      </md-item-content>
-    </md-button>
-  </md-list>
-  <md-list class="drive-list-item" layout="column" ng-repeat="folder in driveCtrl.folderList">
-    <md-button ng-class="{selected: folder.isSelected}" ng-dblclick="driveCtrl.onItemDoubleClicked(folder)" ng-click="driveCtrl.onItemClicked(folder, true)" mtd-right-click="driveCtrl.onItemClicked(folder, false)">
-      <md-item-content>
-        <div class="md-tile-left">
-          <img ng-src="{{folder.iconLink}}">
-        </div>
-        <div class="md-tile-content list-item-content" ng-bind="folder.title"></div>
-      </md-item-content>
-    </md-button>
-  </md-list>
-  <md-list class="drive-list-item" layout="column" ng-repeat="file in driveCtrl.fileList">
-    <md-button ng-class="{selected: file.isSelected}" ng-dblclick="driveCtrl.onItemDoubleClicked(file)" ng-click="driveCtrl.onItemClicked(file, true)" mtd-right-click="driveCtrl.onItemClicked(file, false)">
-      <md-item-content>
-        <div class="md-tile-left">
-          <img ng-src="{{file.iconLink}}">
-        </div>
-        <div class="md-tile-content list-item-content" ng-bind="file.title">
-        </div>
-      </md-item-content>
-    </md-button>
+  <md-list layout="column" class="drive-list">
+    <md-list-item class="drive-list-item" ng-if="!driveCtrl.currentFolder.isRoot" ng-click="driveCtrl.upToParentFolder()">
+      <span class="fa fa-level-up"></span>&nbsp;&nbsp;...
+      <md-divider></md-divider>
+    </md-list-item>
+    <md-list-item class="drive-list-item" ng-class="{selected: folder.isSelected}" ng-dblclick="driveCtrl.onItemDoubleClicked(folder)" ng-click="driveCtrl.onItemClicked(folder, true)" mtd-right-click="driveCtrl.onItemClicked(folder, false)" ng-repeat="folder in driveCtrl.folderList">
+      <img class="icon" ng-src="{{folder.iconLink}}">
+      <span class="name" ng-bind="::folder.title"></span>
+      <md-divider></md-divider>
+    </md-list-item>
+    <md-list-item class="drive-list-item" ng-class="{selected: file.isSelected}" ng-dblclick="driveCtrl.onItemDoubleClicked(file)" ng-click="driveCtrl.onItemClicked(file, true)" mtd-right-click="driveCtrl.onItemClicked(file, false)" ng-repeat="file in driveCtrl.fileList">
+      <img class="icon" ng-src="{{file.iconLink}}">
+      <span class="name" ng-bind="::file.title"></span>
+      <md-divider></md-divider>
+    </md-list-item>
   </md-list>
 </md-content>

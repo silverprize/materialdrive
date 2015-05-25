@@ -1,28 +1,19 @@
 <md-content ng-controller="SidenavController as sidenavCtrl">
-  <md-list>
-    <md-item>
-      <md-item-content>
-        <div class="md-tile-left">
-            <img ng-src="{{sidenavCtrl.user.picture.url}}" class="face" alt="{{sidenavCtrl.user.displayName}}">
-        </div>
-        <div class="md-tile-content">
-          <h3>{{::sidenavCtrl.user.emailAddress}}</h3>
-          <h4>{{::sidenavCtrl.user.displayName}}</h4>
-        </div>
-      </md-item-content>
-    </md-item>
-    <md-divider></md-divider>
-    <md-item ng-repeat="menu in sidenavCtrl.menuList">
-      <md-button style="padding: 20px;" ng-href="{{menu.href}}" class="md-hue-1 md-primary" ng-class="{'md-raised': menu.selected}" layout="column" ng-click="sidenavCtrl.onMenuSelect(menu)">
-        <div layout="row">
-          <div flex="33">
-            <span ng-class="menu.icon"></span>
-          </div>
-          <div flex style="text-align:left;">
-            <span>{{::menu.label}}</span>
-          </div>
-        </div>
+  <md-list-item>
+    <img ng-src="{{sidenavCtrl.user.picture.url}}" class="face" alt="{{sidenavCtrl.user.displayName}}">
+    <div class="md-list-item-text">
+      <h1 class="md-title">{{::sidenavCtrl.user.displayName}}</h1>
+      <h1 class="md-body-1">{{::sidenavCtrl.user.emailAddress}}</h1>
+    </div>
+  </md-list-item>
+  <md-divider></md-divider>
+  <md-list class="sidenav-menu-list-container">
+    <md-list-item class="list-item" ng-repeat="menu in sidenavCtrl.menuList">
+      <md-button class="md-primary list-item-inner" ng-class="{'md-accent': menu.selected}" href="{{menu.href}}" ng-click="sidenavCtrl.onMenuSelect(menu)" flex>
+        <md-icon md-font-icon="{{menu.icon}}"></md-icon>
+        <span style="padding-left: 10px;">{{::menu.label}}</span>
       </md-button>
-    </md-item>
+      <md-divider></md-divider>
+    </md-list-item>
   </md-list>
 </md-content>
