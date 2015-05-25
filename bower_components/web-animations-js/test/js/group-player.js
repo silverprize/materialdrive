@@ -1,7 +1,7 @@
 suite('group-player', function() {
   setup(function() {
     document.timeline._players = [];
-    webAnimationsMinifill.timeline._players = [];
+    webAnimations1.timeline._players = [];
     this.elements = [];
 
     var animationMargin = function(target) {
@@ -46,6 +46,7 @@ suite('group-player', function() {
     var seqEmpty_source = sequenceEmpty();
 
     var seqSimple_target = document.createElement('div');
+    this.elements.push(seqSimple_target);
     var seqSimple_source = sequenceWithEffects(seqSimple_target);
 
     var seqWithSeq_target = document.createElement('div');
@@ -183,7 +184,7 @@ suite('group-player', function() {
   test('playing an animationGroup works as expected', function() {
     tick(90);
     var p = document.timeline.play(simpleAnimationGroup());
-    checkTimes(p, [null, 0], []);
+    checkTimes(p, [null, 0], [[null, 0], [null, 0], [null, 0]]);
     tick(100);
     checkTimes(p, [100, 0], [[100, 0], [100, 0], [100, 0]]);
     tick(300);
@@ -331,6 +332,17 @@ suite('group-player', function() {
     assert.equal(getComputedStyle(this.complexTarget).marginLeft, '0px');
   });
 
+  test('cancelling group players before tick', function() {
+    tick(0);
+    var player = document.timeline.play(this.complexSource);
+    player.cancel();
+    assert.equal(player.currentTime, null);
+    assert.equal(getComputedStyle(this.complexTarget).marginLeft, '0px');
+    tick(4);
+    assert.equal(player.currentTime, null);
+    assert.equal(getComputedStyle(this.complexTarget).marginLeft, '0px');
+  });
+
   test('redundant animation node wrapping', function() {
     tick(100);
     var animation = new AnimationSequence([
@@ -373,6 +385,19 @@ suite('group-player', function() {
     ], 't = 103');
     if (this.target.parent)
       this.target.parent.removeChild(target);
+  });
+
+  test('setting the playbackRate on group players', function() {
+    var group = new AnimationGroup([
+      new Animation(null, [], 1234),
+      new Animation(null, [], 1234),
+    ]);
+    var p = document.timeline.play(group);
+    p.playbackRate = 2;
+    assert.equal(p._player.playbackRate, 2, 'Updates the playbackRate of the inner player');
+    p._childPlayers.forEach(function(childPlayer) {
+      assert.equal(childPlayer.playbackRate, 2, 'It also updates the child players');
+    });
   });
 
   test('delays on groups work correctly', function() {
@@ -525,6 +550,7 @@ suite('group-player', function() {
 
   test('pausing works as expected with a simple AnimationSequence', function() {
     var player = document.timeline.play(this.seqSimple_source);
+    var target = this.seqSimple_source.children[0].target;
     tick(0);
     checkTimes(player, [0, 0], [[0, 0], [500, -500]], 't = 0');
 
@@ -533,18 +559,63 @@ suite('group-player', function() {
 
     player.pause();
     checkTimes(player, [null, null], [[null, null], [null, null]], 't = 200');
+    assert.equal(getComputedStyle(target).marginLeft, '40px');
 
     tick(300);
     checkTimes(player, [null, 200], [[null, 200], [null, -300]], 't = 300');
+    assert.equal(getComputedStyle(target).marginLeft, '40px');
 
     player.play();
     checkTimes(player, [null, 200], [[null, 200], [null, -300]], 't = 300');
+    assert.equal(getComputedStyle(target).marginLeft, '40px');
 
     tick(301);
     checkTimes(player, [101, 200], [[101, 200], [601, -300]], 't = 301');
+    assert.equal(getComputedStyle(target).marginLeft, '40px');
+
+    tick(401);
+    checkTimes(player, [101, 300], [[101, 300], [601, -200]], 't = 401');
+    assert.equal(getComputedStyle(target).marginLeft, '60px');
 
     tick(700);
     checkTimes(player, [101, 599], [[101, 500], [601, 99]], 't = 700');
+    assert.equal(getComputedStyle(target).marginLeft, '0px');
+  });
+
+  test('pausing before tick works as expected with a simple AnimationSequence', function() {
+    var player = document.timeline.play(this.seqSimple_source);
+    var target = this.seqSimple_source.children[0].target;
+    checkTimes(player, [null, 0], [[null, 0], [null, -500]], 't = 0');
+
+    player.pause();
+    checkTimes(player, [null, null], [[null, null], [null, null]], 't = 0');
+    assert.equal(getComputedStyle(target).marginLeft, '0px');
+
+    tick(10);
+    checkTimes(player, [null, 0], [[null, 0], [null, -500]], 't = 10');
+    assert.equal(getComputedStyle(target).marginLeft, '0px');
+
+    tick(20);
+    checkTimes(player, [null, 0], [[null, 0], [null, -500]], 't = 10');
+    assert.equal(getComputedStyle(target).marginLeft, '0px');
+  });
+
+  test('pausing and seeking before tick works as expected with a simple AnimationSequence', function() {
+    var player = document.timeline.play(this.seqSimple_source);
+    player.pause();
+
+    player.currentTime = 0;
+    checkTimes(player, [null, 0], [[null, 0], [null, -500]], 't = 10');
+
+    player.currentTime = 250;
+    checkTimes(player, [null, 250], [[null, 250], [null, -250]], 't = 10');
+
+    player.currentTime = 500;
+    checkTimes(player, [null, 500], [[null, 500], [null, 0]], 't = 10');
+
+    // FIXME: Expectation should be [null, 1000], [[null, 500], [null, 500]].
+    player.currentTime = 1000;
+    checkTimes(player, [null, 1000], [[null, 1000], [null, 500]], 't = 10');
   });
 
   test('pausing works as expected with an AnimationSequence inside an AnimationSequence', function() {
@@ -913,5 +984,58 @@ suite('group-player', function() {
     assert.equal(p.playState, 'finished');
     assert.equal(p._childPlayers[0]._player.playState, 'finished');
     assert.equal(p._childPlayers[1]._player.playState, 'finished');
+  });
+
+  test('pausing then seeking out of range then seeking into range works', function() {
+    var target = document.createElement('div');
+    var anim = new Animation(target, [], {duration: 2000, fill: 'both'});
+    var group = new AnimationGroup([anim], {fill: 'none'});
+    var player = document.timeline.play(group);
+
+    player.pause();
+    player.currentTime = 3000;
+    tick(100);
+    player.currentTime = 1000;
+    assert.equal(player._childPlayers.length, 1);
+    assert.equal(player._childPlayers[0]._player.playState, 'paused');
+    assert.equal(player._childPlayers[0]._player.currentTime, 1000);
+
+  });
+
+  test('reversing then seeking out of range then seeking into range works', function() {
+    var target = document.createElement('div');
+    var anim = new Animation(target, [], {duration: 2000, fill: 'both'});
+    var group = new AnimationGroup([anim], {fill: 'none'});
+    var player = document.timeline.play(group);
+
+    player.currentTime = 1000;
+    tick(100);
+    player.reverse();
+    player.currentTime = 3000;
+    tick(110);
+    player.currentTime = 1000;
+    assert.equal(player.playbackRate, -1);
+    assert.equal(player._childPlayers.length, 1);
+    assert.equal(player._childPlayers[0]._player.playState, 'running');
+    assert.equal(player._childPlayers[0]._player.currentTime, 1000);
+    assert.equal(player._childPlayers[0]._player.playbackRate, -1);
+
+  });
+
+  test('fill none groups with fill none children do not fill', function() {
+    var anim = new Animation(
+        this.target,
+        [{marginLeft: '0px'}, {marginLeft: '100px'}],
+        {duration: 500, fill: 'none'});
+    var group = new AnimationGroup([anim], {fill: 'none'});
+    var player = document.timeline.play(group);
+
+    tick(0);
+    assert.equal(getComputedStyle(this.target).marginLeft, '0px');
+    tick(250);
+    assert.equal(getComputedStyle(this.target).marginLeft, '50px');
+    tick(501);
+    assert.equal(getComputedStyle(this.target).marginLeft, '0px');
+    tick(502);
   });
 });

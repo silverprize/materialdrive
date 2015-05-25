@@ -84,7 +84,21 @@ enable the optional list cascade transition.
             'opacity': 0.9,
             'transform': 'scale(1)'
           }], {
-            duration: duration * offset
+            duration: duration * offset,
+          }));
+
+          // XXX: cancel() seems not to be working until chrome 41 so set the opacity for the
+          // background here to prevent a flash.
+          anims.push(new Animation(node.$.background, [{
+            'opacity': 0,
+            'transform': 'scale(0)'
+          }, {
+            'opacity': 0,
+            'transform': 'scale(0)'
+          }], {
+            duration: 0,
+            delay: 0,
+            fill: 'forwards'
           }));
 
           var bg = node.$.background;

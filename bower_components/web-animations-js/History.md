@@ -1,3 +1,52 @@
+### 1.0.6 - *February 5 2015*
+
+  * Implement playbackRate setter for group players.
+  * Fix pausing a group player before its first tick.
+  * Fix cancelling a group player before its first tick.
+  * Fix excess CPU use on idle pages where custom effects and groups were used.
+  * Suppress AnimationTiming.playbackRate deprecation warning for cases where AnimationTiming.playbackRate == 1.
+
+### 1.0.5 - *January 6 2015*
+
+  * Fix loading the polyfill in an SVG document
+  * Fix a problem where groups didn't take effect in their first frame
+  * Don't rely on performance.now
+
+### 1.0.4 - *December 8 2014*
+
+  * Fix a critical bug where deprecation logic wasn't being loaded
+    when `web-animations-next` and `web-animations-next-lite` were
+    executed on top of a native `element.animate`.
+
+### 1.0.3 - *December 4 2014*
+
+  * Fix a critical bug on iOS 7 and Safari <= 6. Due to limitations,
+    inline style patching is not supported on these platforms.
+
+### 1.0.2 - *November 28 2014*
+
+  * Deprecated `AnimationTiming.playbackRate`.
+
+    For example, this is no longer supported:
+
+        var player = element.animate(
+            keyframes,
+            {duration: 1000, playbackRate: 2});
+
+    Use `AnimationPlayer.playbackRate` instead:
+
+        var player = element.animate(
+            keyframes,
+            {duration: 1000});
+        player.playbackRate = 2;
+
+    If you have any feedback on this change, please start a discussion
+    on the public-fx mailing list:
+    http://lists.w3.org/Archives/Public/public-fx/
+
+    Or file an issue against the specification on GitHub:
+    https://github.com/w3c/web-animations/issues/new
+
 ### 1.0.1 - *November 26 2014*
 
   * Players should be constructed in idle state

@@ -1,10 +1,10 @@
 /**!
  * AngularJS file upload/drop directive with progress and abort
  * @author  Danial  <danial.farid@gmail.com>
- * @version 2.1.1
+ * @version 2.1.2
  */
 (function() {
-
+	
 function patchXHR(fnName, newFn) {
 	window.XMLHttpRequest.prototype[fnName] = newFn(window.XMLHttpRequest.prototype[fnName]);
 }
@@ -24,9 +24,9 @@ if (window.XMLHttpRequest && !window.XMLHttpRequest.__isFileAPIShim) {
 		}
 	});
 }
-
+	
 var angularFileUpload = angular.module('angularFileUpload', []);
-angularFileUpload.version = '2.1.1';
+angularFileUpload.version = '2.1.2';
 angularFileUpload.service('$upload', ['$http', '$q', '$timeout', function($http, $q, $timeout) {
 	function sendHttp(config) {
 		config.method = config.method || 'POST';
@@ -60,7 +60,7 @@ angularFileUpload.service('$upload', ['$http', '$q', '$timeout', function($http,
 		};
 
 		$http(config).then(function(r){deferred.resolve(r)}, function(e){deferred.reject(e)}, function(n){deferred.notify(n)});
-
+		
 		promise.success = function(fn) {
 			promise.then(function(response) {
 				fn(response.data, response.status, response.headers, config);
@@ -99,7 +99,7 @@ angularFileUpload.service('$upload', ['$http', '$q', '$timeout', function($http,
 			})(config.xhrFn);
 			return promise;
 		};
-
+		
 		return promise;
 	}
 
@@ -141,7 +141,7 @@ angularFileUpload.service('$upload', ['$http', '$q', '$timeout', function($http,
 				if (Object.prototype.toString.call(config.file) === '[object Array]') {
 					var isFileFormNameString = Object.prototype.toString.call(fileFormName) === '[object String]';
 					for (var i = 0; i < config.file.length; i++) {
-						formData.append(isFileFormNameString ? fileFormName : fileFormName[i], config.file[i],
+						formData.append(isFileFormNameString ? fileFormName : fileFormName[i], config.file[i], 
 								(config.fileName && config.fileName[i]) || config.file[i].name);
 					}
 				} else {
@@ -194,7 +194,9 @@ function handleFileSelect(scope, elem, attr, ngModel, $parse, $timeout, $compile
 		var origElem = elem;
 		elem = fileElem;
 	}
-	var changeFn = $parse(attr.ngFileChange);
+	if (attr['ngFileSelect'] != '') {
+		attr.ngFileChange = attr.ngFileSelect;
+	}
 	if ($parse(attr.resetOnClick)(scope) != false) {
 		if (navigator.appVersion.indexOf("MSIE 10") !== -1) {
 			// fix for IE10 cannot set the value of the input to null programmatically by replacing input
@@ -222,13 +224,10 @@ function handleFileSelect(scope, elem, attr, ngModel, $parse, $timeout, $compile
 	var onChangeFn = function(evt) {
 		var files = [], fileList, i;
 		fileList = evt.__files_ || evt.target.files;
-		updateModel(fileList, attr, ngModel, changeFn, scope, evt);
+		updateModel(fileList, attr, ngModel, scope, evt);
 	};
-	elem.on('change', onChangeFn);
-	if (attr['ngFileSelect'] != '') {
-		attr.ngFileChange = attr.ngFileSelect;
-	}
-
+	elem.bind('change', onChangeFn);
+	
 	function updateModel(fileList, attr, ngModel, change, scope, evt) {
 		var files = [];
 		for (var i = 0; i < fileList.length; i++) {
@@ -238,9 +237,9 @@ function handleFileSelect(scope, elem, attr, ngModel, $parse, $timeout, $compile
 			scope[attr.ngModel] ? scope[attr.ngModel].value = files : scope[attr.ngModel] = files;
 			ngModel && ngModel.$setViewValue(files != null && files.length == 0 ? '' : files);
 		}
-		if (change) {
+		if (attr.ngFileChange && attr.ngFileChange != "") {
 			$timeout(function() {
-				change(scope, {
+				$parse(attr.ngFileChange)(scope, {
 					$files : files,
 					$event : evt
 				});
@@ -257,14 +256,14 @@ angularFileUpload.directive('ngFileDrop', [ '$parse', '$timeout', '$location', f
 	}
 }}]);
 
-angularFileUpload.directive('ngNoFileDrop', function() {
+angularFileUpload.directive('ngNoFileDrop', function() { 
 	return function(scope, elem, attr) {
 		if (dropAvailable()) elem.css('display', 'none')
 	}
 });
 
 //for backward compatibility
-angularFileUpload.directive('ngFileDropAvailable', [ '$parse', '$timeout', function($parse, $timeout) {
+angularFileUpload.directive('ngFileDropAvailable', [ '$parse', '$timeout', function($parse, $timeout) { 
 	return function(scope, elem, attr) {
 		if (dropAvailable()) {
 			var fn = $parse(attr['ngFileDropAvailable']);
@@ -327,10 +326,10 @@ function handleDrop(scope, elem, attr, ngModel, $parse, $timeout, $location) {
 				ngModel && ngModel.$setViewValue(files != null && files.length == 0 ? '' : files);
 			}
 			if (attr['ngFileRejectedModel']) {
-				scope[attr.ngFileRejectedModel] ? scope[attr.ngFileRejectedModel].value = rejFiles :
+				scope[attr.ngFileRejectedModel] ? scope[attr.ngFileRejectedModel].value = rejFiles : 
 					scope[attr.ngFileRejectedModel] = rejFiles;
 			}
-
+			
 			$timeout(function() {
 				$parse(attr.ngFileChange)(scope, {
 					$files : files,
@@ -340,29 +339,29 @@ function handleDrop(scope, elem, attr, ngModel, $parse, $timeout, $location) {
 			});
 		}, $parse(attr.allowDir)(scope) != false, attr.multiple || $parse(attr.ngMultiple)(scope));
 	}, false);
-
+	
 	function calculateDragOverClass(scope, attr, evt) {
 		var valid = true;
 		if (regexp) {
 			var items = evt.dataTransfer.items;
 			if (items != null) {
 				for (var i = 0 ; i < items.length && valid; i++) {
-					valid = valid && (items[i].kind == 'file' || items[i].kind == '') &&
+					valid = valid && (items[i].kind == 'file' || items[i].kind == '') && 
 						(items[i].type.match(regexp) != null || (items[i].name != null && items[i].name.match(regexp) != null));
 				}
 			}
 		}
 		var clazz = $parse(attr.dragOverClass)(scope, {$event : evt});
 		if (clazz) {
-			if (clazz.delay) dragOverDelay = clazz.delay;
+			if (clazz.delay) dragOverDelay = clazz.delay; 
 			if (clazz.accept) clazz = valid ? clazz.accept : clazz.reject;
 		}
 		return clazz || attr['dragOverClass'] || 'dragover';
 	}
-
+				
 	function extractFiles(evt, callback, allowDir, multiple) {
 		var files = [], rejFiles = [], items = evt.dataTransfer.items, processing = 0;
-
+		
 		function addFile(file) {
 			if (!regexp || file.type.match(regexp) || (file.name != null && file.name.match(regexp))) {
 				files.push(file);
@@ -370,7 +369,7 @@ function handleDrop(scope, elem, attr, ngModel, $parse, $timeout, $location) {
 				rejFiles.push(file);
 			}
 		}
-
+		
 		if (items && items.length > 0 && $location.protocol() != 'file') {
 			for (var i = 0; i < items.length; i++) {
 				if (items[i].webkitGetAsEntry && items[i].webkitGetAsEntry() && items[i].webkitGetAsEntry().isDirectory) {
@@ -418,7 +417,7 @@ function handleDrop(scope, elem, attr, ngModel, $parse, $timeout, $location) {
 				}
 			}, delay || 0)
 		})();
-
+		
 		function traverseFileTree(files, entry, path) {
 			if (entry != null) {
 				if (entry.isDirectory) {

@@ -36,6 +36,7 @@ This example renders a drop-down menu with 4 options.
 @group Paper Elements
 @element paper-dropdown-menu
 @extends core-dropdown-base
+@mixins Polymer.CoreFocusable https://github.com/polymer/core-focusable
 @status unstable
 @homepage github.io
 -->
@@ -88,12 +89,12 @@ contains the selection state.
       user-select: none;
       cursor: pointer;
       padding: 0.5em 0 0.25em;
-      margin: 0.75em 0;
+      margin: 1.1em 0;
       border-bottom: 1px solid #757575;
       outline: none;
     }
 
-    #label, #arrow {
+    #label:not(.selectedItem), #arrow {
       color: #757575;
     }
 
@@ -164,8 +165,10 @@ contains the selection state.
     selectAction: function(e) {
       var detail = e.detail;
       if (detail.isSelected) {
+        this.$.label.classList.add('selectedItem');
         this.selectedItemLabel = detail.item.label || detail.item.textContent;
       } else {
+        this.$.label.classList.remove('selectedItem');
         this.selectedItemLabel = '';
       }
     }

@@ -13,7 +13,7 @@
 // limitations under the License.
 (function(shared, scope, testing) {
 
-  var nullTarget = document.createElement('div');
+  var nullTarget = document.createElementNS('http://www.w3.org/1999/xhtml', 'div');
 
   var sequenceNumber = 0;
   scope.bindPlayerForCustomEffect = function(player) {
@@ -62,9 +62,10 @@
     updating.sort(function(left, right) {
       return left._sequenceNumber - right._sequenceNumber;
     });
-    updating.filter(function(callback) {
+    updating = updating.filter(function(callback) {
       callback();
-      if (!callback._player || callback._player.finished || callback._player.paused)
+      var playState = callback._player ? callback._player.playState : 'idle';
+      if (playState != 'running' && playState != 'pending')
         callback._registered = false;
       return callback._registered;
     });
@@ -83,4 +84,4 @@
       register(this._callback);
   };
 
-})(webAnimationsShared, webAnimationsMaxifill, webAnimationsTesting);
+})(webAnimationsShared, webAnimationsNext, webAnimationsTesting);

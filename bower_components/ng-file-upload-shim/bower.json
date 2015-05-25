@@ -1,7 +1,7 @@
 {
   "name": "angular-file-upload-shim",
   "main": "angular-file-upload-shim.js",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "homepage": "https://github.com/danialfarid/angular-file-upload",
   "authors": [
     "danialf <danial.farid@gmail.com>"

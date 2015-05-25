@@ -2,12 +2,16 @@
   "name": "paper-checkbox",
   "private": true,
   "dependencies": {
-    "font-roboto": "Polymer/font-roboto#^0.5.0",
-    "core-label": "Polymer/core-label#^0.5.0",
-    "paper-radio-button": "Polymer/paper-radio-button#^0.5.0"
+    "paper-radio-button": "Polymer/paper-radio-button#^0.5",
+    "polymer": "Polymer/polymer#^0.5"
   },
   "ignore": [
-    "externs/**"
+    "externs/**",
+    ".gitignore"
   ],
-  "version": "0.5.2"
+  "devDependencies": {
+    "font-roboto": "Polymer/font-roboto#~0.5.4",
+    "core-label": "Polymer/core-label#~0.5.4"
+  },
+  "version": "0.5.6"
 }

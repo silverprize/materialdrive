@@ -100,7 +100,7 @@ element.
      * Parameters to send to the specified URL, as JSON.
      *
      * @attribute params
-     * @type string (JSON)
+     * @type string
      * @default ''
      */
     params: '',
@@ -236,7 +236,7 @@ element.
 
     isSuccess: function(xhr) {
       var status = xhr.status || 0;
-      return !status || (status >= 200 && status < 300);
+      return (status >= 200 && status < 300);
     },
 
     processResponse: function(xhr) {
@@ -248,11 +248,15 @@ element.
     },
 
     processError: function(xhr) {
-      var response = xhr.status + ': ' + xhr.responseText;
+      var response = this.evalResponse(xhr);
+      var error = {
+        statusCode: xhr.status,
+        response: response
+      };
       if (xhr === this.activeRequest) {
-        this.error = response;
+        this.error = error;
       }
-      this.fire('core-error', {response: response, xhr: xhr});
+      this.fire('core-error', {response: error, xhr: xhr});
     },
 
     processProgress: function(progress, xhr) {
@@ -347,6 +351,14 @@ element.
       }
     },
 
+    getParams: function(params) {
+      params = this.params || params;
+      if (params && typeof(params) == 'string') {
+        params = JSON.parse(params);
+      }
+      return params;
+    },
+
     /**
      * Performs an Ajax request to the specified URL.
      *
@@ -356,10 +368,7 @@ element.
       var args = this.xhrArgs || {};
       // TODO(sjmiles): we may want XHR to default to POST if body is set
       args.body = this.body || args.body;
-      args.params = this.params || args.params;
-      if (args.params && typeof(args.params) == 'string') {
-        args.params = JSON.parse(args.params);
-      }
+      args.params = this.getParams(args.params);
       args.headers = this.headers || args.headers || {};
       if (args.headers && typeof(args.headers) == 'string') {
         args.headers = JSON.parse(args.headers);
@@ -403,6 +412,20 @@ element.
         }
       }
       return this.activeRequest;
+    },
+
+    /**
+     * Aborts the current active request if there is one and resets internal
+     * state appropriately.
+     *
+     * @method abort
+     */
+    abort: function() {
+      if (!this.activeRequest) return;
+      this.activeRequest.abort();
+      this.activeRequest = null;
+      this.progress = {};
+      this.loading = false;
     }
 
   });

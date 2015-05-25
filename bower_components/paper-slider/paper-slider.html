@@ -103,7 +103,7 @@ To change the slider secondary progress bar color:
   </div>
 
   <template if="{{editable}}">
-    <paper-input id="input" class="slider-input" value="{{immediateValue}}" disabled?="{{disabled}}" on-change="{{inputChange}}"></paper-input>
+    <paper-input id="input" class="slider-input" disabled?="{{disabled}}" on-change="{{inputChange}}"></paper-input>
   </template>
 
 </template>
@@ -189,9 +189,17 @@ To change the slider secondary progress bar color:
      * @type number
      * @default 0
      */
-
     maxMarkers: 100,
-     
+
+    /**
+     * True when the user is dragging the slider.
+     *
+     * @attribute dragging
+     * @type boolean
+     * @default false
+     */
+    dragging: false,
+
     observe: {
       'step snaps': 'update'
     },
@@ -232,6 +240,9 @@ To change the slider secondary progress bar color:
     immediateValueChanged: function() {
       if (!this.dragging) {
         this.value = this.immediateValue;
+      }
+      if (this.editable) {
+        this.$.input.value = this.immediateValue;
       }
       this.fire('immediate-value-change');
     },
@@ -304,7 +315,7 @@ To change the slider secondary progress bar color:
       var ratio = (e.x - rect.left) / this._w;
       this.positionKnob(ratio);
       this.expandJob = this.job(this.expandJob, this.expandKnob, 60);
-      this.fire('change');
+      this.asyncFire('change');
     },
 
     knobTransitionEnd: function(e) {
@@ -324,10 +335,18 @@ To change the slider secondary progress bar color:
       }
     },
 
+    /**
+     * Increases value by `step` but not above `max`.
+     * @method increment
+     */
     increment: function() {
       this.value = this.clampValue(this.value + this.step);
     },
 
+    /**
+     * Decreases value by `step` but not below `min`.
+     * @method decrement
+     */
     decrement: function() {
       this.value = this.clampValue(this.value - this.step);
     },

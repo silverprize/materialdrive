@@ -1,4 +1,7 @@
 paper-radio-group
 =================
 
-See the [component page](http://www.polymer-project.org/docs/elements/paper-elements.html#paper-radio-group) for more information.
+**This element is compatible with Polymer 0.5 and lower only, and will be deprecated.**  
+You can check out a similar 0.8-compatible version of this element at [https://github.com/polymerelements/paper-radio-group](https://github.com/polymerelements/paper-radio-group)
+
+See the [component page](https://www.polymer-project.org/0.5/docs/elements/paper-radio-group.html) for more information.

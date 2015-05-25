@@ -1,6 +1,6 @@
 suite('timing', function() {
   setup(function() {
-    webAnimationsMinifill.timeline._players = [];
+    webAnimations1.timeline._players = [];
   });
 
   test('pause and scrub', function() {
@@ -47,5 +47,10 @@ suite('timing', function() {
 
     player = document.body.animate([], { duration: NaN, easing: 'ease-out' });
     tick(300);
+  });
+
+  test('can set fill:none on group', function() {
+    var timing = webAnimationsShared.makeTiming({fill: 'none'}, true);
+    assert.equal(timing.fill, 'none');
   });
 });

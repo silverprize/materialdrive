@@ -50,7 +50,8 @@
 
   function InternalTimeline() {
     this._players = [];
-    this.currentTime = window.performance ? performance.now() : 0;
+    // Android 4.3 browser has window.performance, but not window.performance.now
+    this.currentTime = window.performance && performance.now ? performance.now() : 0;
   };
 
   InternalTimeline.prototype = {
@@ -86,6 +87,7 @@
   var pendingEffects = [];
   function applyPendingEffects() {
     pendingEffects.forEach(function(f) { f(); });
+    pendingEffects.length = 0;
   }
 
   var originalGetComputedStyle = window.getComputedStyle;
@@ -124,7 +126,7 @@
       return player._inTimeline;
     });
 
-    pendingEffects.length = 0;
+    // FIXME: Should remove dupliactes from pendingEffects.
     pendingEffects.push.apply(pendingEffects, newPendingClears);
     pendingEffects.push.apply(pendingEffects, newPendingEffects);
 
@@ -144,4 +146,4 @@
   var timeline = new InternalTimeline();
   scope.timeline = timeline;
 
-})(webAnimationsShared, webAnimationsMinifill, webAnimationsTesting);
+})(webAnimationsShared, webAnimations1, webAnimationsTesting);

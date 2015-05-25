@@ -1,4 +1,4 @@
-/*
+/**
  * @license
  * Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
  * This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
@@ -60,7 +60,7 @@
               };
               entities.push(current);
               break;
-            
+
             // an entity may have these describable sub-features
             case 'attribute':
             case 'property':
@@ -94,7 +94,30 @@
               }
 
               break;
-  
+
+            case 'extends':
+            case 'mixins':
+              var parts = content.split(' ');
+              var subObj = {
+                name: parts[0],
+                url: parts[1] || null
+              };
+              makePragma(current, pragma, subObj);
+              break;
+
+            case 'return':
+              var returnRe = /\{(.+)\}\s+(.*)$/;
+
+              var returnReResult = content.match(returnRe);
+              if (returnReResult) {
+                var subReturnObj = {
+                  type: returnReResult[1],
+                  description: returnReResult[2]
+                };
+                subCurrent[pragma] = subReturnObj;
+              }
+              break;
+
             // everything else
             default:
               current[pragma] = content;

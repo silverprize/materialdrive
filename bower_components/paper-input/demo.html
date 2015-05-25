@@ -21,6 +21,7 @@
   <link href="paper-autogrow-textarea.html" rel="import">
   <link href="paper-input-decorator.html" rel="import">
   <link href="paper-input.html" rel="import">
+  <link href="paper-char-counter.html" rel="import">
 
   <style shim-shadowdom>
 
@@ -48,6 +49,16 @@
 
     paper-input-decorator {
       max-width: 80%;
+    }
+
+    @media only screen and (min-width : 320px) {
+      paper-input {
+        width: 100%;
+      }
+
+      paper-input-decorator {
+        max-width: 100%;
+      }
     }
 
     paper-input.narrow {
@@ -113,6 +124,10 @@
 
     <paper-input label="floating label" floatingLabel></paper-input>
 
+    <br>
+
+    <paper-input label="disabled" disabled></paper-input>
+
   </section>
 
   <section>
@@ -149,24 +164,47 @@
 
   </section>
 
-  <section id="validate">
+  <section>
 
-    <div>Validation</div>
+    <div>Character counter</div>
 
-    <button onclick="validateAll()">click me to validate all</button>
-
-    <paper-input-decorator label="required" floatingLabel error="input is required!">
-      <input is="core-input" required>
+    <paper-input-decorator label="input with visible character counter">
+      <input id="i1" is="core-input" maxlength="5">
+      <paper-char-counter class="counter" target="i1"></paper-char-counter>
     </paper-input-decorator>
 
-    <script>
-      function validateAll() {
-        var $d = document.getElementById('validate').querySelectorAll('paper-input-decorator');
-        Array.prototype.forEach.call($d, function(d) {
-          d.isInvalid = !d.querySelector('input').validity.valid;
-        });
-      }
-    </script>
+    <br>
+
+    <paper-input-decorator label="input with character counter and custom error"
+                           error="maximum characters exceeded">
+      <input id="i2" is="core-input" maxlength="10">
+      <paper-char-counter class="counter" target="i2"></paper-char-counter>
+    </paper-input-decorator>
+
+    <br>
+
+    <paper-input-decorator label="input with hidden character counter"
+                           error="maximum characters exceeded">
+      <input id="i3" is="core-input" maxlength="10">
+      <paper-char-counter class="counter" showCounter="false" target="i3"></paper-char-counter>
+    </paper-input-decorator>
+
+    <paper-input-decorator label="autogrowing text area with character counter">
+      <paper-autogrow-textarea>
+        <textarea id="t1" maxlength="100"></textarea>
+      </paper-autogrow-textarea>
+      <paper-char-counter class="counter" target="t1"></paper-char-counter>
+    </paper-input-decorator>
+
+  </section>
+
+  <section>
+
+    <div>Auto-Validation</div>
+
+    <paper-input-decorator label="required" floatingLabel error="input is required!" autoValidate>
+      <input is="core-input" required>
+    </paper-input-decorator>
 
   </section>
 
@@ -185,6 +223,14 @@
     </paper-input-decorator>
 
   </section>
+
+  <script>
+
+    document.body.addEventListener('change', function(e) {
+      console.log('change', e.target);
+    });
+
+  </script>
 
 </body>
 </html>

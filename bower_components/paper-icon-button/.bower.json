@@ -2,24 +2,24 @@
   "name": "paper-icon-button",
   "private": true,
   "dependencies": {
-    "polymer": "Polymer/polymer#^0.5.0",
-    "paper-button": "Polymer/paper-button#^0.5.0",
-    "core-icon": "Polymer/core-icon#^0.5.0",
-    "core-icons": "Polymer/core-icons#^0.5.0",
-    "paper-ripple": "Polymer/paper-ripple#^0.5.0"
+    "polymer": "Polymer/polymer#^0.5",
+    "paper-button": "Polymer/paper-button#^0.5",
+    "core-icon": "Polymer/core-icon#^0.5",
+    "core-icons": "Polymer/core-icons#^0.5",
+    "paper-ripple": "Polymer/paper-ripple#^0.5"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^1.1.4"
   },
-  "version": "0.5.2",
+  "version": "0.5.6",
   "homepage": "https://github.com/Polymer/paper-icon-button",
-  "_release": "0.5.2",
+  "_release": "0.5.6",
   "_resolution": {
     "type": "version",
-    "tag": "0.5.2",
-    "commit": "01ff19f4cce26f99d1d6d45af79de6d3963c2cc6"
+    "tag": "0.5.6",
+    "commit": "6a16a7a71b461387c64b2a6699eddaff84ca8328"
   },
   "_source": "git://github.com/Polymer/paper-icon-button.git",
-  "_target": "^0.5.0",
+  "_target": "^0.5",
   "_originalSource": "Polymer/paper-icon-button"
 }

@@ -1,4 +1,4 @@
 core-animation
 ==============
 
-See the [component page](http://polymer-project.org/docs/elements/core-elements.html#core-animation) for more information.
+See the [component page](https://www.polymer-project.org/0.5/docs/elements/core-animation.html) for more information.

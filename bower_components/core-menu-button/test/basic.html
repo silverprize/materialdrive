@@ -45,6 +45,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </core-dropdown>
   </core-menu-button>
 
+  <core-menu-button id="button2" disabled>
+    <core-icon-button icon="menu"></core-icon-button>
+    <core-dropdown class="dropdown">
+      <core-menu id="menu1">
+        <core-item foo="c">Cupcake</core-item>
+        <core-item foo="d">Donut</core-item>
+        <core-item foo="e">Eclair</core-item>
+        <core-item foo="f">Froyo</core-item>
+        <core-item foo="g">Gingerbread</core-item>
+      </core-menu>
+    </core-dropdown>
+  </core-menu-button>
+
   <script>
 
     function flushLayoutAndRender(callback) {
@@ -59,9 +72,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     var b1 = document.getElementById('button1');
     var m1 = document.getElementById('menu1');
 
+    var b2 = document.getElementById('button2');
+
     test('default', function() {
       // it renders!
       assert.ok(true);
+    });
+
+    test('HTML disabled attribute should bind downwards', function() {
+      assert.equal(true, b2.disabled);
     });
 
   </script>

@@ -1,4 +1,4 @@
 core-layout-grid
 ================
 
-See the [component page](http://polymer-project.org/docs/elements/core-elements.html#core-layout-grid) for more information.
+See the [component page](https://www.polymer-project.org/0.5/docs/elements/core-layout-grid.html) for more information.

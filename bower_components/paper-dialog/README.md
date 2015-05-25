@@ -1,4 +1,4 @@
 paper-dialog
 ===================
 
-See the [component page](http://www.polymer-project.org/docs/elements/paper-elements.html#paper-dialog) for more information.
+See the [component page](https://www.polymer-project.org/0.5/docs/elements/paper-dialog.html) for more information.

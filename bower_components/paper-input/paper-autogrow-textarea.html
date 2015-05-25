@@ -16,7 +16,7 @@ Example:
 
     <paper-autogrow-textarea id="a1">
         <textarea id="t1"></textarea>
-    <paper-autogrow-textarea>
+    </paper-autogrow-textarea>
 
 Because the `textarea`'s `value` property is not observable, if you set the `value` imperatively
 you must call `update` to notify this element the value has changed.
@@ -25,7 +25,7 @@ Example:
 
     /* using example HTML above */
     t1.value = 'some\ntext';
-    a1.update();
+    a1.update(t1);
 
 @group Paper Elements
 @element paper-autogrow-textarea
@@ -46,6 +46,7 @@ Example:
 
     .mirror-text {
       visibility: hidden;
+      word-wrap: break-word;
     }
 
     ::content textarea {
@@ -138,7 +139,7 @@ Example:
     /**
      * Sizes this element to fit the input value. This function is automatically called
      * when the user types in new input, but you must call this function if the value
-     * is updated imperatively.
+     * is updated imperatively. Takes as parameter the textarea containing the input.
      *
      * @method update
      * @param Element The input

@@ -37,6 +37,7 @@ Example:
 <link href="../polymer/polymer.html" rel="import">
 <link href="../core-a11y-keys/core-a11y-keys.html" rel="import">
 <link href="../core-dropdown/core-dropdown-base.html" rel="import">
+<link href="../core-focusable/core-focusable.html" rel="import">
 
 <polymer-element name="core-menu-button" extends="core-dropdown-base" relative>
 <template>
@@ -64,7 +65,7 @@ Example:
 </template>
 <script>
 
-  Polymer({
+  var p = {
 
     overlayListeners: {
       'core-overlay-open': 'openAction',
@@ -75,7 +76,10 @@ Example:
       this.opened = false;
     }
 
-  });
+  };
+
+  Polymer.mixin2(p, Polymer.CoreFocusable);
+  Polymer(p);
 
 </script>
 </polymer-element>
