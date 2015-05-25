@@ -131,7 +131,7 @@
       filesList: function(args) {
         query = encodeURIComponent(args.query);
         if (args.mimeType) {
-          query = [' and mimeType = \'', mimeType, '\''].join('');
+          query += [' and mimeType = \'', args.mimeType, '\''].join('');
         }
         if (args.maxResults) {
           query += '&maxResults=' + args.maxResults;
