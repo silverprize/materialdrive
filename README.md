@@ -16,9 +16,9 @@ Consist of
 - https://developers.google.com/drive/web/
 - https://www.angularjs.org
 - https://material.angularjs.org
-- https://www.polymer-project.org/components/paper-elements/demo.html
 
 Libraries
 =
 - [Font awesome](http://fontawesome.io/)
 - [angular-file-upload](https://github.com/danialfarid/angular-file-upload)
+- [Polymer core-icon](https://www.polymer-project.org/0.5/components/core-elements/demo.html#core-icon)
