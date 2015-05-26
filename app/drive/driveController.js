@@ -425,11 +425,17 @@
         }
       });
 
+      if (!countItem) {
+        return false;
+      }
+
       if (countItem > 1 || hasFolder) {
         self.contextMenuList[0].enabled = false;
       } else {
         self.contextMenuList[0].enabled = true;
       }
+
+      return true;
     }
 
     function onContextMenuSelected(menu) {

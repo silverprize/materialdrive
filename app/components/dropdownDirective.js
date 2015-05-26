@@ -9,19 +9,16 @@
         menuList: '=',
         callback: '&onMenuSelected'
       },
-      templateUrl: 'app/components/dropdown.tpl.html',
+      templateUrl: 'app/components/dropdown.tpl.html?id=1',
       controller: ['$scope', DropdownController],
-      controllerAs: 'dropdownCtrl',
-      link: link
+      controllerAs: 'dropdownCtrl'
     };
 
     function DropdownController($scope) {
+      var self = this;
 
-    }
-
-    function link(scope, elem, attrs) {
-      scope.onMenuSelected = function(menu) {
-        scope.callback({menu: menu});
+      this.onMenuSelected = function(menu) {
+        $scope.callback({menu: menu});
       };
     }
   }]);

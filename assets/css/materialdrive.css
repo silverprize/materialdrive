@@ -1723,10 +1723,17 @@
 .context-menu {
   background-color: white;
   position: fixed;
+  z-index: 69;
 }
 .dropdown-menu-item {
   overflow: hidden;
   margin: 0;
+  display: block;
+  text-align: left;
+  padding: 5px 15px;
+}
+.dropdown-menu-item .name {
+  padding-left: 3px;
 }
 .file-word-bg {
   color: #4285f4;
@@ -1751,6 +1758,7 @@
   position: absolute;
   right: 24px;
   bottom: 24px;
+  z-index: 68;
 }
 .drive-list {
   padding: 0;
