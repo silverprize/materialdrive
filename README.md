@@ -10,6 +10,7 @@ Available features
 - File delete, copy, move
 - Fab for new document/folder and upload files
 - Incremental search
+- Context menu
 
 Consist of
 =
