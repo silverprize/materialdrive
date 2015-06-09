@@ -1,4 +1,4 @@
-<md-content class="drive-body" md-scroll-y mtd-context-menu class="context-menu" menu-list="driveCtrl.contextMenuList" on-menu-selected="driveCtrl.onContextMenuSelected(menu)" on-popup="driveCtrl.onContextMenuPopup()">
+<md-content md-scroll-y mtd-context-menu menu-list="driveCtrl.contextMenuList" on-menu-selected="driveCtrl.onContextMenuSelected(menu)" on-popup="driveCtrl.onContextMenuPopup()">
   <md-list layout="column" class="drive-list">
     <md-list-item class="drive-list-item" ng-if="!driveCtrl.currentFolder.isRoot" ng-click="driveCtrl.upToParentFolder()">
       <span class="fa fa-level-up"></span>&nbsp;&nbsp;...
