@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.9.4
+ * v0.9.8
  */
 (function( window, angular, undefined ){
 "use strict";
@@ -52,7 +52,7 @@ var DELETE_HINT_TEMPLATE = '\
  *
  * @param $mdTheming
  * @param $mdInkRipple
- * @ngInject
+ * ngInject
  */
 function MdChip($mdTheming) {
   return {
@@ -666,7 +666,7 @@ MdChipsCtrl.prototype.hasFocus = function () {
         // name with '$', Angular won't write it into the DOM. The cloned
         // element propagates to the link function via the attrs argument,
         // where various contained-elements can be consumed.
-        attrs['$mdUserTemplate'] = element.clone();
+        var content = attrs['$mdUserTemplate'] = element.clone();
         return MD_CHIPS_TEMPLATE;
       },
       require: ['mdChips'],
@@ -910,7 +910,7 @@ MdContactChipsCtrl.prototype.filterSelectedContacts = function(contact) {
    *
    * @param $mdTheming
    * @returns {*}
-   * @ngInject
+   * ngInject
    */
   function MdContactChips ($mdTheming, $mdUtil) {
     return {
