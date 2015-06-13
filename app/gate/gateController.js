@@ -13,10 +13,6 @@
   function GateController($scope, $location, $routeParams, google) {
     var self = this;
 
-    $scope.base.config = {
-      ngViewClass: 'gate'
-    };
-
     self.authorize = authorize;
 
     function authorize() {

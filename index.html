@@ -13,10 +13,14 @@
     <link href="bower_components/core-icons/core-icons.html" rel="import">
     <link rel="stylesheet" type="text/css" href="bower_components/angular-material/angular-material.css">
     <link rel="stylesheet" type="text/css" href="assets/css/materialdrive.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   </head>
 
   <body layout="row">
-    <div mtd-frame></div>
+    <div layout="row" layout-fill tabindex="-1" role="main">
+      <div ng-view layout="column" flex></div>
+    </div>
+
     <a id="forkme_banner" href="https://github.com/silverprize/materialdrive">View on GitHub</a>
 
     <script type="text/javascript" src="bower_components/angular/angular.js"></script>
@@ -25,6 +29,7 @@
     <script type="text/javascript" src="bower_components/angular-aria/angular-aria.js"></script>
     <script type="text/javascript" src="bower_components/angular-animate/angular-animate.js"></script>
     <script type="text/javascript" src="bower_components/angular-route/angular-route.js"></script>
+    <script type="text/javascript" src="bower_components/angular-touch/angular-touch.js"></script>
     <script type="text/javascript" src="bower_components/angular-material/angular-material.js"></script>
 
     <script type="text/javascript" src="app/util.js"></script>
@@ -32,10 +37,9 @@
     <script type="text/javascript" src="app/app.js"></script>
     <script type="text/javascript" src="app/shared/googleService.js"></script>
     <script type="text/javascript" src="app/base/baseService.js"></script>
-    <script type="text/javascript" src="app/base/baseController.js"></script>
-    <script type="text/javascript" src="app/base/frameDirective.js"></script>
     <script type="text/javascript" src="app/gate/gateController.js"></script>
-    <script type="text/javascript" src="app/drive/driveController.js"></script>
+    <script type="text/javascript" src="app/drive/driveControllers.js"></script>
+    <script type="text/javascript" src="app/drive/driveDirectives.js"></script>
     <script type="text/javascript" src="app/drive/newItemFabController.js"></script>
     <script type="text/javascript" src="app/components/contextMenuDirective.js"></script>
     <script type="text/javascript" src="app/components/dropdownDirective.js"></script>

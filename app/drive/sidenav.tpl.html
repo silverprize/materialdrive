@@ -1,19 +1,21 @@
-<md-content ng-controller="SidenavController as sidenavCtrl">
+<md-toolbar class="md-tall">
   <md-list-item>
     <img ng-src="{{sidenavCtrl.user.picture.url}}" class="face" alt="{{sidenavCtrl.user.displayName}}">
     <div class="md-list-item-text">
-      <h1 class="md-title">{{::sidenavCtrl.user.displayName}}</h1>
-      <h1 class="md-body-1">{{::sidenavCtrl.user.emailAddress}}</h1>
+      <h1 class="md-title" ng-bind="::sidenavCtrl.user.displayName"></h1>
+      <h1 class="md-body-1" ng-bind="::sidenavCtrl.user.emailAddress"></h1>
     </div>
   </md-list-item>
-  <md-divider></md-divider>
+</md-toolbar>
+
+<md-content flex layout="column">
   <md-list class="sidenav-menu-list-container">
     <md-list-item class="list-item" ng-repeat="menu in sidenavCtrl.menuList">
-      <md-button class="md-primary list-item-inner" ng-class="{'md-accent': menu.selected}" href="{{menu.href}}" ng-click="sidenavCtrl.onMenuSelect(menu)" flex>
+      <md-button class="md-primary list-item-inner" ng-class="{'md-accent': menu.selected}" href="{{menu.href}}" ng-click="sidenavCtrl.onMenuSelect(menu)" flex aria-label="{{::menu.label}}">
         <md-icon md-font-icon="{{menu.icon}}"></md-icon>
-        <span style="padding-left: 10px;">{{::menu.label}}</span>
+        <span style="padding-left: 10px;" ng-bind="::menu.label"></span>
+        <md-divider></md-divider>
       </md-button>
-      <md-divider></md-divider>
     </md-list-item>
   </md-list>
 </md-content>

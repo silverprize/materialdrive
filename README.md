@@ -23,3 +23,4 @@ Libraries
 - [Font awesome](http://fontawesome.io/)
 - [angular-file-upload](https://github.com/danialfarid/angular-file-upload)
 - [Polymer core-icon](https://www.polymer-project.org/0.5/components/core-elements/demo.html#core-icon)
+- [Material icons](https://www.google.com/design/icons)

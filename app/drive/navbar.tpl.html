@@ -1,36 +1,32 @@
-<div ng-controller="NavbarController as navbarCtrl">
-
-  <div class="md-toolbar-tools" layout="row" layout-align="space-between center">
-    <div ng-show="!navbarCtrl.queryFormState">
-      <md-button class="md-icon-button" ng-click="navbarCtrl.toggleSidenav()" hide-gt-md aria-label="Toggle Sidenav">
-        <md-icon md-font-icon="fa fa-bars fa-2x"></md-icon>
-      </md-button>
-    </div>
-    <div ng-show="!navbarCtrl.queryFormState">
-      <md-button class="md-icon-button" ng-click="navbarCtrl.searchText = ''; navbarCtrl.queryFormState = 'on'" aria-label="Toggle Search form">
-        <md-icon md-font-icon="fa fa-search fa-2x"></md-icon>
-      </md-button>
-      <md-button class="md-icon-button" aria-label="Toggle Detail panel">
-        <md-icon md-font-icon="fa fa-info-circle fa-2x"></md-icon>
-      </md-button>
-    </div>
-    <div ng-show="navbarCtrl.queryFormState" flex>
-      <md-autocomplete md-selected-item="navbarCtrl.selectedItem" md-search-text="navbarCtrl.searchText" md-items="item in navbarCtrl.querySearchText(navbarCtrl.searchText)" md-item-text="item.title" placeholder="Search Drive" md-selected-item-change="navbarCtrl.searchItemSelected()" style="padding-left: 40px;" focus="{{navbarCtrl.queryFormState}}">
-        <span md-highlight-text="navbarCtrl.searchText">{{item.title}}</span>
-      </md-autocomplete>
-      <md-button class="md-icon-button md-primary" style="position: absolute; top:7px; padding-right: 20px;" ng-click="navbarCtrl.queryFormState = ''" aria-label="Back to Navbar">
-        <md-icon md-font-icon="fa fa-arrow-left fa-2x"></md-icon>
-      </md-button>
-    </div>
+<div class="md-toolbar-tools" layout="row" layout-align="space-between center">
+  <div ng-show="!navbarCtrl.queryFormState">
+    <md-button class="md-icon-button" ng-click="navbarCtrl.toggleSidenav()" hide-gt-md aria-label="Toggle Sidenav">
+      <md-icon md-font-icon="fa fa-bars fa-2x"></md-icon>
+    </md-button>
   </div>
-
-  <div class="md-toolbar-tools" ng-if="navbarCtrl.breadcrumb.length > 0">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item" ng-repeat="item in navbarCtrl.breadcrumb">
-        <md-button class="breadcrumb-item-inner" ng-href="#drive/folder/{{item.id}}" aria-label="Move to {{::item.title}}">{{::item.title}}</md-button>
-        <img class="breadcrumb-separator" src="https://material.angularjs.org/latest/img/docArrow.png" ng-if="navbarCtrl.breadcrumb.length > 1 && !$last">
-      </li>
-    </ol>
+  <div ng-show="!navbarCtrl.queryFormState">
+    <md-button class="md-icon-button" ng-click="navbarCtrl.searchText = ''; navbarCtrl.queryFormState = 'on'" aria-label="Toggle Search form">
+      <md-icon md-font-icon="fa fa-search fa-2x"></md-icon>
+    </md-button>
+    <md-button class="md-icon-button" aria-label="Toggle Details" ng-click="navbarCtrl.toggleDetails()">
+      <md-icon md-font-icon="fa fa-info-circle fa-2x"></md-icon>
+    </md-button>
   </div>
+  <div ng-show="navbarCtrl.queryFormState" flex>
+    <md-autocomplete md-selected-item="navbarCtrl.selectedItem" md-search-text="navbarCtrl.searchText" md-items="item in navbarCtrl.querySearchText(navbarCtrl.searchText)" md-item-text="item.title" placeholder="Search Drive" md-selected-item-change="navbarCtrl.searchItemSelected()" style="padding-left: 40px;" mtd-focus="{{navbarCtrl.queryFormState}}">
+      <span md-highlight-text="navbarCtrl.searchText">{{item.title}}</span>
+    </md-autocomplete>
+    <md-button class="md-icon-button md-primary" style="position: absolute; top:7px; padding-right: 20px;" ng-click="navbarCtrl.queryFormState = ''" aria-label="Back to Navbar">
+      <md-icon md-font-icon="fa fa-arrow-left fa-2x"></md-icon>
+    </md-button>
+  </div>
+</div>
 
+<div class="md-toolbar-tools" ng-if="navbarCtrl.breadcrumb.length > 0">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item" ng-repeat="item in navbarCtrl.breadcrumb">
+      <md-button class="breadcrumb-item-inner" ng-href="#drive/folder/{{item.id}}" aria-label="Move to {{::item.title}}">{{::item.title}}</md-button>
+      <img class="breadcrumb-separator" src="https://material.angularjs.org/latest/img/docArrow.png" ng-if="navbarCtrl.breadcrumb.length > 1 && !$last">
+    </li>
+  </ol>
 </div>

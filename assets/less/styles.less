@@ -1,29 +1,13 @@
-.navbar {
-  max-height: @navbar-height;
-}
-
-.drive-body-container {
-  position: absolute;
-  top: 0;
-  padding-top: @navbar-height;
-  width: 100%;
-  height: 100%;
-}
-
-.drive-body-container.double-toolbar {
-  padding-top: @navbar-height * 2;
-}
-
 .breadcrumb {
   padding: 0;
   margin: 0;
   list-style: none;
 
   .breadcrumb-item {
-    min-width: 60px;
     display: inline-block;
 
     .breadcrumb-item-inner {
+      min-width: inherit;
       margin: 0;
       vertical-align: middle;
     }
@@ -39,14 +23,10 @@
   }
 }
 
-.drive-body {
-  height: 100%;
-}
-
 .context-menu {
   background-color: white;
   position: fixed;
-  z-index: 69;
+  z-index: 30;
 }
 
 .dropdown-menu-item {
@@ -88,12 +68,24 @@
 .fab-container {
   position: absolute;
   right: 24px;
-  bottom: 24px;
-  z-index: 68;
+  bottom: 14px;
+}
+
+.prevent-backdrop {
+  .md-sidenav-backdrop {
+    display: none;
+  }
+}
+
+.wrapper {
+  position: relative;
 }
 
 .drive-list {
   padding: 0;
+  overflow: auto;
+  overflow-x: none;
+
   .drive-list-item {
     .icon {
       vertical-align: middle;
@@ -134,14 +126,6 @@
     width: 60px;
     height: 70px;
   }
-}
-
-[fill-parent] {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
 }
 
 .file-navigation-dialog {
@@ -225,3 +209,22 @@ input-file input[type="file"] {
     }
   }
 }
+
+.details {
+  font-size: 13px;
+}
+
+// Rules for sizing the icon.
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
+
+// Rules for using icons as black on a light background.
+.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
+.material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
+
+// Rules for using icons as white on a dark background.
+.material-icons.md-light { color: rgba(255, 255, 255, 1); }
+.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
+

@@ -1684,29 +1684,16 @@
   border-bottom-left-radius: 2px;
   border-bottom-right-radius: 2px;
 }
-.navbar {
-  max-height: 64px;
-}
-.drive-body-container {
-  position: absolute;
-  top: 0;
-  padding-top: 64px;
-  width: 100%;
-  height: 100%;
-}
-.drive-body-container.double-toolbar {
-  padding-top: 128px;
-}
 .breadcrumb {
   padding: 0;
   margin: 0;
   list-style: none;
 }
 .breadcrumb .breadcrumb-item {
-  min-width: 60px;
   display: inline-block;
 }
 .breadcrumb .breadcrumb-item .breadcrumb-item-inner {
+  min-width: inherit;
   margin: 0;
   vertical-align: middle;
 }
@@ -1717,13 +1704,10 @@
 .breadcrumb .breadcrumb-separator {
   height: 12px;
 }
-.drive-body {
-  height: 100%;
-}
 .context-menu {
   background-color: white;
   position: fixed;
-  z-index: 69;
+  z-index: 30;
 }
 .dropdown-menu-item {
   overflow: hidden;
@@ -1757,11 +1741,18 @@
 .fab-container {
   position: absolute;
   right: 24px;
-  bottom: 24px;
-  z-index: 68;
+  bottom: 14px;
+}
+.prevent-backdrop .md-sidenav-backdrop {
+  display: none;
+}
+.wrapper {
+  position: relative;
 }
 .drive-list {
   padding: 0;
+  overflow: auto;
+  overflow-x: none;
 }
 .drive-list .drive-list-item .icon {
   vertical-align: middle;
@@ -1794,13 +1785,6 @@
 .btn-gate .icon-gate {
   width: 60px;
   height: 70px;
-}
-[fill-parent] {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
 }
 .file-navigation-dialog .header {
   background-color: #29b6f6;
@@ -1865,4 +1849,31 @@ input-file input[type="file"] {
 }
 .new-menu-list .new-menu-list-item .new-menu-list-item-inner .name {
   width: auto;
+}
+.details {
+  font-size: 13px;
+}
+.material-icons.md-18 {
+  font-size: 18px;
+}
+.material-icons.md-24 {
+  font-size: 24px;
+}
+.material-icons.md-36 {
+  font-size: 36px;
+}
+.material-icons.md-48 {
+  font-size: 48px;
+}
+.material-icons.md-dark {
+  color: rgba(0, 0, 0, 0.54);
+}
+.material-icons.md-dark.md-inactive {
+  color: rgba(0, 0, 0, 0.26);
+}
+.material-icons.md-light {
+  color: #ffffff;
+}
+.material-icons.md-light.md-inactive {
+  color: rgba(255, 255, 255, 0.3);
 }

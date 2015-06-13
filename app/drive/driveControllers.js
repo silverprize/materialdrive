@@ -2,84 +2,18 @@
   'use strict';
 
   angular.module('materialDrive')
-  .controller('NavbarController', [
-    '$scope',
-    '$window',
-    '$document',
-    '$location',
-    '$q',
-    '$cacheFactory',
-    '$mdSidenav',
-    'google',
-    NavbarController
-  ])
-  .controller('SidenavController', [
-    '$cacheFactory',
-    'google',
-    SidenavController
-  ])
-  .controller('DriveController', [
-    '$scope',
-    '$location',
-    '$routeParams',
-    '$filter',
-    '$window',
-    '$q',
-    '$mdDialog',
-    '$injector',
-    '$cacheFactory',
-    'notifier',
-    'google',
-    DriveController
-  ])
-  .controller('NavigationDialogController', [
-    '$scope',
-    '$mdDialog',
-    '$injector',
-    NavigationDialogController
-  ])
-  .directive('mtdRightClick', ['$parse', '$rootScope', function($parse, $rootScope) {
-    return {
-      restrict: 'A',
-      compile: function($element, attr) {
-        var fn = $parse(attr.mtdRightClick, /* interceptorFn */ null, /* expensiveChecks */ true);
-        return function EventHandler(scope, element) {
-          element.on('contextmenu', function(event) {
-            var callback = function() {
-              fn(scope, {$event:event});
-            };
-            if ($rootScope.$$phase) {
-              scope.$evalAsync(callback);
-            } else {
-              scope.$apply(callback);
-            }
-          });
-        };
-      }
-    };
-  }])
-  .directive('focus', ['$timeout', function($timeout) {
-    return {
-      restrict: 'A',
-      link: function(scope, elem, attrs) {
-        attrs.$observe('focus', function(newValue) {
-          if (newValue === 'on') {
-            $timeout(function() {
-              elem.find('input').focus();
-            });
-          }
-        });
-      }
-    };
-  }]);
+  .controller('NavbarController', NavbarController)
+  .controller('SidenavController', SidenavController)
+  .controller('DriveController', DriveController)
+  .controller('NavigationDialogController', NavigationDialogController);
 
   function NavbarController($scope, $window, $document, $location, $q, $cacheFactory, $mdSidenav, google) {
-    var self = this;
+    var self = this,
+        detailsCache = $cacheFactory.get('details');
 
     self.toggleSidenav = toggleSidenav;
-
+    self.toggleDetails = toggleDetails;
     self.querySearchText = querySearchText;
-
     self.searchItemSelected = searchItemSelected;
 
     self.breadcrumb = $cacheFactory.get('drive').get('breadcrumb');
@@ -91,6 +25,17 @@
 
     function toggleSidenav() {
       $mdSidenav('sidenav').toggle();
+    }
+
+    function toggleDetails() {
+      var details = $mdSidenav('details');
+      if (details.isOpen() || details.isLockedOpen()) {
+        detailsCache.put('visible' , false);
+        details.close();
+      } else {
+        detailsCache.put('visible' , true);
+        details.open();
+      }
     }
 
     function querySearchText(searchText) {
@@ -118,11 +63,14 @@
       }
     }
   }
+  NavbarController.$injector = ['$scope', '$window', '$document', '$location', '$q', '$cacheFactory', '$mdSidenav', 'google'];
 
   function SidenavController($cacheFactory, google) {
-    var self = this;
+    var self = this,
+        cache = $cacheFactory.get('sidenav');
 
-    self.menuList = $cacheFactory.get('sidenav').get('menuList');
+    self.menuList = cache.get('menuList');
+    self.user = cache.get('userInfo');
 
     self.selectedMenu = self.menuList.filter(function(menu) {
       return menu.selected;
@@ -132,6 +80,7 @@
 
     google.about().success(function(data) {
       self.user = data.user;
+      cache.put('userInfo', data.user);
     });
 
     function onMenuSelect(menu) {
@@ -140,11 +89,13 @@
       self.selectedMenu = menu;
     }
   }
+  SidenavController.$injector = ['$cacheFactory', '$mdSidenav', '$mdMedia', 'google'];
 
-  function DriveController($scope, $location, $routeParams, $filter, $window, $q, $mdDialog, $injector, $cacheFactory, notifier, google) {
+  function DriveController($scope, $location, $routeParams, $filter, $window, $q, $mdDialog, $injector, $cacheFactory, $mdMedia, $mdSidenav, notifier, google) {
     var self = this,
         driveCache = $cacheFactory.get('drive'),
-        sidenavCache = $cacheFactory.get('sidenav');
+        sidenavCache = $cacheFactory.get('sidenav'),
+        detailsCache = $cacheFactory.get('details');
 
     if (!driveCache) {
       driveCache = $cacheFactory('drive');
@@ -201,6 +152,10 @@
       sidenavCache.put('menuList', menuList);
     }
 
+    if (!detailsCache) {
+      detailsCache = $cacheFactory('details');
+    }
+
     self.selectedItemMap = {};
 
     self.currentFolder = {
@@ -223,22 +178,13 @@
 
     self.breadcrumb = driveCache.get('breadcrumb');
 
-    $scope.base.config = {
-      useNavbar: true,
-      useFab: true,
-      useSidenav: true,
-      fabTemplateUrl: 'app/drive/new-item-fab.tpl.html',
-      navbarTemplateUrl: 'app/drive/navbar.tpl.html',
-      sidenavTemplateUrl: 'app/drive/sidenav.tpl.html',
-      ngViewClass: 'drive-body-container',
-      navbarClass: self.breadcrumb && self.breadcrumb.length > 0 ? ' md-tall' : ''
-    };
-
     self.onContextMenuPopup = onContextMenuPopup;
     self.onContextMenuSelected = onContextMenuSelected;
     self.onItemClicked = onItemClicked;
     self.onItemDoubleClicked = onItemDoubleClicked;
     self.upToParentFolder = upToParentFolder;
+    self.isScreenSize = $mdMedia;
+    self.isDetailsLocked = isDetailsLocked;
 
     notifier.addListener('newItem', {
       listener: self,
@@ -278,10 +224,8 @@
 
         if (self.currentFolder.isRoot) {
           self.breadcrumb.splice(0, self.breadcrumb.length);
-          $scope.base.config.navbarClass = '';
+          self.breadcrumb.push(self.currentFolder);
         } else {
-          $scope.base.config.ngViewClass += ' double-toolbar';
-          $scope.base.config.navbarClass = ' md-tall';
           makeBreadcrumb();
         }
 
@@ -300,7 +244,7 @@
     function makeBreadcrumb() {
       var breadcrumb = [self.currentFolder];
       var getParent = function(parent) {
-        if (!parent || parent.isRoot) {
+        if (!parent) {
           self.breadcrumb.splice(0, self.breadcrumb.length);
           breadcrumb.reverse().forEach(function(item) {
             self.breadcrumb.push(item);
@@ -328,6 +272,10 @@
         emptySelectedItem();
         self.selectedItemMap[item.id] = item;
         item.isSelected = true;
+      }
+
+      if (item.isSelected) {
+        self.selectedItem = item;
       }
     }
 
@@ -535,7 +483,12 @@
         });
       });
     }
+
+    function isDetailsLocked() {
+      return !!($mdMedia('gt-md') && detailsCache.get('visible'));
+    }
   }
+  DriveController.$injector = ['$scope', '$location', '$routeParams', '$filter', '$window', '$q', '$mdDialog', '$injector', '$cacheFactory', '$mdMedia', '$mdSidenav', 'notifier', 'google'];
 
   function NavigationDialogController($scope, $mdDialog, $injector) {
     var self = this,
@@ -586,5 +539,6 @@
       });
     }
   }
+  NavigationDialogController.$injector = ['$scope', '$mdDialog', '$injector'];
 
 })();
