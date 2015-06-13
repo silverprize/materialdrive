@@ -222,12 +222,7 @@
           self.currentFolder.isRoot = self.currentFolder.parents.length === 0;
         }
 
-        if (self.currentFolder.isRoot) {
-          self.breadcrumb.splice(0, self.breadcrumb.length);
-          self.breadcrumb.push(self.currentFolder);
-        } else {
-          makeBreadcrumb();
-        }
+        makeBreadcrumb();
 
         angular.forEach(data.items, function(item) {
           if (item.mimeType === google.mimeType.folder) {
@@ -242,21 +237,34 @@
     }
 
     function makeBreadcrumb() {
-      var breadcrumb = [self.currentFolder];
-      var getParent = function(parent) {
-        if (!parent) {
-          self.breadcrumb.splice(0, self.breadcrumb.length);
-          breadcrumb.reverse().forEach(function(item) {
-            self.breadcrumb.push(item);
-          });
-        } else {
+      var getRoot = function() {
+            return $cacheFactory.get('sidenav').get('menuList').filter(function(menu) {
+              return menu.selected;
+            })[0];
+          }, getParent, breadcrumb;
+
+      if (self.currentFolder.isRoot) {
+        self.breadcrumb.splice(0, self.breadcrumb.length);
+        self.breadcrumb.push(getRoot());
+      } else {
+        breadcrumb = [self.currentFolder];
+        getParent = function(parent) {
           google.filesGet(parent.id).success(function(data) {
-            breadcrumb.push(data);
-            getParent(data.parents[0]);
+            if (data.parents[0]) {
+              breadcrumb.push(data);
+              getParent(data.parents[0]);
+            } else {
+              self.breadcrumb.splice(0, self.breadcrumb.length);
+              self.breadcrumb.push(getRoot());
+              breadcrumb.reverse().forEach(function(item) {
+                self.breadcrumb.push(item);
+              });
+            }
           });
-        }
-      };
-      getParent(self.currentFolder.parents[0]);
+        };
+        getParent(self.currentFolder.parents[0]);
+      }
+
     }
 
     function onItemClicked(item, add) {
