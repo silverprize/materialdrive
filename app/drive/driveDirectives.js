@@ -30,7 +30,7 @@
   function MtdFocus($timeout) {
     return {
       link: function(scope, elem, attrs) {
-        attrs.$observe('focus', function(newValue) {
+        attrs.$observe('mtdFocus', function(newValue) {
           if (newValue === 'on') {
             $timeout(function() {
               elem.find('input').focus();
