@@ -1,15 +1,15 @@
 <div class="md-toolbar-tools" layout="row" layout-align="space-between center">
   <div ng-show="!navbarCtrl.queryFormState">
     <md-button class="md-icon-button" ng-click="navbarCtrl.toggleSidenav()" hide-gt-md aria-label="Toggle Sidenav">
-      <md-icon md-font-icon="fa fa-bars fa-2x"></md-icon>
+      <md-icon md-font-icon="material-icons">menu</md-icon>
     </md-button>
   </div>
   <div ng-show="!navbarCtrl.queryFormState">
     <md-button class="md-icon-button" ng-click="navbarCtrl.searchText = ''; navbarCtrl.queryFormState = 'on'" aria-label="Toggle Search form">
-      <md-icon md-font-icon="fa fa-search fa-2x"></md-icon>
+      <md-icon md-font-icon="material-icons">search</md-icon>
     </md-button>
     <md-button class="md-icon-button" aria-label="Toggle Details" ng-click="navbarCtrl.toggleDetails()">
-      <md-icon md-font-icon="fa fa-info-circle fa-2x"></md-icon>
+      <md-icon md-font-icon="material-icons">info_outline</md-icon>
     </md-button>
   </div>
   <div ng-show="navbarCtrl.queryFormState" flex>
@@ -17,7 +17,7 @@
       <span md-highlight-text="navbarCtrl.searchText">{{item.title}}</span>
     </md-autocomplete>
     <md-button class="md-icon-button md-primary" style="position: absolute; top:7px; padding-right: 20px;" ng-click="navbarCtrl.queryFormState = ''" aria-label="Back to Navbar">
-      <md-icon md-font-icon="fa fa-arrow-left fa-2x"></md-icon>
+      <md-icon md-font-icon="material-icons">arrow_back</md-icon>
     </md-button>
   </div>
 </div>
