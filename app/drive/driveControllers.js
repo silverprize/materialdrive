@@ -207,6 +207,8 @@
       var query = (google.query[$routeParams.category] || google.query.folder).replace('%s', $routeParams.itemId || 'root'),
           promises = [];
 
+      self.loaded = false;
+
       promises.push(google.filesList({query: query}));
       if ($routeParams.itemId) {
         promises.push(google.filesGet($routeParams.itemId));
@@ -233,6 +235,7 @@
         });
         self.folderList = $filter('orderBy')(folderList, 'title');
         self.fileList = $filter('orderBy')(fileList, 'title');
+        self.loaded = true;
       });
     }
 

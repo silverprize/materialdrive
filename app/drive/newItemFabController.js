@@ -2,83 +2,50 @@
   'use strict';
 
   angular.module('materialDrive')
-  .controller('NewItemFabController', [
-    '$scope',
-    '$mdBottomSheet',
-    '$mdDialog',
-    NewItemFabController
-  ])
-  .controller('BottomSheetController', [
-    '$scope',
-    '$mdBottomSheet',
-    '$mdDialog',
-    'google',
-    'notifier',
-    BottomSheetController
-  ])
-  .controller('NameDialogController', [
-    '$scope',
-    '$mdDialog',
-    NameDialogController
-  ]);
+  .controller('NewItemFabController', NewItemFabController)
+  .controller('NameDialogController', NameDialogController);
 
-  function NewItemFabController($scope, $mdBottomSheet, $mdDialog) {
+  function NewItemFabController($scope, $mdDialog, google, notifier) {
     var self = this;
 
-    self.showNewItemMenu = showNewItemMenu;
-
-    function showNewItemMenu($event) {
-      $mdBottomSheet.show({
-        templateUrl: 'app/drive/new-item-menu-sheet.tpl.html',
-        controller: 'BottomSheetController',
-        controllerAs: 'vm',
-        targetEvent: $event
-      });
-    }
-  }
-
-  function BottomSheetController($scope, $mdBottomSheet, $mdDialog, google, notifier) {
-    var self = this;
-
-    self.items = [{
-      name: 'Folder',
-      icon: {
-        class: 'fa-folder',
-        bg: ''
-      },
-      mimeType: google.mimeType.folder
-    }, {
+    self.menuList = [{
       name: 'Document',
       icon: {
-        class: 'fa-file-word-o',
+        name: 'fa fa-file-word-o fa-lg',
         bg: 'file-word-bg'
       },
       mimeType: google.mimeType.document
     }, {
       name: 'Spreadsheet',
       icon: {
-        class: 'fa-file-excel-o',
+        name: 'fa fa-file-excel-o fa-lg',
         bg: 'file-spreadsheet-bg'
       },
       mimeType: google.mimeType.spreadsheet
     }, {
       name: 'Presentation',
       icon: {
-        class: 'fa-file-powerpoint-o',
+        name: 'fa fa-file-powerpoint-o fa-lg',
         bg: 'file-presentation-bg'
       },
       mimeType: google.mimeType.presentation
+    }, {
+      name: 'Folder',
+      icon: {
+        name: 'fa fa-folder fa-lg',
+        bg: 'file-bg'
+      },
+      mimeType: google.mimeType.folder
     }];
 
-    self.onFileSelected = function ($files, $event) {
-      $mdBottomSheet.hide();
+    self.onFileSelected = function($files, $event) {
       notifier.notify('upload', {
         fileList: $files
       });
     };
 
-    self.listItemClick = function($event, $index) {
-      var clickedItem = self.items[$index];
+    self.menuClick = function($event, $index) {
+      var clickedMenu = self.menuList[$index];
       $mdDialog.show({
         controller: 'NameDialogController',
         controllerAs: 'vm',
@@ -87,20 +54,20 @@
         clickOutsideToClose: true,
         targetEvent: $event,
         locals: {
-          item: clickedItem
+          item: clickedMenu
         },
         onComplete: function(scope, elem, options) {
           elem.find('input').focus();
         }
       }).then(function(name) {
-        $mdBottomSheet.hide();
         notifier.notify('newItem', {
           name: name,
-          mimeType: clickedItem.mimeType
+          mimeType: clickedMenu.mimeType
         });
       });
     };
   }
+  NewItemFabController.$injector = ['$scope', '$mdDialog', 'google', 'notifier'];
 
   function NameDialogController($scope, $mdDialog) {
     var self = this;
@@ -113,5 +80,6 @@
       $mdDialog.cancel();
     };
   }
+  NameDialogController.$injector = ['$scope', '$mdDialog'];
 
 })();

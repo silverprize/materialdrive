@@ -1720,13 +1720,16 @@
   padding-left: 3px;
 }
 .file-word-bg {
-  color: #4285f4;
+  background-color: #4285f4 !important;
 }
 .file-spreadsheet-bg {
-  color: #0f9d58;
+  background-color: #0f9d58 !important;
 }
 .file-presentation-bg {
-  color: #f4b400;
+  background-color: #f4b400 !important;
+}
+.file-bg {
+  background-color: #808080 !important;
 }
 .md-inline-list-icon-label {
   color: buttontext;
