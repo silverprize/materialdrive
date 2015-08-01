@@ -1061,9 +1061,11 @@ md-backdrop {
   }
 
   opacity: 1;
-  transition: opacity 600ms $swift-ease-in-timing-function;
 
-  background-color: rgba(0,0,0,0);
+  // - Animate background-color alpha only for `.md-opaque` stylings
+  // !!Important - Theme-based Background-color and animations can be enabled in backdrop-theme.scss
+
+  transition: background-color 450ms $swift-ease-in-timing-function;
 
   position: absolute;
   top:0;
@@ -1072,28 +1074,13 @@ md-backdrop {
   right: 0;
 
   &.md-click-catcher {
-    position: fixed;
+    position: absolute;
   }
 
-  &.ng-enter {
-    opacity: 0;
-    &.ng-enter-active {
-      opacity: 1;
-    }
+  &.md-opaque.ng-leave {
+    transition: background-color 400ms linear;
   }
 
-  &.ng-leave {
-    opacity: 1;
-    transition: opacity 400ms linear;
-
-    &.ng-leave-active {
-      opacity: 0;
-    }
-  }
-
-  &.md-opaque {
-    background-color: rgba(0,0,0,0.42);
-  }
 }
 
 
@@ -1775,7 +1762,7 @@ $contact-chip-name-width: rem(12) !default;
       padding-right:rem(0.4);
       float: left;
       white-space: nowrap;
-      max-width: calc(100% - 31px);
+      max-width: 100%;
       overflow: hidden;
       text-overflow: ellipsis;
       &:focus {
@@ -1922,6 +1909,7 @@ $dialog-padding: $baseline-grid * 3;
   width: 100%;
   height: 100%;
   z-index: $z-index-dialog;
+  overflow: hidden;
 }
 
 md-dialog {
@@ -2943,6 +2931,7 @@ md-menu-content {
 md-menu-item {
   display: flex;
   flex-direction: row;
+  min-height: $menu-item-height;
   height: $menu-item-height;
   align-content: center;
   justify-content: flex-start;

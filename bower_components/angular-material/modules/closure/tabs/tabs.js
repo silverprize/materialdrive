@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.10.1-rc3-master-eda4782
+ * v0.10.1-rc5-master-69385ad
  */
 goog.provide('ng.material.components.tabs');
 goog.require('ng.material.components.icon');
@@ -480,7 +480,10 @@ function MdTabsController ($scope, $element, $window, $mdConstant, $mdTabInkRipp
   function select (index) {
     if (!locked) ctrl.focusIndex = ctrl.selectedIndex = index;
     ctrl.lastClick = true;
-    ctrl.tabs[ index ].element.triggerHandler('click');
+    // nextTick is required to prevent errors in user-defined click events
+    $mdUtil.nextTick(function () {
+      ctrl.tabs[ index ].element.triggerHandler('click');
+    }, false);
   }
 
   /**
@@ -687,6 +690,7 @@ function MdTabsController ($scope, $element, $window, $mdConstant, $mdTabInkRipp
    * @returns {*}
    */
   function getNearestSafeIndex (newIndex) {
+    if (newIndex === -1) return -1;
     var maxOffset = Math.max(ctrl.tabs.length - newIndex, newIndex),
         i, tab;
     for (i = 0; i <= maxOffset; i++) {
@@ -1072,7 +1076,7 @@ function MdTabs ($mdTheming, $mdUtil, $compile) {
             </div>\
           </md-tabs-canvas>\
         </md-tabs-wrapper>\
-        <md-tabs-content-wrapper ng-show="$mdTabsCtrl.hasContent">\
+        <md-tabs-content-wrapper ng-show="$mdTabsCtrl.hasContent && $mdTabsCtrl.selectedIndex >= 0">\
           <md-tab-content\
               id="tab-content-{{::tab.id}}"\
               role="tabpanel"\
@@ -1108,14 +1112,13 @@ angular
     .module('material.components.tabs')
     .directive('mdTemplate', MdTemplate);
 
-function MdTemplate ($compile, $mdUtil) {
+function MdTemplate ($compile) {
   return {
     restrict: 'A',
     link:     link,
     scope:    {
       template:     '=mdTemplate',
-      compileScope: '=mdScope',
-      connected:    '=?mdConnectedIf'
+      compileScope: '=mdScope'
     },
     require:  '^?mdTabs'
   };
@@ -1128,23 +1131,8 @@ function MdTemplate ($compile, $mdUtil) {
       ctrl.updatePagination();
       ctrl.updateInkBarStyles();
     });
-    return $mdUtil.nextTick(handleScope);
-    function handleScope () {
-      scope.$watch('connected', function (value) { value === false ? disconnect() : reconnect(); });
-      scope.$on('$destroy', reconnect);
-    }
-
-    function disconnect () {
-      if (ctrl.scope.noDisconnect) return;
-      $mdUtil.disconnectScope(compileScope);
-    }
-
-    function reconnect () {
-      if (ctrl.scope.noDisconnect) return;
-      $mdUtil.reconnectScope(compileScope);
-    }
   }
 }
-MdTemplate.$inject = ["$compile", "$mdUtil"];
+MdTemplate.$inject = ["$compile"];
 
 ng.material.components.tabs = angular.module("material.components.tabs");

@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.10.1-rc3-master-eda4782
+ * v0.10.1-rc5-master-69385ad
  */
 (function( window, angular, undefined ){
 "use strict";
@@ -332,7 +332,7 @@ function MenuProvider($$interimElementProvider) {
       // Return the promise for when our menu is done animating in
       return animator
           .waitTransitionEnd(element, {timeout: 370})
-          .then( function(response) {
+          .finally( function(response) {
             opts.cleanupInteraction = activateInteraction();
             return response;
           });

@@ -30,34 +30,26 @@
         </md-list>
 
         <div ng-controller="NewItemFabController as ctrl"  class="fab-container">
-          <md-fab-speed-dial ng-hide="demo.hidden" md-direction="up" class="md-fling">
+          <md-fab-speed-dial ng-hide="demo.hidden" md-direction="up" class="md-scale">
             <md-fab-trigger>
               <md-button aria-label="menu" class="md-fab md-warn">
                 <md-icon md-font-icon="material-icons">add</md-icon>
               </md-button>
             </md-fab-trigger>
             <md-fab-actions>
-              <md-button aria-label="{{ctrl.menuList[0].name}}" class="md-fab md-raised md-mini" ng-class="ctrl.menuList[0].icon.bg" ng-click="ctrl.menuClick($event, 0)">
-                <md-tooltip md-direction="left">{{::ctrl.menuList[0].name}}</md-tooltip>
-                <md-icon md-font-icon="{{ctrl.menuList[0].icon.name}}"></md-icon>
-              </md-button>
-              <md-button aria-label="{{ctrl.menuList[1].name}}" class="md-fab md-raised md-mini" ng-class="ctrl.menuList[1].icon.bg" ng-click="ctrl.menuClick($event, 1)">
-                <md-tooltip md-direction="left">{{::ctrl.menuList[1].name}}</md-tooltip>
-                <md-icon md-font-icon="{{ctrl.menuList[1].icon.name}}"></md-icon>
-              </md-button>
-              <md-button aria-label="{{ctrl.menuList[2].name}}" class="md-fab md-raised md-mini" ng-class="ctrl.menuList[2].icon.bg" ng-click="ctrl.menuClick($event, 2)">
-                <md-tooltip md-direction="left">{{::ctrl.menuList[2].name}}</md-tooltip>
-                <md-icon md-font-icon="{{ctrl.menuList[2].icon.name}}"></md-icon>
-              </md-button>
-              <md-button aria-label="{{ctrl.menuList[3].name}}" class="md-fab md-raised md-mini" ng-class="ctrl.menuList[3].icon.bg" ng-click="ctrl.menuClick($event, 3)">
-                <md-tooltip md-direction="left">{{::ctrl.menuList[3].name}}</md-tooltip>
-                <md-icon md-font-icon="{{ctrl.menuList[3].icon.name}}"></md-icon>
-              </md-button>
-              <md-button class="md-fab md-raised md-mini file-bg" aria-label="Upload">
-                <md-tooltip md-direction="left">Upload</md-tooltip>
-                <md-icon md-font-icon="fa fa-cloud-upload fa-lg"></md-icon>
-                <ng-file-select ng-multiple="true" ng-file-change="ctrl.onFileSelected($files, $event)"></ng-file-select>
-              </md-button>
+              <div ng-repeat="menu in ctrl.menuList">
+                <md-button aria-label="{{::menu.name}}" class="md-fab md-raised md-mini" ng-class="menu.icon.bg" ng-click="ctrl.menuClick($event, $index)">
+                  <md-tooltip md-direction="left">{{::menu.name}}</md-tooltip>
+                  <md-icon md-font-icon="{{menu.icon.name}}"></md-icon>
+                </md-button>
+              </div>
+              <div>
+                <md-button class="md-fab md-raised md-mini file-bg" aria-label="Upload">
+                  <md-tooltip md-direction="left">Upload</md-tooltip>
+                  <md-icon md-font-icon="fa fa-cloud-upload fa-lg"></md-icon>
+                  <ng-file-select ng-multiple="true" ng-file-change="ctrl.onFileSelected($files, $event)"></ng-file-select>
+                </md-button>
+              </div>
             </md-fab-actions>
           </md-fab-speed-dial>
         </div>
