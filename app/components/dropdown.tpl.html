@@ -1,5 +1,5 @@
 <md-whiteframe class="md-whiteframe-z1" layout="column">
   <md-button ng-if="menu.enabled" class="dropdown-menu-item" ng-repeat="menu in menuList" ng-click="dropdownCtrl.onMenuSelected(menu)" layout="row" aria-label="{{::menu.name}}">
-    <core-icon icon="{{::menu.icon}}"></core-icon> <span class="name" ng-bind="::menu.name"></span>
+    <md-icon md-font-icon="material-icons">{{::menu.icon}}</md-icon> <span class="name" ng-bind="::menu.name"></span>
   </md-button>
 </md-whiteframe>

@@ -1,4 +1,4 @@
-<md-dialog class="file-navigation-dialog md-content-overflow">
+<md-dialog class="file-navigation-dialog md-content-overflow" aria-label="dialog">
   <h1 class="header md-title">Move to</h1>
   <md-divider></md-divider>
   <h1 class="md-subheader current-folder clickable" ng-click="vm.goToParent()">
@@ -6,7 +6,7 @@
   </h1>
   <md-dialog-content>
     <md-list class="drive-list" ng-repeat="folder in vm.folderList">
-      <md-list-item class="drive-list-item" ng-click="!vm.selectedItemMap[folder.id] && vm.exapnd(folder)" ng-class="{disabled: vm.selectedItemMap[folder.id]}">
+      <md-list-item class="drive-list-item" aria-label="{{::folder.title}}" ng-click="!vm.selectedItemMap[folder.id] && vm.exapnd(folder)" ng-class="{disabled: vm.selectedItemMap[folder.id]}">
         <img class="icon" ng-src="{{folder.iconLink}}">
         <span class="name" ng-bind="::folder.title"></span>
       </md-list-item>

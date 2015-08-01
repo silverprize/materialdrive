@@ -164,11 +164,11 @@
 
     self.contextMenuList = [{
       name: 'Make a copy',
-      icon: 'content-copy',
+      icon: 'content_copy',
       enabled: true
     }, {
       name: 'Move to',
-      icon: 'folder-open',
+      icon: 'folder_open',
       enabled: true
     }, {
       name: 'Remove',

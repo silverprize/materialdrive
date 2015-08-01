@@ -51,7 +51,7 @@
         bodyElem.append(menuListElem);
 
         bodyElem.on('click', function() {
-          $scope.contextMenuState.visibility = 'hidden';
+          $scope.contextMenuState.display = 'none';
           $scope.$digest();
         });
 
@@ -73,6 +73,7 @@
             $scope.contextMenuState.left = left + 'px';
             $scope.contextMenuState.top = top + 'px';
             $scope.contextMenuState.visibility = 'visible';
+            $scope.contextMenuState.display = 'block';
           }
 
           $scope.$digest();
