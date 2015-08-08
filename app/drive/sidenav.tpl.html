@@ -11,7 +11,7 @@
 <md-content flex layout="column">
   <md-list class="sidenav-menu-list-container">
     <md-list-item class="list-item" ng-repeat="menu in sidenavCtrl.menuList">
-      <md-button class="md-primary list-item-inner" ng-class="{'md-accent': menu.selected}" href="{{menu.href}}" ng-click="sidenavCtrl.onMenuSelect(menu)" flex aria-label="{{::menu.label}}">
+      <md-button class="md-primary list-item-inner" ng-class="{'md-accent': menu.selected}" ui-sref="drive.category({category: menu.href})" ng-click="sidenavCtrl.onMenuSelect(menu)" flex aria-label="{{::menu.label}}">
         <md-icon md-font-icon="material-icons">{{::menu.icon}}</md-icon>
         <span style="padding-left: 10px;" ng-bind="::menu.label"></span>
         <md-divider></md-divider>

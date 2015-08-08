@@ -21,5 +21,6 @@ Consist of
 Libraries
 =
 - [Font awesome](http://fontawesome.io/)
-- [angular-file-upload](https://github.com/danialfarid/angular-file-upload)
 - [Material icons](https://www.google.com/design/icons)
+- [angular-file-upload](https://github.com/danialfarid/angular-file-upload)
+- [AngularUI Router](https://github.com/angular-ui/ui-router)

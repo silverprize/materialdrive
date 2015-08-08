@@ -1,0 +1,25 @@
+<div flex layout="column" class="wrapper">
+  <md-progress-linear ng-if="!driveCtrl.loaded" md-mode="indeterminate" style="position:absolute;top:-5px"></md-progress-linear>
+  <md-list class="drive-list" ng-if="driveCtrl.loaded">
+    <md-list-item class="drive-list-item" ng-if="!driveCtrl.currentFolder.isRoot" ng-click="driveCtrl.upToParentFolder()">
+      <span class="fa fa-level-up"></span>&nbsp;&nbsp;...
+      <md-divider></md-divider>
+    </md-list-item>
+
+    <div ng-if="driveCtrl.loaded && !driveCtrl.fileList.length && !driveCtrl.folderList.length" layout-align="center center" layout="column">
+      <i class="material-icons md-48 md-dark">format_quote</i> There is no item.
+    </div>
+
+    <md-list-item class="drive-list-item" ng-class="{selected: folder.isSelected}" ng-dblclick="driveCtrl.onItemDoubleClicked(folder)" ng-click="driveCtrl.onItemClicked(folder, true)" mtd-right-click="driveCtrl.onItemClicked(folder, false)" ng-repeat="folder in driveCtrl.folderList" aria-label="{{::folder.title}} selected">
+      <img class="icon" ng-src="{{folder.iconLink}}">
+      <span class="name" ng-bind="::folder.title"></span>
+      <md-divider></md-divider>
+    </md-list-item>
+
+    <md-list-item class="drive-list-item" ng-class="{selected: file.isSelected}" ng-dblclick="driveCtrl.onItemDoubleClicked(file)" ng-click="driveCtrl.onItemClicked(file, true)" mtd-right-click="driveCtrl.onItemClicked(file, false)" ng-repeat="file in driveCtrl.fileList" aria-label="{{::file.title}} selected">
+      <img class="icon" ng-src="{{file.iconLink}}">
+      <span class="name" ng-bind="::file.title"></span>
+      <md-divider></md-divider>
+    </md-list-item>
+  </md-list>
+</div>

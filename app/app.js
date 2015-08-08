@@ -2,56 +2,83 @@
   'use strict';
 
   angular.module('materialDrive')
-  .config(['$routeProvider', setupRoute])
+  .config(['$urlRouterProvider', '$stateProvider', setupRoute])
   .config(['$httpProvider', setupHttp]);
 
-  function setupRoute($routeProvider) {
-    $routeProvider.when('/drive/:category/:itemId?', {
-      templateUrl: 'app/drive/drive.tpl.html',
-      controller: 'DriveController',
-      controllerAs: 'driveCtrl',
-      resolve: {
-        google: ['$injector', function($injector) {
-          var $q = $injector.get('$q'),
-              $location = $injector.get('$location'),
-              google = $injector.get('google'),
-              deferred = $q.defer();
+  function setupRoute($urlRouterProvider, $stateProvider) {
+     var driveResolve = {
+      google: ['$injector', function($injector) {
+        var $q = $injector.get('$q'),
+            $state = $injector.get('$state'),
+            $location = $injector.get('$location'),
+            google = $injector.get('google'),
+            deferred = $q.defer();
 
-          google.authorize(true).then(function() {
-            deferred.resolve(google);
+        google.authorize(true).then(function() {
+          deferred.resolve(google);
+        }, function() {
+          deferred.promise.then(null, function() {
+            $state.go('gate.sign', {
+              redirect: $location.url()
+            });
+          });
+          deferred.reject();
+        });
+        return deferred.promise;
+      }]
+    }, gateResolve = {
+      auth: ['$injector', function($injector) {
+        var $q = $injector.get('$q'),
+            $state = $injector.get('$state'),
+            google = $injector.get('google');
+
+        return google.prepareGapi().then(function(google) {
+          return google.authorize(true).then(function() {
+            $state.go('drive.category', {
+              category: 'mydrive'
+            });
           }, function() {
-            deferred.promise.then(null, function() {
-              $location.url('/sign?redirect=' + $location.url());
-            });
-            deferred.reject();
+            return $q.when();
           });
-          return deferred.promise;
-        }]
-      }
-    }).when('/sign', {
-      templateUrl: 'app/gate/gate.tpl.html',
-      controller: 'GateController',
-      controllerAs: 'gateCtrl',
-      resolve: {
-        auth: ['$injector', function($injector) {
-          var $q = $injector.get('$q'),
-              $location = $injector.get('$location'),
-              $routeParams = $injector.get('$routeParams'),
-              google = $injector.get('google');
+        });
+      }]
+    };
 
-          return google.prepareGapi().then(function(google) {
-            return google.authorize(true).then(function() {
-              $location.url($routeParams.redirect || '/drive/mydrive');
-            }, function() {
-              return $q.when();
-            });
-          });
-        }]
-      }
-    }).otherwise({
-      redirectTo: function() {
-        return '/drive/mydrive';
-      }
+    $urlRouterProvider
+    .otherwise('/drive/mydrive');
+
+    $stateProvider
+    .state('gate', {
+      url: '',
+      templateUrl: 'app/gate/gate.tpl.html',
+      controller: 'GateController as gateCtrl',
+      resolve : gateResolve
+    })
+    .state('gate.sign', {
+      url: '/sign?redirect',
+      templateUrl: 'app/gate/gate.tpl.html',
+      controller: 'GateController as gateCtrl',
+      resolve : gateResolve
+    })
+    .state('drive', {
+      url: '/drive',
+      templateUrl: 'app/drive/drive.tpl.html',
+      controller: 'DriveController as driveCtrl',
+      resolve: driveResolve
+    })
+    .state('drive.category', {
+      url: '/:category',
+      templateUrl: 'app/drive/drive-list.tpl.html',
+      controller: ['$scope', '$stateParams', function($scope, $stateParams) {
+        $scope.driveCtrl.init($stateParams);
+      }]
+    })
+    .state('drive.folder', {
+      url: '/folder/:folderId',
+      templateUrl: 'app/drive/drive-list.tpl.html',
+      controller: ['$scope', '$stateParams', function($scope, $stateParams) {
+        $scope.driveCtrl.init($stateParams);
+      }]
     });
   }
 
@@ -61,14 +88,13 @@
         responseError: function(rejection) {
           var google = $injector.get('google'),
               $q = $injector.get('$q'),
-              $location = $injector.get('$location'),
-              $route = $injector.get('$route');
+              $state = $injector.get('$state');
 
           if (rejection.status === 401) {
             google.authorize(true).then(function() {
-              $route.reload();
+              $state.reload();
             }, function() {
-              $location.url('/');
+              $state.go('gate');
             });
           }
           return $q.reject(rejection);

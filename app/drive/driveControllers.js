@@ -7,7 +7,7 @@
   .controller('DriveController', DriveController)
   .controller('NavigationDialogController', NavigationDialogController);
 
-  function NavbarController($scope, $window, $document, $location, $q, $cacheFactory, $mdSidenav, google) {
+  function NavbarController($scope, $window, $document, $state, $q, $cacheFactory, $mdSidenav, google) {
     var self = this,
         detailsCache = $cacheFactory.get('details');
 
@@ -18,7 +18,7 @@
 
     self.breadcrumb = $cacheFactory.get('drive').get('breadcrumb');
 
-    $scope.$on('$routeChangeSuccess', function() {
+    $scope.$on('$stateChangeSuccess', function() {
       self.queryFormState = '';
       self.searchText = '';
     });
@@ -57,26 +57,24 @@
       }
 
       if (self.selectedItem.mimeType === google.mimeType.folder) {
-        $location.url('/drive/folder/' + self.selectedItem.id);
+        $state.go('drive.folder', {
+          folderId: self.selectedItem.id
+        });
       } else {
         $window.open(self.selectedItem.alternateLink);
       }
     }
   }
-  NavbarController.$injector = ['$scope', '$window', '$document', '$location', '$q', '$cacheFactory', '$mdSidenav', 'google'];
+  NavbarController.$injector = ['$scope', '$window', '$document', '$state', '$q', '$cacheFactory', '$mdSidenav', 'google'];
 
   function SidenavController($cacheFactory, google) {
     var self = this,
         cache = $cacheFactory.get('sidenav');
 
+    self.onMenuSelect = onMenuSelect;
+
     self.menuList = cache.get('menuList');
     self.user = cache.get('userInfo');
-
-    self.selectedMenu = self.menuList.filter(function(menu) {
-      return menu.selected;
-    })[0];
-
-    self.onMenuSelect = onMenuSelect;
 
     google.about().success(function(data) {
       self.user = data.user;
@@ -84,6 +82,12 @@
     });
 
     function onMenuSelect(menu) {
+      if (!self.selectedMenu) {
+        self.selectedMenu = self.menuList.filter(function(menu) {
+          return menu.selected;
+        })[0];
+      }
+
       self.selectedMenu.selected = false;
       menu.selected = true;
       self.selectedMenu = menu;
@@ -91,11 +95,20 @@
   }
   SidenavController.$injector = ['$cacheFactory', '$mdSidenav', '$mdMedia', 'google'];
 
-  function DriveController($scope, $location, $routeParams, $filter, $window, $q, $mdDialog, $injector, $cacheFactory, $mdMedia, $mdSidenav, notifier, google) {
+  function DriveController($scope, $state, $filter, $window, $q, $mdDialog, $injector, $cacheFactory, $mdMedia, $mdSidenav, notifier, google) {
     var self = this,
         driveCache = $cacheFactory.get('drive'),
         sidenavCache = $cacheFactory.get('sidenav'),
         detailsCache = $cacheFactory.get('details');
+
+    self.init = init;
+    self.onContextMenuPopup = onContextMenuPopup;
+    self.onContextMenuSelected = onContextMenuSelected;
+    self.onItemClicked = onItemClicked;
+    self.onItemDoubleClicked = onItemDoubleClicked;
+    self.upToParentFolder = upToParentFolder;
+    self.isScreenSize = $mdMedia;
+    self.isDetailsLocked = isDetailsLocked;
 
     if (!driveCache) {
       driveCache = $cacheFactory('drive');
@@ -103,35 +116,64 @@
     }
 
     if (!sidenavCache) {
-      var menuList = [{
+      sidenavCache = $cacheFactory('sidenav');
+      sidenavCache.put('menuList', [{
         icon: 'folder',
         label: 'My Drive',
-        href: '#drive/mydrive',
+        href: 'mydrive',
         index: 0
       }, {
         icon: 'people',
         label: 'Share with me',
-        href: '#drive/incoming',
+        href: 'incoming',
         index: 1
       }, {
         icon: 'history',
         label: 'Recent',
-        href: '#drive/recent',
+        href: 'recent',
         index: 2
       }, {
         icon: 'star',
         label: 'Starred',
-        href: '#drive/starred',
+        href: 'starred',
         index: 3
       }, {
         icon: 'delete',
         label: 'Trash',
-        href: '#drive/trash',
+        href: 'trash',
         index: 4
-      }];
+      }]);
+    }
 
-      sidenavCache = $cacheFactory('sidenav');
-      switch ($routeParams.category) {
+    if (!detailsCache) {
+      detailsCache = $cacheFactory('details');
+    }
+
+    notifier.addListener('newItem', {
+      listener: self,
+      callback: onCreateNewItem
+    });
+
+    notifier.addListener('upload', {
+      listener: self,
+      callback: onUploadFile
+    });
+
+    $scope.$on('$stateChangeSuccess', function() {
+      self.selectedItem = undefined;
+    });
+
+    $scope.$on('$destroy', function() {
+      notifier.removeListener('newItem', self);
+      notifier.removeListener('upload', self);
+    });
+
+    function init($stateParams) {
+      var query = (google.query[$stateParams.category] || google.query.folder).replace('%s', $stateParams.folderId || 'root'),
+          promises = [],
+          menuList = sidenavCache.get('menuList');
+
+      switch ($stateParams.category) {
         case 'incoming':
           menuList[1].selected = true;
           break;
@@ -149,69 +191,33 @@
           break;
       }
 
-      sidenavCache.put('menuList', menuList);
-    }
+      self.selectedItemMap = {};
 
-    if (!detailsCache) {
-      detailsCache = $cacheFactory('details');
-    }
+      self.currentFolder = {
+        isRoot: true
+      };
 
-    self.selectedItemMap = {};
+      self.contextMenuList = [{
+        name: 'Make a copy',
+        icon: 'content_copy',
+        enabled: true
+      }, {
+        name: 'Move to',
+        icon: 'folder_open',
+        enabled: true
+      }, {
+        name: 'Remove',
+        icon: 'delete',
+        enabled: true
+      }];
 
-    self.currentFolder = {
-      isRoot: true
-    };
-
-    self.contextMenuList = [{
-      name: 'Make a copy',
-      icon: 'content_copy',
-      enabled: true
-    }, {
-      name: 'Move to',
-      icon: 'folder_open',
-      enabled: true
-    }, {
-      name: 'Remove',
-      icon: 'delete',
-      enabled: true
-    }];
-
-    self.breadcrumb = driveCache.get('breadcrumb');
-
-    self.onContextMenuPopup = onContextMenuPopup;
-    self.onContextMenuSelected = onContextMenuSelected;
-    self.onItemClicked = onItemClicked;
-    self.onItemDoubleClicked = onItemDoubleClicked;
-    self.upToParentFolder = upToParentFolder;
-    self.isScreenSize = $mdMedia;
-    self.isDetailsLocked = isDetailsLocked;
-
-    notifier.addListener('newItem', {
-      listener: self,
-      callback: onCreateNewItem
-    });
-
-    notifier.addListener('upload', {
-      listener: self,
-      callback: onUploadFile
-    });
-
-    $scope.$on('$destroy', function() {
-      notifier.removeListener('newItem', self);
-      notifier.removeListener('upload', self);
-    });
-
-    init();
-
-    function init() {
-      var query = (google.query[$routeParams.category] || google.query.folder).replace('%s', $routeParams.itemId || 'root'),
-          promises = [];
+      self.breadcrumb = driveCache.get('breadcrumb');
 
       self.loaded = false;
 
       promises.push(google.filesList({query: query}));
-      if ($routeParams.itemId) {
-        promises.push(google.filesGet($routeParams.itemId));
+      if ($stateParams.folderId) {
+        promises.push(google.filesGet($stateParams.folderId));
       }
 
       $q.all(promises).then(function(responses) {
@@ -296,14 +302,20 @@
       }
 
       if (item.mimeType === google.mimeType.folder) {
-        $location.url('/drive/folder/' + item.id);
+        $state.go('drive.folder', {
+          category: $state.params.category,
+          folderId: item.id
+        });
       } else {
         $window.open(item.alternateLink);
       }
     }
 
     function upToParentFolder() {
-      $location.url('/drive/folder/' + self.currentFolder.parents[0].id);
+      $state.go('drive.folder', {
+        category: $state.params.category,
+        folderId: self.currentFolder.parents[0].id
+      });
     }
 
     function onCreateNewItem(data) {
@@ -315,7 +327,7 @@
         if (data.mimeType !== google.mimeType.folder) {
           $window.open(data.alternateLink);
         }
-        init();
+        init($state.params);
       });
     }
 
@@ -365,7 +377,7 @@
             $q.all(uploadPromises).then(function(responses) {
               $mdDialog.hide();
               emptySelectedItem();
-              init();
+              init($state.params);
             });
             self.prepared = true;
           });
@@ -435,7 +447,7 @@
 
       $q.all(promises).then(function() {
         emptySelectedItem();
-        init();
+        init($state.params);
       });
     }
 
@@ -457,7 +469,7 @@
 
         $q.all(promises).then(function() {
           emptySelectedItem();
-          init();
+          init($state.params);
         });
       });
     }
@@ -490,7 +502,7 @@
 
         $q.all(promises).then(function() {
           emptySelectedItem();
-          init();
+          init($state.params);
         });
       });
     }
@@ -499,7 +511,7 @@
       return !!($mdMedia('gt-md') && detailsCache.get('visible'));
     }
   }
-  DriveController.$injector = ['$scope', '$location', '$routeParams', '$filter', '$window', '$q', '$mdDialog', '$injector', '$cacheFactory', '$mdMedia', '$mdSidenav', 'notifier', 'google'];
+  DriveController.$injector = ['$scope', '$state', '$filter', '$window', '$q', '$mdDialog', '$injector', '$cacheFactory', '$mdMedia', '$mdSidenav', 'notifier', 'google'];
 
   function NavigationDialogController($scope, $mdDialog, $injector) {
     var self = this,

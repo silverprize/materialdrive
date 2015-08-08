@@ -2,34 +2,11 @@
   <md-sidenav ng-controller="SidenavController as sidenavCtrl" class="md-sidenav-left md-whiteframe-z2" md-component-id="sidenav" md-is-locked-open="$mdMedia('gt-md')" ng-include="'app/drive/sidenav.tpl.html'"></md-sidenav>
 
   <div class="file-list-wrapper" layout="column" flex>
+
     <md-toolbar ng-controller="NavbarController as navbarCtrl" class="navbar md-whiteframe-z2 md-tall" ng-include="'app/drive/navbar.tpl.html'"></md-toolbar>
-    <md-content class="md-sidenav-left md-whiteframe-z2" mtd-context-menu menu-list="driveCtrl.contextMenuList" on-menu-selected="driveCtrl.onContextMenuSelected(menu)" on-popup="driveCtrl.onContextMenuPopup()" layout="column" flex md-scroll-y>
-      <div flex layout="column" class="wrapper">
-        <md-progress-linear ng-if="!driveCtrl.loaded" md-mode="indeterminate" style="position:absolute;top:-5px"></md-progress-linear>
-        <md-list class="drive-list">
-          <md-list-item class="drive-list-item" ng-if="!driveCtrl.currentFolder.isRoot" ng-click="driveCtrl.upToParentFolder()">
-            <span class="fa fa-level-up"></span>&nbsp;&nbsp;...
-            <md-divider></md-divider>
-          </md-list-item>
 
-          <div ng-if="driveCtrl.loaded && !driveCtrl.fileList.length && !driveCtrl.folderList.length" layout-align="center center" layout="column">
-            <i class="material-icons md-48 md-dark">format_quote</i> There is no item.
-          </div>
+    <md-content class="md-sidenav-left md-whiteframe-z2" mtd-context-menu menu-list="driveCtrl.contextMenuList" on-menu-selected="driveCtrl.onContextMenuSelected(menu)" on-popup="driveCtrl.onContextMenuPopup()" layout="column" flex md-scroll-y ui-view></md-content>
 
-          <md-list-item class="drive-list-item" ng-class="{selected: folder.isSelected}" ng-dblclick="driveCtrl.onItemDoubleClicked(folder)" ng-click="driveCtrl.onItemClicked(folder, true)" mtd-right-click="driveCtrl.onItemClicked(folder, false)" ng-repeat="folder in driveCtrl.folderList" aria-label="{{::folder.title}} selected">
-            <img class="icon" ng-src="{{folder.iconLink}}">
-            <span class="name" ng-bind="::folder.title"></span>
-            <md-divider></md-divider>
-          </md-list-item>
-
-          <md-list-item class="drive-list-item" ng-class="{selected: file.isSelected}" ng-dblclick="driveCtrl.onItemDoubleClicked(file)" ng-click="driveCtrl.onItemClicked(file, true)" mtd-right-click="driveCtrl.onItemClicked(file, false)" ng-repeat="file in driveCtrl.fileList" aria-label="{{::file.title}} selected">
-            <img class="icon" ng-src="{{file.iconLink}}">
-            <span class="name" ng-bind="::file.title"></span>
-            <md-divider></md-divider>
-          </md-list-item>
-        </md-list>
-      </div>
-    </md-content>
     <div ng-controller="NewItemFabController as ctrl"  class="fab-container">
       <md-fab-speed-dial ng-hide="demo.hidden" md-direction="up" class="md-scale">
         <md-fab-trigger>
@@ -54,6 +31,7 @@
         </md-fab-actions>
       </md-fab-speed-dial>
     </div>
+
   </div>
 
   <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="details" md-is-locked-open="driveCtrl.isDetailsLocked()" layout="column">

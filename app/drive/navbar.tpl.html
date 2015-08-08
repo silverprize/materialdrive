@@ -25,8 +25,8 @@
 <div class="md-toolbar-tools" ng-if="navbarCtrl.breadcrumb.length > 0">
   <ol class="breadcrumb">
     <li class="breadcrumb-item" ng-repeat="item in navbarCtrl.breadcrumb">
-      <md-button ng-if="$first" class="breadcrumb-item-inner" ng-href="{{item.href}}" aria-label="{{::item.label}}">{{::item.label}}</md-button>
-      <md-button ng-if="!$first" class="breadcrumb-item-inner" ng-href="#drive/folder/{{item.id}}" aria-label="{{::item.title}}">{{::item.title}}</md-button>
+      <md-button ng-if="$first" class="breadcrumb-item-inner" ui-sref="drive.category({category: item.href})" aria-label="{{::item.label}}">{{::item.label}}</md-button>
+      <md-button ng-if="!$first" class="breadcrumb-item-inner" ui-sref="drive.folder({folderId: item.id})" aria-label="{{::item.title}}">{{::item.title}}</md-button>
       <img class="breadcrumb-separator" src="https://material.angularjs.org/latest/img/docArrow.png" ng-if="navbarCtrl.breadcrumb.length > 1 && !$last">
     </li>
   </ol>
