@@ -1684,6 +1684,9 @@
   border-bottom-left-radius: 2px;
   border-bottom-right-radius: 2px;
 }
+.file-list-wrapper {
+  position: relative;
+}
 .breadcrumb {
   padding: 0;
   margin: 0;
@@ -1873,4 +1876,12 @@ input-file input[type="file"] {
 }
 .material-icons.md-light.md-inactive {
   color: rgba(255, 255, 255, 0.3);
+}
+@-moz-document url-prefix() {
+  [layout-fill] {
+    margin: 0;
+    width: 100%;
+    min-height: 100%;
+    height: inherit;
+  }
 }
