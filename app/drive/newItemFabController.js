@@ -5,6 +5,7 @@
   .controller('NewItemFabController', NewItemFabController)
   .controller('NameDialogController', NameDialogController);
 
+  NewItemFabController.$injector = ['$scope', '$mdDialog', 'google', 'notifier'];
   function NewItemFabController($scope, $mdDialog, google, notifier) {
     var self = this;
 
@@ -67,8 +68,8 @@
       });
     };
   }
-  NewItemFabController.$injector = ['$scope', '$mdDialog', 'google', 'notifier'];
 
+  NameDialogController.$injector = ['$scope', '$mdDialog'];
   function NameDialogController($scope, $mdDialog) {
     var self = this;
 
@@ -80,6 +81,5 @@
       $mdDialog.cancel();
     };
   }
-  NameDialogController.$injector = ['$scope', '$mdDialog'];
 
 })();

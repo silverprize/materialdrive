@@ -4,6 +4,7 @@
   angular.module('materialDrive')
   .controller('GateController', GateController);
 
+  GateController.$injector = ['$scope', '$location', '$state', 'google'];
   function GateController($scope, $location, $state, google) {
     var self = this;
 
@@ -16,6 +17,4 @@
       });
     }
   }
-
-  GateController.$injector = ['$scope', '$location', '$state', 'google'];
 })();

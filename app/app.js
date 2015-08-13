@@ -2,10 +2,11 @@
   'use strict';
 
   angular.module('materialDrive')
-  .config(['$urlRouterProvider', '$stateProvider', setupRoute])
-  .config(['$httpProvider', setupHttp]);
+  .config(SetupRoute)
+  .config(SetupHttp);
 
-  function setupRoute($urlRouterProvider, $stateProvider) {
+  SetupRoute.$injector = ['$urlRouterProvider', '$stateProvider'];
+  function SetupRoute($urlRouterProvider, $stateProvider) {
      var driveResolve = {
       google: ['$injector', function($injector) {
         var $q = $injector.get('$q'),
@@ -82,7 +83,8 @@
     });
   }
 
-  function setupHttp($httpProvider) {
+  SetupHttp.$injector = ['$httpProvider'];
+  function SetupHttp($httpProvider) {
     $httpProvider.interceptors.push(['$injector', function($injector) {
       return {
         responseError: function(rejection) {

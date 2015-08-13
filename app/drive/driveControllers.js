@@ -7,6 +7,7 @@
   .controller('DriveController', DriveController)
   .controller('NavigationDialogController', NavigationDialogController);
 
+  NavbarController.$injector = ['$scope', '$window', '$document', '$state', '$q', '$cacheFactory', '$mdSidenav', 'google'];
   function NavbarController($scope, $window, $document, $state, $q, $cacheFactory, $mdSidenav, google) {
     var self = this,
         detailsCache = $cacheFactory.get('details');
@@ -65,7 +66,6 @@
       }
     }
   }
-  NavbarController.$injector = ['$scope', '$window', '$document', '$state', '$q', '$cacheFactory', '$mdSidenav', 'google'];
 
   function SidenavController($cacheFactory, google) {
     var self = this,
@@ -81,6 +81,7 @@
       cache.put('userInfo', data.user);
     });
 
+  SidenavController.$injector = ['$cacheFactory', '$mdSidenav', '$mdMedia', 'google'];
     function onMenuSelect(menu) {
       if (!self.selectedMenu) {
         self.selectedMenu = self.menuList.filter(function(menu) {
@@ -93,8 +94,8 @@
       self.selectedMenu = menu;
     }
   }
-  SidenavController.$injector = ['$cacheFactory', '$mdSidenav', '$mdMedia', 'google'];
 
+  DriveController.$injector = ['$scope', '$state', '$filter', '$window', '$q', '$mdDialog', '$injector', '$cacheFactory', '$mdMedia', '$mdSidenav', 'notifier', 'google'];
   function DriveController($scope, $state, $filter, $window, $q, $mdDialog, $injector, $cacheFactory, $mdMedia, $mdSidenav, notifier, google) {
     var self = this,
         driveCache = $cacheFactory.get('drive'),
@@ -511,8 +512,8 @@
       return !!($mdMedia('gt-md') && detailsCache.get('visible'));
     }
   }
-  DriveController.$injector = ['$scope', '$state', '$filter', '$window', '$q', '$mdDialog', '$injector', '$cacheFactory', '$mdMedia', '$mdSidenav', 'notifier', 'google'];
 
+  NavigationDialogController.$injector = ['$scope', '$mdDialog', '$injector'];
   function NavigationDialogController($scope, $mdDialog, $injector) {
     var self = this,
         $q = $injector.get('$q'),
@@ -562,6 +563,4 @@
       });
     }
   }
-  NavigationDialogController.$injector = ['$scope', '$mdDialog', '$injector'];
-
 })();
