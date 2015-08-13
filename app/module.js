@@ -4,7 +4,7 @@
   angular.module('materialDrive', [
     'ngMaterial',
     'ngLocale',
-    'angularFileUpload',
+    'ngFileUpload',
     'ui.router'
   ]);
 })();

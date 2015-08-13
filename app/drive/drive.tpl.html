@@ -22,10 +22,9 @@
             </md-button>
           </div>
           <div>
-            <md-button class="md-fab md-raised md-mini file-bg" aria-label="Upload">
+            <md-button class="md-fab md-raised md-mini file-bg" aria-label="Upload" ngf-select ngf-multiple="true" ngf-change="ctrl.onFileSelected($files, $file, $event, $rejectedFiles)">
               <md-tooltip md-direction="left">Upload</md-tooltip>
               <md-icon md-font-icon="fa fa-cloud-upload fa-lg"></md-icon>
-              <ng-file-select ng-multiple="true" ng-file-change="ctrl.onFileSelected($files, $event)"></ng-file-select>
             </md-button>
           </div>
         </md-fab-actions>

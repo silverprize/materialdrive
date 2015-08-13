@@ -39,7 +39,11 @@
       mimeType: google.mimeType.folder
     }];
 
-    self.onFileSelected = function($files, $event) {
+    self.onFileSelected = function($files, $file, $event, $rejectedFiles) {
+      if (!$files.length) {
+        return;
+      }
+
       notifier.notify('upload', {
         fileList: $files
       });

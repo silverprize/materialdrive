@@ -51,7 +51,7 @@
 
   function GoogleService($injector, $q, $interval, query, mimeType) {
     var $http = $injector.get('$http'),
-        $upload = $injector.get('$upload'),
+        Upload = $injector.get('Upload'),
         authData;
 
     return {
@@ -167,7 +167,7 @@
         var offset = 0,
             end = args.file.size;
 
-        return $upload.http({
+        return Upload.http({
           url: args.endpoint,
           method: 'PUT',
           headers: angular.extend({
