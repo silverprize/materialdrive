@@ -14,9 +14,9 @@ Available features
 
 Consist of
 =
-- https://developers.google.com/drive/web/
-- https://www.angularjs.org
-- https://material.angularjs.org
+- [Google Drive REST API](https://developers.google.com/drive/v2/reference/)
+- [AngularJS](https://www.angularjs.org)
+- [Angular Material](https://material.angularjs.org)
 
 Libraries
 =
