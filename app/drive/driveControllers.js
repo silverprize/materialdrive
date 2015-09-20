@@ -43,8 +43,7 @@
       var deferred = $q.defer();
 
       google.filesList({
-        query: 'fullText contains \'' + searchText + '\' and trashed = false',
-        maxResults: 30
+        query: google.query.fullText.replace('%s', searchText)
       }).then(function(response) {
         deferred.resolve(response.data.items);
       }, deferred.reject);
@@ -95,8 +94,8 @@
     }
   }
 
-  DriveController.$injector = ['$scope', '$state', '$filter', '$window', '$q', '$mdDialog', '$injector', '$cacheFactory', '$mdMedia', '$mdSidenav', 'notifier', 'google'];
-  function DriveController($scope, $state, $filter, $window, $q, $mdDialog, $injector, $cacheFactory, $mdMedia, $mdSidenav, notifier, google) {
+  DriveController.$injector = ['$scope', '$state', '$window', '$q', '$mdDialog', '$injector', '$cacheFactory', '$mdMedia', '$mdSidenav', 'notifier', 'google'];
+  function DriveController($scope, $state, $window, $q, $mdDialog, $injector, $cacheFactory, $mdMedia, $mdSidenav, notifier, google) {
     var self = this,
         driveCache = $cacheFactory.get('drive'),
         sidenavCache = $cacheFactory.get('sidenav'),
@@ -216,7 +215,36 @@
 
       self.loaded = false;
 
-      promises.push(google.filesList({query: query}));
+      self.itemListController = {
+        query: query,
+        maxResults: 20,
+        orderBy: 'folder,title asc',
+        getItemAtIndex: function(index) {
+          var _this = this;
+          if (!!this.nextPageToken && !!this.items && (this.items.length <= index + 1)) {
+            google.filesList({
+              query: this.query,
+              pageToken: this.nextPageToken,
+              maxResults: this.maxResults,
+              orderBy: this.orderBy
+            }).success(function(data) {
+              _this.nextPageToken = data.nextPageToken;
+              _this.items = _this.items.concat(data.items);
+            });
+            this.nextPageToken = '';
+          }
+          return !!this.items && !!this.items[index] ? this.items[index] : null;
+        },
+        getLength: function() {
+          return !this.items ? 0 : this.items.length;
+        }
+      };
+
+      promises.push(google.filesList({
+        query: query,
+        orderBy: self.itemListController.orderBy,
+        maxResults: self.itemListController.maxResults
+      }));
       if ($stateParams.folderId) {
         promises.push(google.filesGet($stateParams.folderId));
       }
@@ -233,7 +261,8 @@
 
         makeBreadcrumb();
 
-        self.itemList = data.items;
+        self.itemListController = angular.extend(self.itemListController, data);
+
         self.loaded = true;
       });
     }
@@ -505,12 +534,9 @@
     }
   }
 
-  NavigationDialogController.$injector = ['$scope', '$mdDialog', '$injector'];
-  function NavigationDialogController($scope, $mdDialog, $injector) {
-    var self = this,
-        $q = $injector.get('$q'),
-        $filter = $injector.get('$filter'),
-        google = $injector.get('google');
+  NavigationDialogController.$injector = ['$scope', '$mdDialog', '$q', 'google'];
+  function NavigationDialogController($scope, $mdDialog, $q, google) {
+    var self = this;
 
     self.currentFolder = {
       title: 'My Drive',
@@ -551,7 +577,7 @@
         query: google.query.folder.replace('%s', id),
         mimeType: google.mimeType.folder
       }).success(function (data) {
-        self.folderList = $filter('orderBy')(data.items, 'title');
+        self.folderList = data.items;
       });
     }
   }

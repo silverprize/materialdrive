@@ -33,7 +33,8 @@
     recent: '(not mimeType = \'application/vnd.google-apps.folder\') and lastViewedByMeDate > \'1970-01-01T00:00:00Z\' and trashed = false',
     starred: 'trashed = false and starred = true',
     trash: 'trashed = true and explicitlyTrashed = true',
-    folder: 'trashed = false and \'%s\' in parents'
+    folder: 'trashed = false and \'%s\' in parents',
+    fullText: 'trashed = false and fullText contains \'%s\''
   })
   .constant('mimeType', {
     folder : 'application/vnd.google-apps.folder',
@@ -121,15 +122,25 @@
         return $http.get(API.ABOUT, angular.copy(OAUTH_TOKEN));
       },
       filesList: function(args) {
-        query = encodeURIComponent(args.query);
+        var query = '?q=' + encodeURIComponent(args.query);
+
         if (args.mimeType) {
-          query += [' and mimeType = \'', args.mimeType, '\''].join('');
+          query += ' and mimeType = \'' + args.mimeType + '\'';
         }
+
+        if (args.pageToken) {
+          query += '&pageToken=' + encodeURIComponent(args.pageToken);
+        }
+
         if (args.maxResults) {
           query += '&maxResults=' + args.maxResults;
         }
-        query += '&orderBy=folder,title asc';
-        return $http.get([API.FILES_LIST, '?q=', query].join(''), angular.copy(OAUTH_TOKEN));
+
+        if (args.orderBy) {
+          query += '&orderBy=' + args.orderBy;
+        }
+
+        return $http.get(API.FILES_LIST + query, angular.copy(OAUTH_TOKEN));
       },
       filesGet: function(fileId) {
         return $http.get([API.FILES_GET , '?fileId=', encodeURIComponent(fileId)].join(''), angular.copy(OAUTH_TOKEN));
