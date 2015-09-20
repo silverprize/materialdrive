@@ -79,8 +79,8 @@
     $httpProvider.interceptors.push(['$injector', '$q', function($injector, $q) {
       return {
         responseError: function(rejection) {
-          var $state = $injcetor.get('$state'),
-            google = $injcetor.get('google');
+          var $state = $injector.get('$state'),
+            google = $injector.get('google');
 
           if (rejection.status === 401) {
             google.authorize(true).then(function() {
