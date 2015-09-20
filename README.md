@@ -1,6 +1,6 @@
 Material Drive
 =
-Google Drive with angular-material
+Google Drive with Angular Material
 - Demo http://silverprize.github.io/materialdrive
 
 Available features
