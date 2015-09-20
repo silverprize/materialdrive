@@ -6,19 +6,13 @@
       <md-divider></md-divider>
     </md-list-item>
 
-    <div ng-if="driveCtrl.loaded && !driveCtrl.fileList.length && !driveCtrl.folderList.length" layout-align="center center" layout="column">
+    <div ng-if="driveCtrl.loaded && !driveCtrl.itemList.length" layout-align="center center" layout="column">
       <i class="material-icons md-48 md-dark">format_quote</i> There is no item.
     </div>
 
-    <md-list-item class="drive-list-item" ng-class="{selected: folder.isSelected}" ng-dblclick="driveCtrl.onItemDoubleClicked(folder)" ng-click="driveCtrl.onItemClicked(folder, true)" mtd-right-click="driveCtrl.onItemClicked(folder, false)" ng-repeat="folder in driveCtrl.folderList" aria-label="{{::folder.title}} selected">
-      <img class="icon" ng-src="{{folder.iconLink}}">
-      <span class="name" ng-bind="::folder.title"></span>
-      <md-divider></md-divider>
-    </md-list-item>
-
-    <md-list-item class="drive-list-item" ng-class="{selected: file.isSelected}" ng-dblclick="driveCtrl.onItemDoubleClicked(file)" ng-click="driveCtrl.onItemClicked(file, true)" mtd-right-click="driveCtrl.onItemClicked(file, false)" ng-repeat="file in driveCtrl.fileList" aria-label="{{::file.title}} selected">
-      <img class="icon" ng-src="{{file.iconLink}}">
-      <span class="name" ng-bind="::file.title"></span>
+    <md-list-item class="drive-list-item" ng-repeat="item in driveCtrl.itemList track by item.id" ng-class="{selected: item.isSelected}" ng-dblclick="driveCtrl.onItemDoubleClicked(item)" ng-click="driveCtrl.onItemClicked(item, true)" mtd-right-click="driveCtrl.onItemClicked(item, false)" aria-label="{{::item.title}} selected">
+      <img class="icon" ng-src="{{item.iconLink}}">
+      <span class="name" ng-bind="::item.title"></span>
       <md-divider></md-divider>
     </md-list-item>
   </md-list>

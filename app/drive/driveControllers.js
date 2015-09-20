@@ -233,15 +233,7 @@
 
         makeBreadcrumb();
 
-        angular.forEach(data.items, function(item) {
-          if (item.mimeType === google.mimeType.folder) {
-            folderList.push(item);
-          } else {
-            fileList.push(item);
-          }
-        });
-        self.folderList = $filter('orderBy')(folderList, 'title');
-        self.fileList = $filter('orderBy')(fileList, 'title');
+        self.itemList = data.items;
         self.loaded = true;
       });
     }

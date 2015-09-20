@@ -27,14 +27,7 @@
       OAUTH_TOKEN;
 
   angular.module('materialDrive')
-  .factory('google', [
-    '$injector',
-    '$q',
-    '$interval',
-    'query',
-    'mimeType',
-    GoogleService
-  ])
+  .factory('google', GoogleService)
   .constant('query', {
     incoming: 'trashed = false and not \'me\' in owners and sharedWithMe',
     recent: '(not mimeType = \'application/vnd.google-apps.folder\') and lastViewedByMeDate > \'1970-01-01T00:00:00Z\' and trashed = false',
@@ -49,10 +42,9 @@
     presentation: 'application/vnd.google-apps.presentation'
   });
 
-  function GoogleService($injector, $q, $interval, query, mimeType) {
-    var $http = $injector.get('$http'),
-        Upload = $injector.get('Upload'),
-        authData;
+  GoogleService.$injector = ['$http', '$q', '$interval', 'Upload', 'query', 'mimeType'];
+  function GoogleService($http, $q, $interval, Upload, query, mimeType) {
+    var authData;
 
     return {
       prepareGapi: function() {
@@ -136,6 +128,7 @@
         if (args.maxResults) {
           query += '&maxResults=' + args.maxResults;
         }
+        query += '&orderBy=folder,title asc';
         return $http.get([API.FILES_LIST, '?q=', query].join(''), angular.copy(OAUTH_TOKEN));
       },
       filesGet: function(fileId) {
