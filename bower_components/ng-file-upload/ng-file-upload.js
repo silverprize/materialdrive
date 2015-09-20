@@ -1,7 +1,7 @@
 /**!
  * AngularJS file upload/drop directive and service with progress and abort
  * @author  Danial  <danial.farid@gmail.com>
- * @version 6.0.4
+ * @version 6.1.2
  */
 
 if (window.XMLHttpRequest && !(window.FileAPI && FileAPI.shouldLoad)) {
@@ -22,7 +22,7 @@ if (window.XMLHttpRequest && !(window.FileAPI && FileAPI.shouldLoad)) {
 
 var ngFileUpload = angular.module('ngFileUpload', []);
 
-ngFileUpload.version = '6.0.4';
+ngFileUpload.version = '6.1.2';
 ngFileUpload.defaults = {};
 
 ngFileUpload.service('Upload', ['$http', '$q', '$timeout', function ($http, $q, $timeout) {
@@ -259,6 +259,7 @@ ngFileUpload.service('Upload', ['$http', '$q', '$timeout', function ($http, $q, 
     /** @namespace attr.ngfMultiple */
     /** @namespace attr.ngfCapture */
     /** @namespace attr.ngfAccept */
+    /** @namespace attr.ngfValidate */
     /** @namespace attr.ngfMaxSize */
     /** @namespace attr.ngfMinSize */
     /** @namespace attr.ngfResetOnClick */
@@ -275,7 +276,7 @@ ngFileUpload.service('Upload', ['$http', '$q', '$timeout', function ($http, $q, 
     });
 
     var disabled = false;
-    if (getAttr(attr, 'ngfSelect').search(/\W+$files\W+/) === -1) {
+    if (getAttr(attr, 'ngfSelect').search(/\W+\$files\W+/) === -1) {
       scope.$watch(getAttr(attr, 'ngfSelect'), function (val) {
         disabled = val === false;
       });
@@ -301,6 +302,7 @@ ngFileUpload.service('Upload', ['$http', '$q', '$timeout', function ($http, $q, 
               rejFiles.push(file);
             }
           }
+          elem.$$ngfHasFile = true;
           updateModel($parse, $timeout, scope, ngModel, attr,
             getAttr(attr, 'ngfChange') || getAttr(attr, 'ngfSelect'), files, rejFiles, evt);
           if (files.length === 0) evt.target.value = files;
@@ -358,8 +360,11 @@ ngFileUpload.service('Upload', ['$http', '$q', '$timeout', function ($http, $q, 
     }
 
     function resetModel(evt) {
-      updateModel($parse, $timeout, scope, ngModel, attr,
-        getAttr(attr, 'ngfChange') || getAttr(attr, 'ngfSelect'), [], [], evt, true);
+      if (elem.$$ngfHasFile) {
+        updateModel($parse, $timeout, scope, ngModel, attr,
+          getAttr(attr, 'ngfChange') || getAttr(attr, 'ngfSelect'), [], [], evt, true);
+        delete elem.$$ngfHasFile;
+      }
     }
 
     var initialTouchStartY = 0;
@@ -466,6 +471,11 @@ ngFileUpload.service('Upload', ['$http', '$q', '$timeout', function ($http, $q, 
       return result;
     }
 
+    var custom = $parse(getAttr(attr, 'ngfValidate'))(scope, {$file: file, $event: evt});
+    if (custom != null && (custom === false || custom.length > 0)) {
+      file.$error = custom ? custom : 'validate';
+      return false;
+    }
     var accept = $parse(getAttr(attr, 'ngfAccept'))(scope, {$file: file, $event: evt});
     var fileSizeMax = $parse(getAttr(attr, 'ngfMaxSize'))(scope, {$file: file, $event: evt}) || 9007199254740991;
     var fileSizeMin = $parse(getAttr(attr, 'ngfMinSize'))(scope, {$file: file, $event: evt}) || -1;
@@ -614,7 +624,7 @@ ngFileUpload.service('Upload', ['$http', '$q', '$timeout', function ($http, $q, 
     }
 
     var disabled = false;
-    if (getAttr(attr, 'ngfDrop').search(/\W+$files\W+/) === -1) {
+    if (getAttr(attr, 'ngfDrop').search(/\W+\$files\W+/) === -1) {
       scope.$watch(getAttr(attr, 'ngfDrop'), function(val) {
         disabled = val === false;
       });

@@ -2,13 +2,17 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.10.1
+ * v0.11.0
  */
 goog.provide('ng.material.components.fabActions');
 goog.require('ng.material.core');
 (function() {
   'use strict';
 
+  /**
+   * @ngdoc module
+   * @name material.components.fabActions
+   */
   angular
     .module('material.components.fabActions', ['material.core'])
     .directive('mdFabActions', MdFabActionsDirective);
@@ -16,7 +20,7 @@ goog.require('ng.material.core');
   /**
    * @ngdoc directive
    * @name mdFabActions
-   * @module material.components.fabSpeedDial
+   * @module material.components.fabActions
    *
    * @restrict E
    *
@@ -37,28 +41,18 @@ goog.require('ng.material.core');
       compile: function(element, attributes) {
         var children = element.children();
 
-        // Support both ng-repat and static content
-        if (children.attr('ng-repeat')) {
+        var hasNgRepeat = false;
+
+        angular.forEach(['', 'data-', 'x-'], function(prefix) {
+          hasNgRepeat = hasNgRepeat || (children.attr(prefix + 'ng-repeat') ? true : false);
+        });
+
+        // Support both ng-repeat and static content
+        if (hasNgRepeat) {
           children.addClass('md-fab-action-item');
         } else {
           // Wrap every child in a new div and add a class that we can scale/fling independently
           children.wrap('<div class="md-fab-action-item">');
-        }
-
-        return function postLink(scope, element, attributes, controllers) {
-          // Grab whichever parent controller is used
-          var controller = controllers[0] || controllers[1];
-
-          // Make the children open/close their parent directive
-          if (controller) {
-            angular.forEach(element.children(), function(child) {
-              // Attach listeners to the `md-fab-action-item`
-              child = angular.element(child).children()[0];
-
-              angular.element(child).on('focus', controller.open);
-              angular.element(child).on('blur', controller.close);
-            });
-          }
         }
       }
     }

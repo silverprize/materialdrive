@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.10.1
+ * v0.11.0
  */
 goog.provide('ng.material.components.tooltip');
 goog.require('ng.material.core');
@@ -142,7 +142,25 @@ function MdTooltipDirective($timeout, $window, $$rAF, $document, $mdUtil, $mdThe
 
     function bindEvents () {
       var mouseActive = false;
-      var enterHandler = function() {
+
+      var ngWindow = angular.element($window);
+
+      // Store whether the element was focused when the window loses focus.
+      var windowBlurHandler = function() {
+        elementFocusedOnWindowBlur = document.activeElement === parent[0];
+      };
+      var elementFocusedOnWindowBlur = false;
+      ngWindow.on('blur', windowBlurHandler);
+      scope.$on('$destroy', function() {
+        ngWindow.off('blur', windowBlurHandler);
+      });
+
+      var enterHandler = function(e) {
+        // Prevent the tooltip from showing when the window is receiving focus.
+        if (e.type === 'focus' && elementFocusedOnWindowBlur) {
+          elementFocusedOnWindowBlur = false;
+          return;
+        }
         parent.on('blur mouseleave touchend touchcancel', leaveHandler );
         setVisible(true);
       };
@@ -198,13 +216,17 @@ function MdTooltipDirective($timeout, $window, $$rAF, $document, $mdUtil, $mdThe
     }
 
     function hideTooltip() {
-      $q.all([
-        $animate.removeClass(content, 'md-show'),
-        $animate.removeClass(background, 'md-show'),
-        $animate.removeClass(element, 'md-show')
-      ]).then(function () {
-        if (!scope.visible) element.detach();
-      });
+        var promises = [];
+        angular.forEach([element, background, content], function (it) {
+          if (it.parent() && it.hasClass('md-show')) {
+            promises.push($animate.removeClass(it, 'md-show'));
+          }
+        });
+
+        $q.all(promises)
+          .then(function () {
+            if (!scope.visible) element.detach();
+          });
     }
 
     function positionTooltip() {

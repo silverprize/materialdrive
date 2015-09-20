@@ -1,7 +1,6 @@
 {
   "name": "ng-file-upload",
   "main": "ng-file-upload.js",
-  "version": "6.1.0",
   "homepage": "https://github.com/danialfarid/ng-file-upload",
   "dependencies": {
     "angular": ">1.0.6"
@@ -12,14 +11,14 @@
   "description": "Lightweight Angular JS directive to upload files. Support drag&drop, paste image, progress and abort",
   "ignore": [],
   "license": "MIT",
-  "_release": "6.1.0",
+  "version": "6.1.2",
+  "_release": "6.1.2",
   "_resolution": {
     "type": "version",
-    "tag": "6.1.0",
-    "commit": "8a166b118364e83a87e7e12784b97eef7862cc10"
+    "tag": "6.1.2",
+    "commit": "947e3eef42c0067428d79624250e4e82e15ce512"
   },
   "_source": "git://github.com/danialfarid/angular-file-upload-bower.git",
   "_target": "~6.1.0",
-  "_originalSource": "ng-file-upload",
-  "_direct": true
+  "_originalSource": "ng-file-upload"
 }
