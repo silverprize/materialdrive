@@ -8,13 +8,8 @@
   SetupRoute.$injector = ['$urlRouterProvider', '$stateProvider'];
   function SetupRoute($urlRouterProvider, $stateProvider) {
      var driveResolve = {
-      google: ['$injector', function($injector) {
-        var $q = $injector.get('$q'),
-            $state = $injector.get('$state'),
-            $location = $injector.get('$location'),
-            google = $injector.get('google'),
-            deferred = $q.defer();
-
+      google: ['$q', '$state', '$location', 'google', function($q, $state, $location, google) {
+        var deferred = $q.defer();
         google.authorize(true).then(function() {
           deferred.resolve(google);
         }, function() {
@@ -28,18 +23,14 @@
         return deferred.promise;
       }]
     }, gateResolve = {
-      auth: ['$injector', function($injector) {
-        var $q = $injector.get('$q'),
-            $state = $injector.get('$state'),
-            google = $injector.get('google');
-
+      auth: ['$q', '$state', 'google', function($q, $state, google) {
         return google.prepareGapi().then(function(google) {
           return google.authorize(true).then(function() {
             $state.go('drive.category', {
               category: 'mydrive'
             });
           }, function() {
-            return $q.when();
+            return $q.resolve();
           });
         });
       }]
@@ -85,12 +76,11 @@
 
   SetupHttp.$injector = ['$httpProvider'];
   function SetupHttp($httpProvider) {
-    $httpProvider.interceptors.push(['$injector', function($injector) {
+    $httpProvider.interceptors.push(['$injector', '$q', function($injector, $q) {
       return {
         responseError: function(rejection) {
-          var google = $injector.get('google'),
-              $q = $injector.get('$q'),
-              $state = $injector.get('$state');
+          var $state = $injcetor.get('$state'),
+            google = $injcetor.get('google');
 
           if (rejection.status === 401) {
             google.authorize(true).then(function() {
