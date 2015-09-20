@@ -1853,6 +1853,16 @@ input-file input[type="file"] {
 .details {
   font-size: 13px;
 }
+.search-form-wrapper {
+  position: relative;
+}
+.search-form-wrapper .btn-close-search-form {
+  position: absolute;
+  top: 0;
+  line-height: 40px;
+  width: 30px;
+  height: 40px;
+}
 .material-icons.md-18 {
   font-size: 18px;
 }
