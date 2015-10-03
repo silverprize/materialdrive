@@ -14,7 +14,12 @@
   </div>
   <div class="search-form-wrapper" ng-show="navbarCtrl.queryFormState" flex>
     <md-autocomplete md-selected-item="navbarCtrl.selectedItem" md-search-text="navbarCtrl.searchText" md-items="item in navbarCtrl.querySearchText(navbarCtrl.searchText)" md-item-text="item.title" placeholder="Search Drive" md-selected-item-change="navbarCtrl.searchItemSelected()" style="padding-left: 40px;" mtd-focus="{{navbarCtrl.queryFormState}}">
-      <span md-highlight-text="navbarCtrl.searchText">{{item.title}}</span>
+      <md-item-template>
+        <span md-highlight-text="navbarCtrl.searchText">{{item.title}}</span>
+      </md-item-template>
+      <md-not-found>
+        No matches found for "{{navbarCtrl.searchText}}".
+      </md-not-found>
     </md-autocomplete>
     <md-button class="md-icon-button md-primary btn-close-search-form" ng-click="navbarCtrl.queryFormState = ''" aria-label="Back to Navbar">
       <md-icon md-font-icon="material-icons">arrow_back</md-icon>
