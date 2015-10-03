@@ -1,19 +1,19 @@
 {
   "name": "angular-aria",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "main": "./angular-aria.js",
   "ignore": [],
   "dependencies": {
-    "angular": "1.4.6"
+    "angular": "1.4.7"
   },
   "homepage": "https://github.com/angular/bower-angular-aria",
-  "_release": "1.4.6",
+  "_release": "1.4.7",
   "_resolution": {
     "type": "version",
-    "tag": "v1.4.6",
-    "commit": "e88569c75343cfcd7cf24006a94efa66b2a231b0"
+    "tag": "v1.4.7",
+    "commit": "9057381bec7c1f7b6b3005709626a1539f662c63"
   },
   "_source": "git://github.com/angular/bower-angular-aria.git",
-  "_target": "~1.4.6",
+  "_target": "~1.4.7",
   "_originalSource": "angular-aria"
 }
