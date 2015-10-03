@@ -43,7 +43,7 @@
       var deferred = $q.defer();
 
       google.filesList({
-        query: google.query.fullText.replace('%s', searchText)
+        query: google.query.fullText.concat(' or title contains \'%s\'').replace('%s', searchText)
       }).then(function(response) {
         deferred.resolve(response.data.items);
       }, deferred.reject);
