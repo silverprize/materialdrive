@@ -2,9 +2,9 @@
   'use strict';
 
   angular.module('materialDrive')
-  .directive('mtdRightClick', MtdRightClick)
-  .directive('mtdFocus', MtdFocus)
-  .directive('mtdDetails', MtdDetails);
+  .directive('mtdRightClick', ['$parse', '$rootScope', MtdRightClick])
+  .directive('mtdFocus', ['$timeout', MtdFocus])
+  .directive('mtdDetails', ['mimeType', MtdDetails]);
 
   function MtdRightClick($parse, $rootScope) {
     return {
@@ -25,7 +25,6 @@
       }
     };
   }
-  MtdRightClick.$injector = ['$parse', '$rootScope'];
 
   function MtdFocus($timeout) {
     return {
@@ -40,7 +39,6 @@
       }
     };
   }
-  MtdFocus.$injector = ['$timeout'];
 
   function MtdDetails(mimeType) {
     return {
@@ -67,6 +65,5 @@
       controllerAs: 'detailsCtrl'
     };
   }
-  MtdDetails.$injector = ['mimeType'];
 
 })();

@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.11.2
+ * v0.11.4
  */
 goog.provide('ng.material.components.dialog');
 goog.require('ng.material.components.backdrop');
@@ -75,6 +75,9 @@ MdDialogDirective.$inject = ["$$rAF", "$mdTheming", "$mdDialog"];
  * ## Sizing
  * - Complex dialogs can be sized with `flex="percentage"`, i.e. `flex="66"`.
  * - Default max-width is 80% of the `rootElement` or `parent`.
+ *
+ * ## Css
+ * - `.md-dialog-content` - class that sets the padding on the content as the spec file
  *
  * @usage
  * <hljs lang="html">
@@ -371,6 +374,8 @@ MdDialogDirective.$inject = ["$$rAF", "$mdTheming", "$mdDialog"];
  *   - `controllerAs` - `{string=}`: An alias to assign the controller to on the scope.
  *   - `parent` - `{element=}`: The element to append the dialog to. Defaults to appending
  *     to the root element of the application.
+ *   - `onShowing` `{function=} Callback function used to announce the show() action is
+ *     starting.
  *   - `onComplete` `{function=}`: Callback function used to announce when the show() action is
  *     finished.
  *   - `onRemoving` `{function=} Callback function used to announce the close/hide() action is
@@ -426,8 +431,8 @@ function MdDialogProvider($$interimElementProvider) {
   function advancedDialogOptions($mdDialog, $mdTheming) {
     return {
       template: [
-        '<md-dialog md-theme="{{ dialog.theme }}" aria-label="{{ dialog.ariaLabel }}" class="{{ dialog.css }}">',
-        ' <md-dialog-content role="document" tabIndex="-1">',
+        '<md-dialog md-theme="{{ dialog.theme }}" aria-label="{{ dialog.ariaLabel }}" ng-class="dialog.css">',
+        ' <md-dialog-content class="md-dialog-content" role="document" tabIndex="-1">',
         '   <h2 class="md-title">{{ dialog.title }}</h2>',
         '   <div class="md-dialog-content-body" md-template="::dialog.mdContent"></div>',
         ' </md-dialog-content>',
@@ -642,25 +647,37 @@ function MdDialogProvider($$interimElementProvider) {
           }
         };
 
-        // Add keyup listeners
-        element.on('keyup', keyHandlerFn);
-        target.on('keyup', keyHandlerFn);
+        // Add keydown listeners
+        element.on('keydown', keyHandlerFn);
+        target.on('keydown', keyHandlerFn);
         window.on('resize', onWindowResize);
 
         // Queue remove listeners function
         removeListeners.push(function() {
 
-          element.off('keyup', keyHandlerFn);
-          target.off('keyup', keyHandlerFn);
+          element.off('keydown', keyHandlerFn);
+          target.off('keydown', keyHandlerFn);
           window.off('resize', onWindowResize);
 
         });
       }
       if (options.clickOutsideToClose) {
         var target = element;
-        var clickHandler = function(ev) {
-          // Only close if we click the flex container outside on the backdrop
-          if (ev.target === target[0]) {
+        var sourceElem;
+
+        // Keep track of the element on which the mouse originally went down
+        // so that we can only close the backdrop when the 'click' started on it.
+        // A simple 'click' handler does not work,
+        // it sets the target object as the element the mouse went down on.
+        var mousedownHandler = function(ev) {
+          sourceElem = ev.target;
+        };
+
+        // We check if our original element and the target is the backdrop
+        // because if the original was the backdrop and the target was inside the dialog
+        // we don't want to dialog to close.
+        var mouseupHandler = function(ev) {
+          if (sourceElem === target[0] && ev.target === target[0]) {
             ev.stopPropagation();
             ev.preventDefault();
 
@@ -668,12 +685,14 @@ function MdDialogProvider($$interimElementProvider) {
           }
         };
 
-        // Add click listeners
-        target.on('click', clickHandler);
+        // Add listeners
+        target.on('mousedown', mousedownHandler);
+        target.on('mouseup', mouseupHandler);
 
         // Queue remove listeners function
         removeListeners.push(function() {
-          target.off('click', clickHandler);
+          target.off('mousedown', mousedownHandler);
+          target.off('mouseup', mouseupHandler);
         });
       }
 

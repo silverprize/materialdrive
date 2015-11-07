@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.11.2
+ * v0.11.4
  */
 goog.provide('ng.material.components.chips');
 goog.require('ng.material.components.autocomplete');
@@ -589,9 +589,12 @@ MdChipsCtrl.prototype.hasFocus = function () {
    * displayed as 'chips'. This component can make use of an `<input>` element or an
    * `<md-autocomplete>` element.
    *
-   * <strong>Custom `<md-chip-template>` template</strong>
+   * ### Custom templates
    * A custom template may be provided to render the content of each chip. This is achieved by
-   * specifying an `<md-chip-template>` element as a child of `<md-chips>`. Note: Any attributes on
+   * specifying an `<md-chip-template>` element containing the custom content as a child of
+   * `<md-chips>`.
+   *
+   * Note: Any attributes on
    * `<md-chip-template>` will be dropped as only the innerHTML is used for the chip template. The
    * variables `$chip` and `$index` are available in the scope of `<md-chip-template>`, representing
    * the chip object and its index in the list of chips, respectively.
@@ -981,7 +984,8 @@ var MD_CONTACT_CHIPS_TEMPLATE = '\
             <div class="md-contact-suggestion">\
               <img \
                   ng-src="{{item[$mdContactChipsCtrl.contactImage]}}"\
-                  alt="{{item[$mdContactChipsCtrl.contactName]}}" />\
+                  alt="{{item[$mdContactChipsCtrl.contactName]}}"\
+                  ng-if="item[$mdContactChipsCtrl.contactImage]" />\
               <span class="md-contact-name" md-highlight-text="$mdContactChipsCtrl.searchText"\
                     md-highlight-flags="{{$mdContactChipsCtrl.highlightFlags}}">\
                 {{item[$mdContactChipsCtrl.contactName]}}\
@@ -993,7 +997,8 @@ var MD_CONTACT_CHIPS_TEMPLATE = '\
             <div class="md-contact-avatar">\
               <img \
                   ng-src="{{$chip[$mdContactChipsCtrl.contactImage]}}"\
-                  alt="{{$chip[$mdContactChipsCtrl.contactName]}}" />\
+                  alt="{{$chip[$mdContactChipsCtrl.contactName]}}"\
+                  ng-if="$chip[$mdContactChipsCtrl.contactImage]" />\
             </div>\
             <div class="md-contact-name">\
               {{$chip[$mdContactChipsCtrl.contactName]}}\

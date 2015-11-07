@@ -1,4 +1,7 @@
 *.sublime-project
 *.sublime-workspace
+/build
+/bower_components
 /node_modules
 /.settings
+/.vscode

@@ -2,10 +2,9 @@
   'use strict';
 
   angular.module('materialDrive')
-  .controller('NewItemFabController', NewItemFabController)
-  .controller('NameDialogController', NameDialogController);
+  .controller('NewItemFabController', ['$scope', '$mdDialog', 'google', 'notifier', NewItemFabController])
+  .controller('NameDialogController', ['$scope', '$mdDialog', NameDialogController]);
 
-  NewItemFabController.$injector = ['$scope', '$mdDialog', 'google', 'notifier'];
   function NewItemFabController($scope, $mdDialog, google, notifier) {
     var self = this;
 
@@ -73,7 +72,6 @@
     };
   }
 
-  NameDialogController.$injector = ['$scope', '$mdDialog'];
   function NameDialogController($scope, $mdDialog) {
     var self = this;
 

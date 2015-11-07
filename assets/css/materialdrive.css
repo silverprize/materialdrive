@@ -6,8 +6,8 @@
  * -------------------------- */
 @font-face {
   font-family: 'FontAwesome';
-  src: url('../../bower_components/font-awesome/fonts/fontawesome-webfont.eot?v=4.2.0');
-  src: url('../../bower_components/font-awesome/fonts/fontawesome-webfont.eot?#iefix&v=4.2.0') format('embedded-opentype'), url('../../bower_components/font-awesome/fonts/fontawesome-webfont.woff?v=4.2.0') format('woff'), url('../../bower_components/font-awesome/fonts/fontawesome-webfont.ttf?v=4.2.0') format('truetype'), url('../../bower_components/font-awesome/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular') format('svg');
+  src: url('../assets/fonts/fontawesome-webfont.eot?v=4.2.0');
+  src: url('../assets/fonts/fontawesome-webfont.eot?#iefix&v=4.2.0') format('embedded-opentype'), url('../assets/fonts/fontawesome-webfont.woff?v=4.2.0') format('woff'), url('../assets/fonts/fontawesome-webfont.ttf?v=4.2.0') format('truetype'), url('../assets/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -61,7 +61,7 @@
 }
 .fa-border {
   padding: .2em .25em .15em;
-  border: solid 0.08em #eeeeee;
+  border: solid 0.08em #eee;
   border-radius: .1em;
 }
 .pull-right {
@@ -159,7 +159,7 @@
   font-size: 2em;
 }
 .fa-inverse {
-  color: #ffffff;
+  color: #fff;
 }
 /* Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen
    readers do not read off random characters that represent icons */

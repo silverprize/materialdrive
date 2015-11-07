@@ -2,12 +2,11 @@
   'use strict';
 
   angular.module('materialDrive')
-  .controller('NavbarController', NavbarController)
-  .controller('SidenavController', SidenavController)
-  .controller('DriveController', DriveController)
-  .controller('NavigationDialogController', NavigationDialogController);
+  .controller('NavbarController', ['$scope', '$window', '$document', '$state', '$q', '$cacheFactory', '$mdSidenav', 'google', NavbarController])
+  .controller('SidenavController', ['$cacheFactory', 'google', SidenavController])
+  .controller('DriveController', ['$scope', '$state', '$window', '$q', '$mdDialog', '$injector', '$cacheFactory', '$mdMedia', '$mdSidenav', 'notifier', 'google', DriveController])
+  .controller('NavigationDialogController', ['$scope', '$mdDialog', '$q', 'google', NavigationDialogController]);
 
-  NavbarController.$injector = ['$scope', '$window', '$document', '$state', '$q', '$cacheFactory', '$mdSidenav', 'google'];
   function NavbarController($scope, $window, $document, $state, $q, $cacheFactory, $mdSidenav, google) {
     var self = this,
         detailsCache = $cacheFactory.get('details');
@@ -80,7 +79,6 @@
       cache.put('userInfo', data.user);
     });
 
-  SidenavController.$injector = ['$cacheFactory', '$mdSidenav', '$mdMedia', 'google'];
     function onMenuSelect(menu) {
       if (!self.selectedMenu) {
         self.selectedMenu = self.menuList.filter(function(menu) {
@@ -94,7 +92,6 @@
     }
   }
 
-  DriveController.$injector = ['$scope', '$state', '$window', '$q', '$mdDialog', '$injector', '$cacheFactory', '$mdMedia', '$mdSidenav', 'notifier', 'google'];
   function DriveController($scope, $state, $window, $q, $mdDialog, $injector, $cacheFactory, $mdMedia, $mdSidenav, notifier, google) {
     var self = this,
         driveCache = $cacheFactory.get('drive'),
@@ -534,7 +531,6 @@
     }
   }
 
-  NavigationDialogController.$injector = ['$scope', '$mdDialog', '$q', 'google'];
   function NavigationDialogController($scope, $mdDialog, $q, google) {
     var self = this;
 

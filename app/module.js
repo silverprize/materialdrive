@@ -5,6 +5,10 @@
     'ngMaterial',
     'ngLocale',
     'ngFileUpload',
-    'ui.router'
+    'ui.router',
+    'materialDrive.tpls'
   ]);
+
+  angular.module('materialDrive.tpls', []);
+
 })();

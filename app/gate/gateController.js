@@ -2,9 +2,8 @@
   'use strict';
 
   angular.module('materialDrive')
-  .controller('GateController', GateController);
+  .controller('GateController', ['$scope', '$location', '$state', 'google', GateController]);
 
-  GateController.$injector = ['$scope', '$location', '$state', 'google'];
   function GateController($scope, $location, $state, google) {
     var self = this;
 
