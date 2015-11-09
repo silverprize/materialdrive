@@ -25,20 +25,17 @@ gulp.task('clean', function(cb) {
 });
 
 gulp.task('less', function() {
-  gulp.src('bower_components/font-awesome/fonts/*')
-  .pipe(gulp.dest('build/assets/fonts'));
-
-  return gulp.src('./assets/less/materialdrive.less')
+  return gulp.src('assets/less/materialdrive.less')
     .pipe(less({
       modifyVars: {
         '@fa-font-path': '"../assets/fonts"'
       }
     }))
-    .pipe(gulp.dest('./assets/css'));
+    .pipe(gulp.dest('assets/css'));
 });
 
 gulp.task('jshint', function() {
-  return gulp.src('./app/**/*.js')
+  return gulp.src('app/**/*.js')
     .pipe(jshint())
     .pipe(jshint.reporter(stylish));
 });
@@ -55,19 +52,26 @@ gulp.task('html2js', function() {
     .pipe(rename(function(data) {
       return html2jsFileName = data.basename + data.extname;
     }))
-    .pipe(gulp.dest('./build/js'));
+    .pipe(gulp.dest('build/js'));
 });
 
-gulp.task('copyIndex', function () {
+gulp.task('copyAssets', function () {
+  gulp.src('bower_components/font-awesome/fonts/*')
+    .pipe(gulp.dest('build/assets/fonts'));
+  gulp.src('assets/images/**')
+    .pipe(gulp.dest('build/assets/images'));
+  gulp.src('favicon.ico')
+    .pipe(gulp.dest('build/'));
   return gulp.src(['index.html'])
     .pipe(replace('<!-- app.tpls.js -->', '<script src="js/' + html2jsFileName + '"></script>'))
-    .pipe(gulp.dest('./build'));
+    .pipe(gulp.dest('build'));
 });
 
 gulp.task('usemin', function(cb) {
   return gulp.src('build/index.html')
     .pipe(usemin({
       css: [
+        minifyCss(),
         rev()
       ],
       libjs: [
@@ -90,5 +94,5 @@ gulp.task('usemin', function(cb) {
 });
 
 gulp.task('default', function(cb) {
-  runSequence('jshint', 'clean', 'less', 'html2js', 'copyIndex', 'usemin', cb);
+  runSequence('jshint', 'clean', 'less', 'html2js', 'copyAssets', 'usemin', cb);
 });
