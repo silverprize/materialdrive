@@ -1,5 +1,6 @@
 *.sublime-project
 *.sublime-workspace
+/assets/css
 /build
 /bower_components
 /node_modules

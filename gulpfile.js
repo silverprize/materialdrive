@@ -28,6 +28,7 @@ gulp.task('less', function() {
   return gulp.src('assets/less/materialdrive.less')
     .pipe(less({
       modifyVars: {
+        '@image-asset-path': '"../assets/images"',
         '@fa-font-path': '"../assets/fonts"'
       }
     }))
@@ -93,6 +94,16 @@ gulp.task('usemin', function(cb) {
     .pipe(gulp.dest('build/'));
 });
 
-gulp.task('default', function(cb) {
+gulp.task('build', function(cb) {
   runSequence('jshint', 'clean', 'less', 'html2js', 'copyAssets', 'usemin', cb);
+});
+
+gulp.task('dev', function() {
+  del([
+    './assets/css'
+  ]);
+
+  return gulp.src('assets/less/materialdrive.less')
+    .pipe(less())
+    .pipe(gulp.dest('assets/css'));
 });
