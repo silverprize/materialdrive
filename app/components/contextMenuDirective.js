@@ -14,13 +14,14 @@
         '$scope',
         '$document',
         '$compile',
+        'Util',
         ContextMenuController
       ],
       controllerAs: 'contextMenuCtrl',
       link: link
     };
 
-    function ContextMenuController($scope, $document, $compile) {
+    function ContextMenuController($scope, $document, $compile, Util) {
       var self = this;
 
       $scope.onDropdownMenuSelected = function(menu) {

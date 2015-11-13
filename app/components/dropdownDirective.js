@@ -15,8 +15,6 @@
     };
 
     function DropdownController($scope) {
-      var self = this;
-
       this.onMenuSelected = function(menu) {
         $scope.callback({menu: menu});
       };

@@ -2,12 +2,12 @@
   'use strict';
 
   angular.module('materialDrive')
-  .controller('NavbarController', ['$scope', '$window', '$document', '$state', '$q', '$cacheFactory', '$mdSidenav', 'google', NavbarController])
-  .controller('SidenavController', ['$cacheFactory', 'google', SidenavController])
-  .controller('DriveController', ['$scope', '$state', '$window', '$q', '$mdDialog', '$injector', '$cacheFactory', '$mdMedia', '$mdSidenav', 'notifier', 'google', DriveController])
-  .controller('NavigationDialogController', ['$scope', '$mdDialog', '$q', 'google', NavigationDialogController]);
+  .controller('NavbarController', ['$scope', '$window', '$document', '$state', '$q', '$cacheFactory', '$mdSidenav', 'Google', NavbarController])
+  .controller('SidenavController', ['$cacheFactory', 'Google', SidenavController])
+  .controller('DriveController', ['$scope', '$state', '$window', '$q', '$mdDialog', '$injector', '$cacheFactory', '$mdMedia', '$mdSidenav', 'notifier', 'Google', DriveController])
+  .controller('NavigationDialogController', ['$scope', '$mdDialog', '$q', 'Google', NavigationDialogController]);
 
-  function NavbarController($scope, $window, $document, $state, $q, $cacheFactory, $mdSidenav, google) {
+  function NavbarController($scope, $window, $document, $state, $q, $cacheFactory, $mdSidenav, Google) {
     var self = this,
         detailsCache = $cacheFactory.get('details');
 
@@ -41,8 +41,8 @@
     function querySearchText(searchText) {
       var deferred = $q.defer();
 
-      google.filesList({
-        query: google.query.fullText.concat(' or title contains \'%s\'').replace('%s', searchText)
+      Google.filesList({
+        query: Google.query.fullText.concat(' or title contains \'%s\'').replace('%s', searchText)
       }).then(function(response) {
         deferred.resolve(response.data.items);
       }, deferred.reject);
@@ -55,7 +55,7 @@
         return;
       }
 
-      if (self.selectedItem.mimeType === google.mimeType.folder) {
+      if (self.selectedItem.mimeType === Google.mimeType.folder) {
         $state.go('drive.folder', {
           folderId: self.selectedItem.id
         });
@@ -247,9 +247,7 @@
       }
 
       $q.all(promises).then(function(responses) {
-        var folderList = [],
-            fileList = [],
-            data = responses[0].data;
+        var data = responses[0].data;
 
         if (responses.length === 2) {
           self.currentFolder = responses[1].data;
@@ -393,7 +391,7 @@
                 file: result.file
               }));
             });
-            $q.all(uploadPromises).then(function(responses) {
+            $q.all(uploadPromises).then(function() {
               $mdDialog.hide();
               emptySelectedItem();
               init($state.params);
@@ -449,14 +447,6 @@
       self.selectedItemMap = {};
     }
 
-    function countSelectedItems() {
-      var count = 0;
-      angular.forEach(self.selectedItemMap, function() {
-        count++;
-      });
-      return count;
-    }
-
     function duplicateFiles() {
       var promises = [];
 
@@ -474,7 +464,7 @@
       var confirm = $mdDialog.confirm().title('Will be removed').ok('Yes').cancel('Cancel'),
           content = '';
 
-      angular.forEach(self.selectedItemMap, function(item, itemId) {
+      angular.forEach(self.selectedItemMap, function(item) {
         content = [content, '"', item.title, '", '].join('');
       });
       confirm.content(content.substring(0, content.lastIndexOf(',')));

@@ -7,10 +7,10 @@
 
   function SetupRoute($urlRouterProvider, $stateProvider) {
      var driveResolve = {
-      google: ['$q', '$state', '$location', 'google', function($q, $state, $location, google) {
+      google: ['$q', '$state', '$location', 'Google', function($q, $state, $location, Google) {
         var deferred = $q.defer();
-        google.authorize(true).then(function() {
-          deferred.resolve(google);
+        Google.authorize(true).then(function() {
+          deferred.resolve(Google);
         }, function() {
           deferred.promise.then(null, function() {
             $state.go('gate.sign', {
@@ -22,9 +22,9 @@
         return deferred.promise;
       }]
     }, gateResolve = {
-      auth: ['$q', '$state', 'google', function($q, $state, google) {
-        return google.prepareGapi().then(function(google) {
-          return google.authorize(true).then(function() {
+      auth: ['$q', '$state', 'Google', function($q, $state, Google) {
+        return Google.prepareGapi().then(function(Google) {
+          return Google.authorize(true).then(function() {
             $state.go('drive.category', {
               category: 'mydrive'
             });
@@ -78,10 +78,10 @@
       return {
         responseError: function(rejection) {
           var $state = $injector.get('$state'),
-            google = $injector.get('google');
+            Google = $injector.get('Google');
 
           if (rejection.status === 401) {
-            google.authorize(true).then(function() {
+            Google.authorize(true).then(function() {
               $state.reload();
             }, function() {
               $state.go('gate');

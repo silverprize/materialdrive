@@ -2,10 +2,10 @@
   'use strict';
 
   angular.module('materialDrive')
-  .controller('NewItemFabController', ['$scope', '$mdDialog', 'google', 'notifier', NewItemFabController])
+  .controller('NewItemFabController', ['$scope', '$mdDialog', 'Google', 'notifier', NewItemFabController])
   .controller('NameDialogController', ['$scope', '$mdDialog', NameDialogController]);
 
-  function NewItemFabController($scope, $mdDialog, google, notifier) {
+  function NewItemFabController($scope, $mdDialog, Google, notifier) {
     var self = this;
 
     self.menuList = [{
@@ -14,31 +14,31 @@
         name: 'fa fa-file-word-o fa-lg',
         bg: 'file-word-bg'
       },
-      mimeType: google.mimeType.document
+      mimeType: Google.mimeType.document
     }, {
       name: 'Spreadsheet',
       icon: {
         name: 'fa fa-file-excel-o fa-lg',
         bg: 'file-spreadsheet-bg'
       },
-      mimeType: google.mimeType.spreadsheet
+      mimeType: Google.mimeType.spreadsheet
     }, {
       name: 'Presentation',
       icon: {
         name: 'fa fa-file-powerpoint-o fa-lg',
         bg: 'file-presentation-bg'
       },
-      mimeType: google.mimeType.presentation
+      mimeType: Google.mimeType.presentation
     }, {
       name: 'Folder',
       icon: {
         name: 'fa fa-folder fa-lg',
         bg: 'file-bg'
       },
-      mimeType: google.mimeType.folder
+      mimeType: Google.mimeType.folder
     }];
 
-    self.onFileSelected = function($files, $file, $event, $rejectedFiles) {
+    self.onFileSelected = function($files/*, $file, $event, $rejectedFiles*/) {
       if (!$files.length) {
         return;
       }
@@ -60,7 +60,7 @@
         locals: {
           item: clickedMenu
         },
-        onComplete: function(scope, elem, options) {
+        onComplete: function(scope, elem/*, options*/) {
           elem.find('input').focus();
         }
       }).then(function(name) {

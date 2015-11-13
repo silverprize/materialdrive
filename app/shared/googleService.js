@@ -26,7 +26,7 @@
       OAUTH_TOKEN;
 
   angular.module('materialDrive')
-  .factory('google', ['$http', '$q', '$interval', 'Upload', 'query', 'mimeType', GoogleService])
+  .factory('Google', ['$http', '$q', '$interval', 'Upload', 'query', 'mimeType', GoogleService])
   .constant('query', {
     incoming: 'trashed = false and not \'me\' in owners and sharedWithMe',
     recent: '(not mimeType = \'application/vnd.google-apps.folder\') and lastViewedByMeDate > \'1970-01-01T00:00:00Z\' and trashed = false',

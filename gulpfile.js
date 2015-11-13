@@ -1,4 +1,3 @@
-var stream = require('stream');
 var gulp = require('gulp');
 var del = require('del');
 var jshint = require('gulp-jshint');
@@ -6,7 +5,6 @@ var stylish = require('jshint-stylish');
 var less = require('gulp-less');
 var usemin = require('gulp-usemin');
 var uglify = require('gulp-uglify');
-var minifyHtml = require('gulp-minify-html');
 var minifyCss = require('gulp-minify-css');
 var rev = require('gulp-rev');
 var concat = require('gulp-concat');
@@ -36,7 +34,10 @@ gulp.task('less', function() {
 });
 
 gulp.task('jshint', function() {
-  return gulp.src('app/**/*.js')
+  return gulp.src([
+      '*.js',
+      'app/**/*.js'
+    ])
     .pipe(jshint())
     .pipe(jshint.reporter(stylish));
 });
@@ -51,7 +52,7 @@ gulp.task('html2js', function() {
     .pipe(uglify())
     .pipe(rev())
     .pipe(rename(function(data) {
-      return html2jsFileName = data.basename + data.extname;
+      html2jsFileName = data.basename + data.extname;
     }))
     .pipe(gulp.dest('build/js'));
 });
@@ -68,7 +69,7 @@ gulp.task('copyAssets', function () {
     .pipe(gulp.dest('build'));
 });
 
-gulp.task('usemin', function(cb) {
+gulp.task('usemin', function() {
   return gulp.src('build/index.html')
     .pipe(usemin({
       css: [
@@ -92,6 +93,10 @@ gulp.task('usemin', function(cb) {
       ]
     }))
     .pipe(gulp.dest('build/'));
+});
+
+gulp.task('default', function(cb) {
+  runSequence('build', cb);
 });
 
 gulp.task('build', function(cb) {
