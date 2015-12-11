@@ -6,7 +6,8 @@
     'ngLocale',
     'ngFileUpload',
     'ui.router',
-    'materialDrive.tpls'
+    'materialDrive.tpls',
+    'infinite-scroll'
   ]);
 
   angular.module('materialDrive.tpls', []);

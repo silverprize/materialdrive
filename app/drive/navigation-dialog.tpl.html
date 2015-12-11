@@ -1,14 +1,19 @@
 <md-dialog class="file-navigation-dialog md-content-overflow" aria-label="dialog">
-  <h1 class="header md-title">Move to</h1>
-  <md-divider></md-divider>
-  <h1 class="md-subheader current-folder clickable" ng-click="vm.goToParent()">
-    <span class="fa fa-arrow-left" ng-if="!vm.currentFolder.isRoot"></span> <span ng-bind="vm.currentFolder.title"></span>
-  </h1>
+  <md-toolbar>
+    <div class="md-toolbar-tools"><h2>Move to</h2></div>
+  </md-toolbar>
   <md-dialog-content>
+    <md-list class="drive-list current-folder">
+      <md-list-item class="drive-list-item" aria-label="{{vm.currentFolder.title}}" ng-click="vm.goToParent()">
+        <md-icon ng-if="!vm.currentFolder.isRoot" md-font-icon="material-icons">arrow_back</md-icon>
+        <p ng-bind="vm.currentFolder.title"></p>
+        <md-divider></md-divider>
+      </md-list-item>
+    </md-list>
     <md-list class="drive-list" ng-repeat="folder in vm.folderList">
       <md-list-item class="drive-list-item" aria-label="{{::folder.title}}" ng-click="!vm.selectedItemMap[folder.id] && vm.exapnd(folder)" ng-class="{disabled: vm.selectedItemMap[folder.id]}">
         <img class="icon" ng-src="{{folder.iconLink}}">
-        <span class="name" ng-bind="::folder.title"></span>
+        <p ng-bind="::folder.title"></p>
       </md-list-item>
       <md-divider></md-divider>
     </md-list>

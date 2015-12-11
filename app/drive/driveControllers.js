@@ -4,7 +4,7 @@
   angular.module('materialDrive')
   .controller('NavbarController', ['$scope', '$window', '$document', '$state', '$q', '$cacheFactory', '$mdSidenav', 'Google', NavbarController])
   .controller('SidenavController', ['$cacheFactory', 'Google', SidenavController])
-  .controller('DriveController', ['$scope', '$state', '$window', '$q', '$mdDialog', '$injector', '$cacheFactory', '$mdMedia', '$mdSidenav', 'notifier', 'Google', DriveController])
+  .controller('DriveController', ['$scope', '$state', '$window', '$q', '$mdDialog', '$injector', '$cacheFactory', '$mdMedia', '$mdSidenav', 'notifier', 'Google', 'mimeType', DriveController])
   .controller('NavigationDialogController', ['$scope', '$mdDialog', '$q', 'Google', NavigationDialogController]);
 
   function NavbarController($scope, $window, $document, $state, $q, $cacheFactory, $mdSidenav, Google) {
@@ -16,10 +16,11 @@
     self.querySearchText = querySearchText;
     self.searchItemSelected = searchItemSelected;
 
+    self.status = $cacheFactory.get('drive').get('status');
     self.breadcrumb = $cacheFactory.get('drive').get('breadcrumb');
 
     $scope.$on('$stateChangeSuccess', function() {
-      self.queryFormState = '';
+      self.status.search = false;
       self.searchText = '';
     });
 
@@ -92,7 +93,7 @@
     }
   }
 
-  function DriveController($scope, $state, $window, $q, $mdDialog, $injector, $cacheFactory, $mdMedia, $mdSidenav, notifier, google) {
+  function DriveController($scope, $state, $window, $q, $mdDialog, $injector, $cacheFactory, $mdMedia, $mdSidenav, notifier, google, mimeType) {
     var self = this,
         driveCache = $cacheFactory.get('drive'),
         sidenavCache = $cacheFactory.get('sidenav'),
@@ -107,9 +108,15 @@
     self.isScreenSize = $mdMedia;
     self.isDetailsLocked = isDetailsLocked;
 
+    self.mimeType = mimeType;
+
     if (!driveCache) {
       driveCache = $cacheFactory('drive');
       driveCache.put('breadcrumb', []);
+      driveCache.put('status', {
+        view: 'grid',
+        search: false
+      });
     }
 
     if (!sidenavCache) {
@@ -188,6 +195,9 @@
           break;
       }
 
+      self.breadcrumb = driveCache.get('breadcrumb');
+      self.status = driveCache.get('status');
+
       self.selectedItemMap = {};
 
       self.currentFolder = {
@@ -208,29 +218,38 @@
         enabled: true
       }];
 
-      self.breadcrumb = driveCache.get('breadcrumb');
-
       self.loaded = false;
 
       self.itemListController = {
         query: query,
         maxResults: 20,
         orderBy: 'folder,title asc',
+        isBusy: false,
         getItemAtIndex: function(index) {
+          this.getMoreItems(index);
+          return !!this.items && !!this.items[index] ? this.items[index] : null;
+        },
+        getMoreItems: function(index) {
+          if (this.isBusy) {
+            return;
+          }
+
           var _this = this;
+
           if (!!this.nextPageToken && !!this.items && (this.items.length <= index + 1)) {
+            this.isBusy = true;
             google.filesList({
               query: this.query,
               pageToken: this.nextPageToken,
               maxResults: this.maxResults,
               orderBy: this.orderBy
             }).success(function(data) {
+              _this.isBusy = false;
               _this.nextPageToken = data.nextPageToken;
               _this.items = _this.items.concat(data.items);
             });
             this.nextPageToken = '';
           }
-          return !!this.items && !!this.items[index] ? this.items[index] : null;
         },
         getLength: function() {
           return !this.items ? 0 : this.items.length;

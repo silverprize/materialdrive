@@ -100,10 +100,6 @@
       padding-right: 10px;
     }
 
-    .name {
-      font-size: 15px;
-    }
-
     .md-button {
       border-radius: 0;
       text-align: left;
@@ -130,9 +126,8 @@
   width: 150px !important;
   height: 150px !important;
 
-  .icon-gate {
-    width: 60px;
-    height: 70px;
+  > md-icon {
+    height: 48px;
   }
 }
 
@@ -148,10 +143,7 @@
   }
 
   .current-folder {
-    margin: 0;
-    padding: 10px;
     box-shadow: 0px 2px 4px 0 rgba(0, 0, 0, 0.16);
-    z-index: 1;
   }
 
   .md-dialog.md-default-theme.md-content-overflow .md-actions {
@@ -224,10 +216,12 @@ input-file input[type="file"] {
   .btn-close-search-form {
     position: absolute;
     top: 0;
-    line-height: 40px;
-    width: 30px;
-    height: 40px;
+    margin: 0;
   }
+}
+
+.md-grid-tile-footer-darker {
+  background: rgba(0, 0, 0, 0.5);
 }
 
 // Rules for sizing the icon.

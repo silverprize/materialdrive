@@ -1,19 +1,25 @@
 <div class="md-toolbar-tools" layout="row" layout-align="space-between center">
-  <div ng-show="!navbarCtrl.queryFormState">
+  <div ng-show="!navbarCtrl.status.search">
     <md-button class="md-icon-button" ng-click="navbarCtrl.toggleSidenav()" hide-gt-md aria-label="Toggle Sidenav">
       <md-icon md-font-icon="material-icons">menu</md-icon>
     </md-button>
   </div>
-  <div ng-show="!navbarCtrl.queryFormState">
-    <md-button class="md-icon-button" ng-click="navbarCtrl.searchText = ''; navbarCtrl.queryFormState = 'on'" aria-label="Toggle Search form">
+  <div ng-show="!navbarCtrl.status.search">
+    <md-button class="md-icon-button" aria-label="Toggle list or grid" ng-click="navbarCtrl.status.view = navbarCtrl.status.view === 'list' ? 'grid' : 'list'">
+      <md-tooltip>{{navbarCtrl.status.view === 'list' ? 'Grid view' : 'List view'}}</md-tooltip>
+      <md-icon md-font-icon="material-icons">{{navbarCtrl.status.view === 'list' ? 'view_comfy' : 'list'}}</md-icon>
+    </md-button>
+    <md-button class="md-icon-button" ng-click="navbarCtrl.searchText = ''; navbarCtrl.status.search = true" aria-label="Toggle Search form">
+      <md-tooltip>Search</md-tooltip>
       <md-icon md-font-icon="material-icons">search</md-icon>
     </md-button>
     <md-button class="md-icon-button" aria-label="Toggle Details" ng-click="navbarCtrl.toggleDetails()">
+      <md-tooltip>View details</md-tooltip>
       <md-icon md-font-icon="material-icons">info_outline</md-icon>
     </md-button>
   </div>
-  <div class="search-form-wrapper" ng-show="navbarCtrl.queryFormState" flex>
-    <md-autocomplete md-selected-item="navbarCtrl.selectedItem" md-search-text="navbarCtrl.searchText" md-items="item in navbarCtrl.querySearchText(navbarCtrl.searchText)" md-item-text="item.title" placeholder="Search Drive" md-selected-item-change="navbarCtrl.searchItemSelected()" style="padding-left: 40px;" mtd-focus="{{navbarCtrl.queryFormState}}">
+  <div class="search-form-wrapper" ng-show="navbarCtrl.status.search" flex>
+    <md-autocomplete md-selected-item="navbarCtrl.selectedItem" md-search-text="navbarCtrl.searchText" md-items="item in navbarCtrl.querySearchText(navbarCtrl.searchText)" md-item-text="item.title" placeholder="Search Drive" md-selected-item-change="navbarCtrl.searchItemSelected()" style="padding-left: 40px;" mtd-focus="{{navbarCtrl.status.search}}">
       <md-item-template>
         <span md-highlight-text="navbarCtrl.searchText">{{item.title}}</span>
       </md-item-template>
@@ -21,7 +27,7 @@
         No matches found for "{{navbarCtrl.searchText}}".
       </md-not-found>
     </md-autocomplete>
-    <md-button class="md-icon-button md-primary btn-close-search-form" ng-click="navbarCtrl.queryFormState = ''" aria-label="Back to Navbar">
+    <md-button class="md-icon-button md-primary btn-close-search-form" ng-click="navbarCtrl.status.search = false" aria-label="Back to Navbar">
       <md-icon md-font-icon="material-icons">arrow_back</md-icon>
     </md-button>
   </div>
