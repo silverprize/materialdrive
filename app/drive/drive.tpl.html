@@ -16,8 +16,8 @@
                 ui-view>
     </md-content>
 
-    <div ng-controller="NewItemFabController as ctrl"  class="fab-container">
-      <md-fab-speed-dial ng-hide="demo.hidden" md-direction="up" class="md-scale">
+    <div ng-controller="NewItemFabController as ctrl" class="fab-container" ng-show="ctrl.show">
+      <md-fab-speed-dial md-open="ctrl.isExpanded" md-direction="up" class="md-scale" ng-click="ctrl.isExpanded = !ctrl.isExpanded">
         <md-fab-trigger>
           <md-button aria-label="menu" class="md-fab md-warn">
             <md-icon md-font-icon="material-icons">add</md-icon>

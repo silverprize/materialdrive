@@ -114,7 +114,7 @@
       driveCache = $cacheFactory('drive');
       driveCache.put('breadcrumb', []);
       driveCache.put('status', {
-        view: 'grid',
+        view: 'list',
         search: false
       });
     }
