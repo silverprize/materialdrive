@@ -1,7 +1,7 @@
 {
   "name": "materialdrive",
   "version": "0.0.1",
-  "description": "Material Drive = Google Drive with angular-material - Demo http://silverprize.github.io/materialdrive",
+  "description": "Material Drive = Google Drive with Angular Material - Demo https://silverprize.github.io/materialdrive",
   "main": "gulpfile.js",
   "devDependencies": {
     "del": "^1.1.1",
