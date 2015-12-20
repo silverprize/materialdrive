@@ -1,7 +1,7 @@
 Material Drive
 ===
 Google Drive with Angular Material
-- Demo http://silverprize.github.io/materialdrive
+- Demo https://silverprize.github.io/materialdrive
 
 Available features
 ===
