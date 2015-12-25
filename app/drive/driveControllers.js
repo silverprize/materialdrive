@@ -376,7 +376,7 @@
         escapeToClose: false,
         clickOutsideToClose: false,
         controllerAs: 'vm',
-        controller: function($scope, $mdDialog, currentFolder) {
+        controller: ['$scope', '$mdDialog,', 'currentFolder', function($scope, $mdDialog, currentFolder) {
           var self = this,
               endpointPromises = [],
               uploadPromises = [];
@@ -417,7 +417,7 @@
             });
             self.prepared = true;
           });
-        }
+        }]
       });
     }
 
