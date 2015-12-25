@@ -9,6 +9,10 @@
   <md-progress-linear ng-if="!driveCtrl.loaded" md-mode="indeterminate" style="position:absolute;"></md-progress-linear>
 
   <div ng-if="driveCtrl.loaded && driveCtrl.status.view === 'grid'" flex>
+    <div ng-if="driveCtrl.loaded && !driveCtrl.itemListController.items.length" layout-align="center center" layout="column" layout-padding layout-margin>
+      <i class="material-icons md-48 md-dark">format_quote</i> There is no item.
+    </div>
+
     <md-grid-list md-cols-xs="1"
                   md-cols-sm="2"
                   md-cols-md="3"
@@ -43,7 +47,7 @@
       <md-divider></md-divider>
     </md-list-item>
 
-    <div ng-if="driveCtrl.loaded && !driveCtrl.itemListController.items.length" layout-align="center center" layout="column">
+    <div ng-if="driveCtrl.loaded && !driveCtrl.itemListController.items.length" layout-align="center center" layout="column" layout-padding layout-margin>
       <i class="material-icons md-48 md-dark">format_quote</i> There is no item.
     </div>
 
