@@ -17,6 +17,9 @@
   <div ng-if="item" layout="column">
     <div class="details-thumbnail" ng-if="item.thumbnailLink">
       <img class="details-thumbnail-image" ng-src="{{item.thumbnailLink}}">
+    </div>
+
+    <div ng-if="item.thumbnailLink" layout-margin>
       <md-divider></md-divider>
     </div>
 

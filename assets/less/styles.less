@@ -213,22 +213,25 @@ input-file input[type="file"] {
 }
 
 .details-thumbnail {
-  overflow: hidden;
-  margin: 0 15px;
+  width: 320px;
+  height: 200px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  margin: 15px 0 1px 0;
 }
 
 .details-thumbnail-image {
   display: block;
-  margin: 20px auto;
-  height: 200px;
+  margin: auto;
+  max-height: 200px;
+  max-width: 320px;
+  border: 1px solid #e1e1e1;
 }
 
 .details-informations {
   margin: 0 15px;
   > [layout="row"] {
-    &:first-child {
-      margin-top: 20px;
-    }
     margin-bottom: 5px;
   }
 }
