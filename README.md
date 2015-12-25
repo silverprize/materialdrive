@@ -14,6 +14,17 @@ Available features
 - Infinite scroll
 - List view / Grid view
 
+Build
+===
+- Prepare  
+`npm install && bower install`
+
+- For development  
+`gulp dev`
+
+- For release  
+`gulp`
+
 Consist of
 ===
 - [Google Drive REST API](https://developers.google.com/drive/v2/reference/)
