@@ -10,40 +10,40 @@
   </div>
 </md-toolbar>
 
-<md-content flex>
+<md-content flex md-scroll-y>
   <div ng-if="!item" layout="row" layout-align="center center" layout-padding>
     <i class="material-icons md-48 md-dark">format_quote</i>
   </div>
   <div ng-if="item" layout="column">
-    <div ng-if="!detailsCtrl.isFolder()" layout="column">
-      <img ng-src="https://drive.google.com/thumbnail?id={{item.id}}&sz=w300-h180-p-k-nu">
+    <div class="details-thumbnail" ng-if="item.thumbnailLink">
+      <img class="details-thumbnail-image" ng-src="{{item.thumbnailLink}}">
       <md-divider></md-divider>
     </div>
 
-    <div layout-padding layout-margin>
+    <div class="details-informations">
       <div layout="row">
-        <h1 class="md-body-2" flex="35">Type</h1>
-        <h2 class="md-body-1" flex ng-bind="item.mimeType"></h2>
+        <div class="md-body-2" flex="35">Type</div>
+        <div class="md-body-1" flex ng-bind="item.mimeType"></div>
       </div>
       <div layout="row">
-        <h1 class="md-body-2" flex="35">Quota used</h1>
-        <h2 class="md-body-1" flex ng-bind="item.quotaBytesUsed"></h2>
+        <div class="md-body-2" flex="35">Quota used</div>
+        <div class="md-body-1" flex><span ng-bind="item.quotaBytesUsed"></span> Bytes</div>
       </div>
       <div layout="row">
-        <h1 class="md-body-2" flex="35">Location</h1>
-        <h2 class="md-body-1" flex><span ng-bind="name" ng-repeat="name in item.spaces"></span><span ng-if="$index > 1 && !$last">, </span></h2>
+        <div class="md-body-2" flex="35">Location</div>
+        <div class="md-body-1" flex><span ng-bind="name" ng-repeat="name in item.spaces"></span><span ng-if="$index > 1 && !$last">, </span></div>
       </div>
       <div layout="row">
-        <h1 class="md-body-2" flex="35">Owner</h1>
-        <h2 class="md-body-1" flex><span ng-bind="name" ng-repeat="name in item.ownerNames"></span><span ng-if="$index > 1 && !$last">, </span></h2>
+        <div class="md-body-2" flex="35">Owner</div>
+        <div class="md-body-1" flex><span ng-bind="name" ng-repeat="name in item.ownerNames"></span><span ng-if="$index > 1 && !$last">, </span></div>
       </div>
       <div layout="row">
-        <h1 class="md-body-2" flex="35">Opened</h1>
-        <h2 class="md-body-1" flex ng-bind="item.lastViewedByMeDate|date:'mediumDate'"></h2>
+        <div class="md-body-2" flex="35">Opened</div>
+        <div class="md-body-1" flex ng-bind="item.lastViewedByMeDate|date:'mediumDate'"></div>
       </div>
       <div layout="row">
-        <h1 class="md-body-2" flex="35">Created</h1>
-        <h2 class="md-body-1" flex ng-bind="item.createdDate|date:'mediumDate'"></h2>
+        <div class="md-body-2" flex="35">Created</div>
+        <div class="md-body-1" flex ng-bind="item.createdDate|date:'mediumDate'"></div>
       </div>
     </div>
   </div>

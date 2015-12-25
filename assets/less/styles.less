@@ -206,8 +206,30 @@ input-file input[type="file"] {
   }
 }
 
-.details {
-  font-size: 13px;
+.sidenav-content {
+  overflow: auto;
+  flex-direction: column;
+  display: flex;
+}
+
+.details-thumbnail {
+  margin: 0 15px;
+}
+
+.details-thumbnail-image {
+  display: block;
+  margin: 20px auto;
+  height: 200px;
+}
+
+.details-informations {
+  margin: 0 15px;
+  > [layout="row"] {
+    &:first-child {
+      margin-top: 20px;
+    }
+    margin-bottom: 5px;
+  }
 }
 
 .search-form-wrapper {

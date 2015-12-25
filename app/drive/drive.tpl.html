@@ -1,5 +1,7 @@
 <div layout="row" flex ng-class="{'prevent-backdrop': driveCtrl.isScreenSize('gt-md')}" layout-fill>
-  <md-sidenav ng-controller="SidenavController as sidenavCtrl" class="md-sidenav-left md-whiteframe-z2" md-component-id="sidenav" md-is-locked-open="$mdMedia('gt-md')" ng-include="'app/drive/sidenav.tpl.html'"></md-sidenav>
+  <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="sidenav" md-is-locked-open="$mdMedia('gt-md')" layout="column">
+    <div class="sidenav-content" ng-controller="SidenavController as sidenavCtrl"  ng-include="'app/drive/sidenav.tpl.html'"></div>
+  </md-sidenav>
 
   <div class="file-list-wrapper" layout="column" flex>
 
@@ -43,6 +45,6 @@
   </div>
 
   <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="details" md-is-locked-open="driveCtrl.isDetailsLocked()" layout="column">
-    <div class="details" mtd-details="driveCtrl.selectedItem" flex></div>
+    <mtd-details class="sidenav-content" mtd-details-item="driveCtrl.selectedItem"></mtd-details>
   </md-sidenav>
 </div>
