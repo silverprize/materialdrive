@@ -1,4 +1,4 @@
-<md-dialog>
+<md-dialog aria-label="dialog">
   <form ng-submit="ok()">
     <md-toolbar>
       <div class="md-toolbar-tools"><h2>{{::vm.item.name}}</h2></div>
@@ -11,7 +11,7 @@
         </md-input-container>
       </div>
     </md-dialog-content>
-    <md-dialog-actions layout="row">
+    <md-dialog-actions>
       <md-button ng-click="cancel()">Cancel</md-button>
       <md-button ng-click="ok()" style="margin-right:20px;">Create</md-button>
     </md-dialog-actions>

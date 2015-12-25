@@ -1,11 +1,14 @@
-<md-dialog>
+<md-dialog aria-label="dialog">
   <md-dialog-content>
-    <h2>Now uploding...</h2>
-    <div class="row">
-      <md-progress-linear md-mode="indeterminate"></md-progress-linear>
+    <md-toolbar>
+      <div class="md-toolbar-tools"><h2>Now uploding...</h2></div>
+    </md-toolbar>
+    <div class="md-dialog-content">
+      <h4>{{modalCtrl.current.file.name}}</h4>
+      <md-progress-linear md-mode="determinate" value="{{modalCtrl.current.progress}}"></md-progress-linear>
     </div>
   </md-dialog-content>
-  <div class="md-actions" layout="row">
-    <md-button ng-show="vm.prepared" ng-click="vm.abort()" aria-label="Cancel">Cancel</md-button>
-  </div>
+  <md-dialog-actions>
+    <md-button ng-click="modalCtrl.abort()" aria-label="Cancel">Cancel</md-button>
+  </md-dialog-actions>
 </md-dialog>

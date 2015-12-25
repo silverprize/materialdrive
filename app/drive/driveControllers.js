@@ -2,12 +2,13 @@
   'use strict';
 
   angular.module('materialDrive')
-  .controller('NavbarController', ['$scope', '$window', '$document', '$state', '$q', '$cacheFactory', '$mdSidenav', 'Google', NavbarController])
-  .controller('SidenavController', ['$cacheFactory', 'Google', SidenavController])
-  .controller('DriveController', ['$scope', '$state', '$window', '$q', '$mdDialog', '$injector', '$cacheFactory', '$mdMedia', '$mdSidenav', 'notifier', 'Google', 'mimeType', DriveController])
-  .controller('NavigationDialogController', ['$scope', '$mdDialog', '$q', 'Google', NavigationDialogController]);
+  .controller('NavbarController', ['$scope', '$window', '$document', '$state', '$q', '$cacheFactory', '$mdSidenav', 'google', NavbarController])
+  .controller('SidenavController', ['$cacheFactory', 'google', SidenavController])
+  .controller('DriveController', ['$scope', '$state', '$window', '$q', '$mdDialog', '$injector', '$cacheFactory', '$mdMedia', '$mdSidenav', 'notifier', 'google', 'mimeType', DriveController])
+  .controller('NavigationDialogController', ['$scope', '$mdDialog', '$q', 'google', NavigationDialogController])
+  .controller('UploadProgressDialogController', ['$scope', '$mdDialog', '$mdToast', 'google', 'fileList', 'currentFolder', UploadProgressDialogController]);
 
-  function NavbarController($scope, $window, $document, $state, $q, $cacheFactory, $mdSidenav, Google) {
+  function NavbarController($scope, $window, $document, $state, $q, $cacheFactory, $mdSidenav, google) {
     var self = this,
         detailsCache = $cacheFactory.get('details');
 
@@ -42,8 +43,8 @@
     function querySearchText(searchText) {
       var deferred = $q.defer();
 
-      Google.filesList({
-        query: Google.query.fullText.concat(' or title contains \'%s\'').replace('%s', searchText)
+      google.filesList({
+        query: google.query.fullText.concat(' or title contains \'%s\'').replace('%s', searchText)
       }).then(function(response) {
         deferred.resolve(response.data.items);
       }, deferred.reject);
@@ -56,7 +57,7 @@
         return;
       }
 
-      if (self.selectedItem.mimeType === Google.mimeType.folder) {
+      if (self.selectedItem.mimeType === google.mimeType.folder) {
         $state.go('drive.folder', {
           folderId: self.selectedItem.id
         });
@@ -370,54 +371,17 @@
     function onUploadFile(data) {
       $mdDialog.show({
         locals: {
+          fileList: data.fileList,
           currentFolder: self.currentFolder
         },
         templateUrl: 'app/drive/upload-progress-dialog.tpls.html',
         escapeToClose: false,
         clickOutsideToClose: false,
-        controllerAs: 'vm',
-        controller: ['$scope', '$mdDialog,', 'currentFolder', function($scope, $mdDialog, currentFolder) {
-          var self = this,
-              endpointPromises = [],
-              uploadPromises = [];
-
-          self.abort = function() {
-            if (self.prepared) {
-              uploadPromises.forEach(function(promise) {
-                promise.abort();
-              });
-            }
-            $mdDialog.cancel();
-          };
-
-          data.fileList.forEach(function(file) {
-            var promise = google.getUploadEndpoint({
-              file: file,
-              parents: currentFolder.isRoot ? '' : currentFolder
-            }).then(function(response) {
-              return {
-                response: response,
-                file: file
-              };
-            });
-            endpointPromises.push(promise);
-          });
-
-          $q.all(endpointPromises).then(function(results) {
-            results.forEach(function(result) {
-              uploadPromises.push(google.uploadFile({
-                endpoint: result.response.headers().location,
-                file: result.file
-              }));
-            });
-            $q.all(uploadPromises).then(function() {
-              $mdDialog.hide();
-              emptySelectedItem();
-              init($state.params);
-            });
-            self.prepared = true;
-          });
-        }]
+        controllerAs: 'modalCtrl',
+        controller: 'UploadProgressDialogController'
+      }).then(function() {
+        emptySelectedItem();
+        init($state.params);
       });
     }
 
@@ -511,11 +475,6 @@
         clickOutsideToClose: true,
         locals: {
           selectedItemMap: self.selectedItemMap
-        },
-        resolve: function() {
-          return {
-            '$injector': $injector
-          };
         }
       }).then(function(folder) {
         var promises = [];
@@ -583,6 +542,72 @@
         mimeType: google.mimeType.folder
       }).success(function (data) {
         self.folderList = data.items;
+      });
+    }
+  }
+
+  function UploadProgressDialogController($scope, $mdDialog, $mdToast, google, fileList, currentFolder) {
+    var self = this,
+      countSucceed = 0;
+
+    self.abort = abort;
+
+    uploadFile();
+
+    function abort() {
+      if (!!self.current.promise) {
+        fileList.length = 0;
+        self.current.promise.abort();
+      }
+
+      if (countSucceed > 0) {
+        $mdDialog.hide();
+      } else {
+        $mdDialog.cancel();
+      }
+    }
+
+    function uploadFile() {
+      var file = fileList.pop();
+      self.current = {
+        file: file,
+        progress: 0
+      };
+      var promise = google.getUploadEndpoint({
+        file: file,
+        parents: currentFolder.isRoot ? '' : currentFolder
+      }).then(function(response) {
+        return {
+          endPoint: response.headers().location,
+          file: file
+        };
+      });
+
+      promise = promise.then(function(data) {
+        var promise = google.uploadFile({
+          endpoint: data.endPoint,
+          file: data.file
+        }).progress(function(response) {
+          self.current.progress = Math.min(100, Math.ceil(response.loaded / response.total * 100));
+        });
+
+        self.current.promise = promise;
+        return promise;
+      });
+
+      promise = promise.then(function() {
+        $mdToast.show(
+          $mdToast.simple()
+            .textContent('To upload ' + self.current.file.name + ' was Successful!')
+            .position('top right')
+            .hideDelay(2000)
+        );
+        countSucceed++;
+        if (fileList.length > 0) {
+          uploadFile();
+        } else {
+          $mdDialog.hide();
+        }
       });
     }
   }
