@@ -18,14 +18,14 @@
     "tests"
   ],
   "dependencies": {
-    "font-awesome": "~4.2.0",
+    "font-awesome": "~4.5.0",
     "ng-file-upload": "~6.1.0",
     "ngInfiniteScroll": "~1.2.1",
-    "angular": "~1.4.8",
-    "angular-touch": "~1.4.8",
-    "angular-animate": "~1.4.8",
-    "angular-aria": "~1.4.8",
+    "angular": "~1.4.9",
+    "angular-touch": "~1.4.9",
+    "angular-animate": "~1.4.9",
+    "angular-aria": "~1.4.9",
     "angular-ui-router": "~0.2.15",
-    "angular-material": "~1.0.1"
+    "angular-material": "~1.0.4"
   }
 }
