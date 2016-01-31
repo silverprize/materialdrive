@@ -2,20 +2,13 @@
   'use strict';
 
   angular.module('materialDrive')
-  .controller('NewItemFabController', ['$scope', '$mdDialog', '$timeout', 'google', 'notifier', NewItemFabController])
+  .controller('NewItemFabController', ['$mdDialog', 'google', 'notifier', NewItemFabController])
   .controller('NameDialogController', ['$scope', '$mdDialog', NameDialogController]);
 
-  function NewItemFabController($scope, $mdDialog, $timeout, google, notifier) {
+  function NewItemFabController($mdDialog, google, notifier) {
     var self = this;
 
-    self.isExpanded = true;
-
-    $timeout(function() {
-      self.isExpanded = false;
-      $timeout(function() {
-        self.show = true;
-      });
-    });
+    self.isExpanded = false;
 
     self.menuList = [{
       name: 'Document',
