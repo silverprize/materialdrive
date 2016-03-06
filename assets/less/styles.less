@@ -87,6 +87,9 @@
 
 .wrapper {
   position: relative;
+  &.grid {
+    display: block;
+  }
 }
 
 .drive-list {
@@ -159,17 +162,6 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-ng-file-select,
-input-file input[type="file"] {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  cursor: pointer;
 }
 
 .face {

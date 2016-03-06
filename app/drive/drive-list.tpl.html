@@ -1,46 +1,49 @@
-<div flex
-      layout="column"
-      class="wrapper"
-      infinite-scroll-parent
-      infinite-scroll-distance="1"
-      infinite-scroll="driveCtrl.itemListController.getMoreItems(driveCtrl.itemListController.getLength())"
-      infinite-scroll-disabled="driveCtrl.itemListController.isBusy || driveCtrl.status.view === 'list'">
+<div class="wrapper" ng-class="{grid : driveCtrl.status.view === 'grid'}" flex layout="column"
+  infinite-scroll="driveCtrl.itemListController.getMoreItems(driveCtrl.itemListController.getLength())"
+  infinite-scroll-parent
+  infinite-scroll-distance="1"
+  infinite-scroll-immediate-check="false"
+  infinite-scroll-disabled="driveCtrl.itemListController.isBusy || driveCtrl.status.view === 'list'">
 
   <md-progress-linear ng-if="!driveCtrl.loaded" md-mode="indeterminate" style="position:absolute;"></md-progress-linear>
 
   <div ng-if="driveCtrl.loaded && driveCtrl.status.view === 'grid'" flex>
-    <div ng-if="driveCtrl.loaded && !driveCtrl.itemListController.items.length" layout-align="center center" layout="column" layout-padding layout-margin>
+    <div ng-if="driveCtrl.loaded && !driveCtrl.itemListController.items.length"
+      layout-align="center center"
+      layout="column"
+      layout-padding
+      layout-margin>
       <i class="material-icons md-48 md-dark">format_quote</i> There is no item.
     </div>
 
     <md-grid-list md-cols-xs="1"
-                  md-cols-sm="2"
-                  md-cols-md="3"
-                  md-cols-lg="4"
-                  md-cols-gt-lg="6"
-                  md-row-height-gt-md="1:1"
-                  md-row-height="4:3"
-                  md-gutter="8px"
-                  md-gutter-gt-sm="4px">
-      <md-grid-tile ng-repeat="item in driveCtrl.itemListController.items"
-                    md-colspan-sm="1"
-                    class="clickable"
-                    style="overflow:hidden;"
-                    ng-class="{selected: item.isSelected}"
-                    ng-dblclick="driveCtrl.onItemDoubleClicked(item)"
-                    ng-click="driveCtrl.onItemClicked(item, true)"
-                    mtd-right-click="driveCtrl.onItemClicked(item, false)">
-        <md-icon ng-if="item.mimeType === driveCtrl.mimeType.folder" md-font-icon="material-icons md-48">{{item.shared ? 'folder_shared' : 'folder'}}</md-icon>
+      md-cols-sm="2"
+      md-cols-md="3"
+      md-cols-lg="4"
+      md-cols-gt-lg="6"
+      md-row-height-gt-md="1:1"
+      md-row-height="4:3"
+      md-gutter="8px"
+      md-gutter-gt-sm="4px">
+      <md-grid-tile class="clickable" style="overflow:hidden;"
+        ng-repeat="item in driveCtrl.itemListController.items"
+        md-colspan-sm="1"
+        ng-class="{selected: item.isSelected}"
+        ng-dblclick="driveCtrl.onItemDoubleClicked(item)"
+        ng-click="driveCtrl.onItemClicked(item, true)"
+        mtd-right-click="driveCtrl.onItemClicked(item, false)">
+        <md-icon ng-if="item.mimeType === driveCtrl.mimeType.folder" md-font-icon="material-icons md-48">
+          {{item.shared ? 'folder_shared' : 'folder'}}
+        </md-icon>
         <img ng-if="item.mimeType !== driveCtrl.mimeType.folder" ng-src="{{item.thumbnailLink||item.iconLink}}">
         <md-grid-tile-footer class="md-grid-tile-footer-darker"><h3>{{item.title}}</h3></md-grid-tile-footer>
       </md-grid-tile>
     </md-grid-list>
   </div>
 
-  <md-list class="drive-list"
-           ng-if="driveCtrl.loaded && driveCtrl.status.view === 'list'"
-           flex
-           layout="column">
+  <md-list class="drive-list" ng-if="driveCtrl.loaded && driveCtrl.status.view === 'list'"
+    flex
+    layout="column">
 
     <md-list-item class="drive-list-item" ng-if="!driveCtrl.currentFolder.isRoot" ng-click="driveCtrl.upToParentFolder()">
       <md-icon md-font-icon="material-icons" style="margin:0; transform: rotate(90deg);">subdirectory_arrow_left</md-icon><span>...</span>
@@ -52,14 +55,13 @@
     </div>
 
     <md-virtual-repeat-container flex>
-      <md-list-item class="drive-list-item"
-                    md-virtual-repeat="item in driveCtrl.itemListController"
-                    md-on-demand="true"
-                    ng-class="{selected: item.isSelected}"
-                    ng-dblclick="driveCtrl.onItemDoubleClicked(item)"
-                    ng-click="driveCtrl.onItemClicked(item, true)"
-                    mtd-right-click="driveCtrl.onItemClicked(item, false)"
-                    aria-label="{{item.title}} selected">
+      <md-list-item class="drive-list-item" ng-class="{selected: item.isSelected}"
+        md-virtual-repeat="item in driveCtrl.itemListController"
+        md-on-demand="true"
+        ng-dblclick="driveCtrl.onItemDoubleClicked(item)"
+        ng-click="driveCtrl.onItemClicked(item, true)"
+        mtd-right-click="driveCtrl.onItemClicked(item, false)"
+        aria-label="{{item.title}} selected">
         <img class="icon" ng-src="{{item.iconLink}}">
         <span class="name" ng-bind="item.title"></span>
         <md-divider></md-divider>

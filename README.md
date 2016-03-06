@@ -20,7 +20,7 @@ Build
 `npm install && bower install`
 
 - For development  
-`gulp dev`
+`gulp watch`
 
 - For release  
 `gulp`

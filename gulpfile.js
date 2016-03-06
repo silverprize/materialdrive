@@ -104,11 +104,11 @@ gulp.task('build', function(cb) {
 });
 
 gulp.task('dev', function() {
-  del([
-    './assets/css'
-  ]);
-
   return gulp.src('assets/less/materialdrive.less')
     .pipe(less())
     .pipe(gulp.dest('assets/css'));
+});
+
+gulp.task('watch', ['dev'], function() {
+  gulp.watch('assets/less/*.less', ['dev']);
 });
