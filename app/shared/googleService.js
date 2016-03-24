@@ -10,7 +10,7 @@
         'https://www.googleapis.com/auth/drive.appdata',
         'https://www.googleapis.com/auth/drive.apps.readonly',
         'https://www.googleapis.com/auth/userinfo.email',
-        'https://www.googleapis.com/auth/userinfo.profile',
+        'https://www.googleapis.com/auth/userinfo.profile'
       ],
       API = {
         ABOUT: 'https://www.googleapis.com/drive/v2/about',

@@ -2,9 +2,9 @@
   'use strict';
 
   angular.module('materialDrive')
-  .controller('GateController', ['$scope', '$location', '$state', 'google', GateController]);
+  .controller('GateController', ['$location', '$state', 'google', GateController]);
 
-  function GateController($scope, $location, $state, google) {
+  function GateController($location, $state, google) {
     var self = this;
 
     self.authorize = authorize;

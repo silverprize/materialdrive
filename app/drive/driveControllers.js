@@ -2,13 +2,13 @@
   'use strict';
 
   angular.module('materialDrive')
-  .controller('NavbarController', ['$scope', '$window', '$document', '$state', '$q', '$cacheFactory', '$mdSidenav', 'google', NavbarController])
+  .controller('NavbarController', ['$scope', '$window', '$state', '$q', '$cacheFactory', '$mdSidenav', 'google', NavbarController])
   .controller('SidenavController', ['$cacheFactory', 'google', SidenavController])
-  .controller('DriveController', ['$scope', '$state', '$window', '$q', '$mdDialog', '$injector', '$cacheFactory', '$mdMedia', '$mdSidenav', 'notifier', 'google', 'mimeType', DriveController])
-  .controller('NavigationDialogController', ['$scope', '$mdDialog', '$q', 'google', NavigationDialogController])
-  .controller('UploadProgressDialogController', ['$scope', '$mdDialog', '$mdToast', 'google', 'fileList', 'currentFolder', UploadProgressDialogController]);
+  .controller('DriveController', ['$scope', '$state', '$window', '$q', '$mdDialog', '$cacheFactory', '$mdMedia', 'notifier', 'google', 'mimeType', DriveController])
+  .controller('NavigationDialogController', ['$mdDialog', '$q', NavigationDialogController])
+  .controller('UploadProgressDialogController', ['$mdDialog', '$mdToast', 'google', 'fileList', 'currentFolder', UploadProgressDialogController]);
 
-  function NavbarController($scope, $window, $document, $state, $q, $cacheFactory, $mdSidenav, google) {
+  function NavbarController($scope, $window, $state, $q, $cacheFactory, $mdSidenav, google) {
     var self = this,
         detailsCache = $cacheFactory.get('details');
 
@@ -94,7 +94,7 @@
     }
   }
 
-  function DriveController($scope, $state, $window, $q, $mdDialog, $injector, $cacheFactory, $mdMedia, $mdSidenav, notifier, google, mimeType) {
+  function DriveController($scope, $state, $window, $q, $mdDialog, $cacheFactory, $mdMedia, notifier, google, mimeType) {
     var self = this,
         driveCache = $cacheFactory.get('drive'),
         sidenavCache = $cacheFactory.get('sidenav'),
@@ -400,11 +400,7 @@
         return false;
       }
 
-      if (countItem > 1 || hasFolder) {
-        self.contextMenuList[0].enabled = false;
-      } else {
-        self.contextMenuList[0].enabled = true;
-      }
+      self.contextMenuList[0].enabled = !(countItem > 1 || hasFolder);
 
       return true;
     }
@@ -499,7 +495,7 @@
     }
   }
 
-  function NavigationDialogController($scope, $mdDialog, $q, google) {
+  function NavigationDialogController($mdDialog, google) {
     var self = this;
 
     self.currentFolder = {
@@ -546,7 +542,7 @@
     }
   }
 
-  function UploadProgressDialogController($scope, $mdDialog, $mdToast, google, fileList, currentFolder) {
+  function UploadProgressDialogController($mdDialog, $mdToast, google, fileList, currentFolder) {
     var self = this,
       countSucceed = 0;
 
@@ -595,7 +591,7 @@
         return promise;
       });
 
-      promise = promise.then(function() {
+      promise.then(function() {
         $mdToast.show(
           $mdToast.simple()
             .textContent('To upload ' + self.current.file.name + ' was Successful!')
