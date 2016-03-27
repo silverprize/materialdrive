@@ -9,7 +9,7 @@
         menuList: '=',
         callback: '&onMenuSelected'
       },
-      templateUrl: 'app/components/dropdown.tpl.html',
+      templateUrl: 'app/common/dropdown.tpl.html',
       controller: ['$scope', DropdownController],
       controllerAs: 'dropdownCtrl'
     };

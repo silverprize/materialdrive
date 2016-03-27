@@ -2,8 +2,7 @@
   'use strict';
 
   angular.module('materialDrive')
-  .controller('NewItemFabController', ['$mdDialog', 'google', 'notifier', NewItemFabController])
-  .controller('NameDialogController', ['$scope', '$mdDialog', NameDialogController]);
+    .controller('NewItemFabController', ['$mdDialog', 'google', 'notifier', NewItemFabController]);
 
   function NewItemFabController($mdDialog, google, notifier) {
     var self = this;
@@ -55,7 +54,7 @@
       $mdDialog.show({
         controller: 'NameDialogController',
         controllerAs: 'vm',
-        templateUrl: 'app/drive/name-dialog.tpl.html',
+        templateUrl: 'app/dialog/name-dialog.tpl.html',
         bindToController: true,
         clickOutsideToClose: true,
         targetEvent: $event,
@@ -71,18 +70,6 @@
           mimeType: clickedMenu.mimeType
         });
       });
-    };
-  }
-
-  function NameDialogController($scope, $mdDialog) {
-    var self = this;
-
-    $scope.ok = function() {
-      $mdDialog.hide(self.fileName);
-    };
-
-    $scope.cancel = function() {
-      $mdDialog.cancel();
     };
   }
 

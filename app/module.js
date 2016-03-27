@@ -2,8 +2,8 @@
   'use strict';
 
   angular.module('materialDrive')
-  .config(['$urlRouterProvider', '$stateProvider', SetupRoute])
-  .config(['$httpProvider', SetupHttp]);
+    .config(['$urlRouterProvider', '$stateProvider', SetupRoute])
+    .config(['$httpProvider', SetupHttp]);
 
   function SetupRoute($urlRouterProvider, $stateProvider) {
      var driveResolve = {
@@ -36,41 +36,41 @@
     };
 
     $urlRouterProvider
-    .otherwise('/drive/mydrive');
+      .otherwise('/drive/mydrive');
 
     $stateProvider
-    .state('gate', {
-      url: '',
-      templateUrl: 'app/gate/gate.tpl.html',
-      controller: 'GateController as gateCtrl',
-      resolve : gateResolve
-    })
-    .state('gate.sign', {
-      url: '/sign?redirect',
-      templateUrl: 'app/gate/gate.tpl.html',
-      controller: 'GateController as gateCtrl',
-      resolve : gateResolve
-    })
-    .state('drive', {
-      url: '/drive',
-      templateUrl: 'app/drive/drive.tpl.html',
-      controller: 'DriveController as driveCtrl',
-      resolve: driveResolve
-    })
-    .state('drive.category', {
-      url: '/:category',
-      templateUrl: 'app/drive/drive-list.tpl.html',
-      controller: ['$scope', '$stateParams', function($scope, $stateParams) {
-        $scope.driveCtrl.init($stateParams);
-      }]
-    })
-    .state('drive.folder', {
-      url: '/folder/:folderId',
-      templateUrl: 'app/drive/drive-list.tpl.html',
-      controller: ['$scope', '$stateParams', function($scope, $stateParams) {
-        $scope.driveCtrl.init($stateParams);
-      }]
-    });
+      .state('gate', {
+        url: '',
+        templateUrl: 'app/gate/gate.tpl.html',
+        controller: 'GateController as gateCtrl',
+        resolve : gateResolve
+      })
+      .state('gate.sign', {
+        url: '/sign?redirect',
+        templateUrl: 'app/gate/gate.tpl.html',
+        controller: 'GateController as gateCtrl',
+        resolve : gateResolve
+      })
+      .state('drive', {
+        url: '/drive',
+        templateUrl: 'app/drive/drive.tpl.html',
+        controller: 'DriveController as driveCtrl',
+        resolve: driveResolve
+      })
+      .state('drive.category', {
+        url: '/:category',
+        templateUrl: 'app/drive/drive-list.tpl.html',
+        controller: ['$scope', '$stateParams', function($scope, $stateParams) {
+          $scope.driveCtrl.init($stateParams);
+        }]
+      })
+      .state('drive.folder', {
+        url: '/folder/:folderId',
+        templateUrl: 'app/drive/drive-list.tpl.html',
+        controller: ['$scope', '$stateParams', function($scope, $stateParams) {
+          $scope.driveCtrl.init($stateParams);
+        }]
+      });
   }
 
   function SetupHttp($httpProvider) {

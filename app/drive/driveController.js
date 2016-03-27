@@ -284,7 +284,7 @@
           fileList: data.fileList,
           currentFolder: self.currentFolder
         },
-        templateUrl: 'app/drive/upload-progress-dialog.tpls.html',
+        templateUrl: 'app/dialog/upload-progress-dialog.tpls.html',
         escapeToClose: false,
         clickOutsideToClose: false,
         controllerAs: 'modalCtrl',
@@ -376,7 +376,7 @@
       $mdDialog.show({
         controller: 'NavigationDialogController',
         controllerAs: 'vm',
-        templateUrl: 'app/drive/navigation-dialog.tpl.html',
+        templateUrl: 'app/dialog/navigation-dialog.tpl.html',
         bindToController: true,
         clickOutsideToClose: true,
         locals: {

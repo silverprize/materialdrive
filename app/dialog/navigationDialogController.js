@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('materialDrive')
-    .controller('NavigationDialogController', ['$mdDialog', '$q', NavigationDialogController]);
+    .controller('NavigationDialogController', ['$mdDialog', 'google', NavigationDialogController]);
 
   function NavigationDialogController($mdDialog, google) {
     var self = this;
