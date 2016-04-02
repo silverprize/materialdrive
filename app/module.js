@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('materialDrive')
-    .config(['$locationProvider', SetupHtml5Mode])
+    // .config(['$locationProvider', SetupHtml5Mode])
     .config(['$urlRouterProvider', '$stateProvider', SetupRoute])
     .config(['$httpProvider', SetupHttp]);
 
