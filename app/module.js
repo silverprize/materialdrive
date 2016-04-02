@@ -2,8 +2,13 @@
   'use strict';
 
   angular.module('materialDrive')
+    .config(['$locationProvider', SetupHtml5Mode])
     .config(['$urlRouterProvider', '$stateProvider', SetupRoute])
     .config(['$httpProvider', SetupHttp]);
+
+  function SetupHtml5Mode($locationProvider) {
+    $locationProvider.html5Mode(true);
+  }
 
   function SetupRoute($urlRouterProvider, $stateProvider) {
      var driveResolve = {
