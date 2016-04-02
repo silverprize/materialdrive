@@ -92,9 +92,9 @@
               'session_state': null
             }, function(result) {
               if (result) {
-                authorize();
-              } else {
                 deferred.resolve(authData);
+              } else {
+                authorize();
               }
             });
           }
