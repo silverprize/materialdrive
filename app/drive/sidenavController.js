@@ -14,6 +14,7 @@
     self.user = cache.get('userInfo');
 
     google.about().success(function(data) {
+      data.user = angular.extend({picture: {url: 'assets/images/ic_account_circle_white_24px.svg'}}, data.user);
       self.user = data.user;
       cache.put('userInfo', data.user);
     });
