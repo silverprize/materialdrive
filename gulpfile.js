@@ -11,6 +11,7 @@ var concat = require('gulp-concat');
 var html2js = require('gulp-html2js');
 var replace = require('gulp-replace');
 var rename = require("gulp-rename");
+var connect = require('gulp-connect');
 var runSequence = require('run-sequence');
 
 var html2jsFileName;
@@ -103,12 +104,22 @@ gulp.task('build', function(cb) {
   runSequence('jshint', 'clean', 'less', 'html2js', 'copyAssets', 'usemin', cb);
 });
 
-gulp.task('dev', function() {
+gulp.task('dev', function (cb) {
+  runSequence('dev_less', 'connect', 'watch', cb);
+});
+
+gulp.task('connect', function () {
+  connect.server({
+    port: 3000
+  });
+});
+
+gulp.task('dev_less', function() {
   return gulp.src('assets/less/materialdrive.less')
     .pipe(less())
     .pipe(gulp.dest('assets/css'));
 });
 
-gulp.task('watch', ['dev'], function() {
-  gulp.watch('assets/less/*.less', ['dev']);
+gulp.task('watch', function() {
+  return gulp.watch('assets/less/*.less', ['dev_less']);
 });

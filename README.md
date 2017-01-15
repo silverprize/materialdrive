@@ -1,6 +1,8 @@
 Material Drive
 ===
 Google Drive with Angular Material
+- angularjs 1.6.1
+- angular-material 1.1.1
 - Demo https://silverprize.github.io/materialdrive
 
 Available features
@@ -17,10 +19,13 @@ Available features
 Build
 ===
 - Prepare  
-`npm install && bower install`
+```
+npm i -g gulp-cli
+npm i && bower install
+```
 
 - For development  
-`gulp watch`
+`npm start`
 
 - For release  
 `gulp`
