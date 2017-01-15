@@ -21,6 +21,9 @@
   <div class="search-form-wrapper" ng-show="navbarCtrl.status.search" flex>
     <md-autocomplete md-selected-item="navbarCtrl.selectedItem" md-search-text="navbarCtrl.searchText" md-items="item in navbarCtrl.querySearchText(navbarCtrl.searchText)" md-item-text="item.title" placeholder="Search Drive" md-selected-item-change="navbarCtrl.searchItemSelected()" style="padding-left: 40px;" mtd-focus="{{navbarCtrl.status.search}}">
       <md-item-template>
+        <md-icon md-font-icon="material-icons" ng-if="item.mimeType === navbarCtrl.MimeType.folder">folder_open</md-icon>
+        <md-icon md-font-icon="material-icons" ng-if="item.mimeType !== navbarCtrl.MimeType.folder">insert_drive_file
+        </md-icon>
         <span md-highlight-text="navbarCtrl.searchText">{{item.title}}</span>
       </md-item-template>
       <md-not-found>

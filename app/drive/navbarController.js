@@ -2,9 +2,19 @@
   'use strict';
 
   angular.module('materialDrive')
-    .controller('NavbarController', ['$scope', '$window', '$state', '$q', '$cacheFactory', '$mdSidenav', 'google', NavbarController]);
+    .controller('NavbarController', [
+      '$scope',
+      '$window',
+      '$state',
+      '$q',
+      '$cacheFactory',
+      '$mdSidenav',
+      'google',
+      'MimeType',
+      NavbarController
+    ]);
 
-  function NavbarController($scope, $window, $state, $q, $cacheFactory, $mdSidenav, google) {
+  function NavbarController($scope, $window, $state, $q, $cacheFactory, $mdSidenav, google, MimeType) {
     var self = this;
     var detailsCache = $cacheFactory.get('details');
 
@@ -12,6 +22,7 @@
     self.toggleDetails = toggleDetails;
     self.querySearchText = querySearchText;
     self.searchItemSelected = searchItemSelected;
+    self.MimeType = MimeType;
 
     self.status = $cacheFactory.get('drive').get('status');
     self.breadcrumb = $cacheFactory.get('drive').get('breadcrumb');
@@ -53,7 +64,7 @@
         return;
       }
 
-      if (self.selectedItem.mimeType === google.mimeType.folder) {
+      if (self.selectedItem.mimeType === MimeType.folder) {
         $state.go('drive.folder', {
           folderId: self.selectedItem.id
         });

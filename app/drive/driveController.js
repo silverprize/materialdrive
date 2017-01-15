@@ -2,13 +2,25 @@
   'use strict';
   
   angular.module('materialDrive')
-    .controller('DriveController', ['$scope', '$state', '$window', '$q', '$mdDialog', '$cacheFactory', '$mdMedia', 'notifier', 'google', 'mimeType', DriveController]);
+    .controller('DriveController', [
+      '$scope',
+      '$state',
+      '$window',
+      '$q',
+      '$mdDialog',
+      '$cacheFactory',
+      '$mdMedia',
+      'notifier',
+      'google',
+      'MimeType',
+      DriveController
+    ]);
 
-  function DriveController($scope, $state, $window, $q, $mdDialog, $cacheFactory, $mdMedia, notifier, google, mimeType) {
-    var self = this,
-        driveCache = $cacheFactory.get('drive'),
-        sidenavCache = $cacheFactory.get('sidenav'),
-        detailsCache = $cacheFactory.get('details');
+  function DriveController($scope, $state, $window, $q, $mdDialog, $cacheFactory, $mdMedia, notifier, google, MimeType) {
+    var self = this;
+    var driveCache = $cacheFactory.get('drive');
+    var sidenavCache = $cacheFactory.get('sidenav');
+    var detailsCache = $cacheFactory.get('details');
 
     self.init = init;
     self.onContextMenuPopup = onContextMenuPopup;
@@ -18,8 +30,7 @@
     self.upToParentFolder = upToParentFolder;
     self.isScreenSize = $mdMedia.bind($mdMedia);
     self.isDetailsLocked = isDetailsLocked;
-
-    self.mimeType = mimeType;
+    self.MimeType = MimeType;
 
     if (!driveCache) {
       driveCache = $cacheFactory('drive');
@@ -252,7 +263,7 @@
         return;
       }
 
-      if (item.mimeType === google.mimeType.folder) {
+      if (item.mimeType === MimeType.folder) {
         $state.go('drive.folder', {
           category: $state.params.category,
           folderId: item.id
@@ -276,7 +287,7 @@
         parents: self.currentFolder.isRoot ? '' : self.currentFolder
       }).then(function(response) {
         var data = response.data;
-        if (data.mimeType !== google.mimeType.folder) {
+        if (data.mimeType !== MimeType.folder) {
           $window.open(data.alternateLink);
         }
         init($state.params);
@@ -306,7 +317,7 @@
 
       angular.forEach(self.selectedItemMap, function(item) {
         countItem++;
-        if (item.mimeType === google.mimeType.folder) {
+        if (item.mimeType === MimeType.folder) {
           hasFolder = true;
         }
       });

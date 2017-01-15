@@ -2,9 +2,15 @@
   'use strict';
 
   angular.module('materialDrive')
-    .controller('NewItemFabController', ['$mdDialog', 'google', 'notifier', NewItemFabController]);
+    .controller('NewItemFabController', [
+      '$mdDialog',
+      'google',
+      'notifier',
+      'MimeType',
+      NewItemFabController
+    ]);
 
-  function NewItemFabController($mdDialog, google, notifier) {
+  function NewItemFabController($mdDialog, google, notifier, MimeType) {
     var self = this;
 
     self.isExpanded = false;
@@ -15,28 +21,28 @@
         name: 'fa fa-file-word-o fa-lg',
         bg: 'file-word-bg'
       },
-      mimeType: google.mimeType.document
+      mimeType: MimeType.document
     }, {
       name: 'Spreadsheet',
       icon: {
         name: 'fa fa-file-excel-o fa-lg',
         bg: 'file-spreadsheet-bg'
       },
-      mimeType: google.mimeType.spreadsheet
+      mimeType: MimeType.spreadsheet
     }, {
       name: 'Presentation',
       icon: {
         name: 'fa fa-file-powerpoint-o fa-lg',
         bg: 'file-presentation-bg'
       },
-      mimeType: google.mimeType.presentation
+      mimeType: MimeType.presentation
     }, {
       name: 'Folder',
       icon: {
         name: 'fa fa-folder fa-lg',
         bg: 'file-bg'
       },
-      mimeType: google.mimeType.folder
+      mimeType: MimeType.folder
     }];
 
     self.onFileSelected = function($files/*, $file, $event, $rejectedFiles*/) {

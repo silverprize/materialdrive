@@ -26,7 +26,7 @@
       OAUTH_TOKEN;
 
   angular.module('materialDrive')
-  .factory('google', ['$http', '$q', '$interval', 'Upload', 'query', 'mimeType', GoogleService])
+  .factory('google', ['$http', '$q', '$interval', 'Upload', 'query', 'MimeType', GoogleService])
   .constant('query', {
     incoming: 'trashed = false and not \'me\' in owners and sharedWithMe',
     recent: '(not mimeType = \'application/vnd.google-apps.folder\') and lastViewedByMeDate > \'1970-01-01T00:00:00Z\' and trashed = false',
@@ -34,15 +34,9 @@
     trash: 'trashed = true and explicitlyTrashed = true',
     folder: 'trashed = false and \'%s\' in parents',
     fullText: 'trashed = false and fullText contains \'%s\''
-  })
-  .constant('mimeType', {
-    folder : 'application/vnd.google-apps.folder',
-    document: 'application/vnd.google-apps.document',
-    spreadsheet: 'application/vnd.google-apps.spreadsheet',
-    presentation: 'application/vnd.google-apps.presentation'
   });
 
-  function GoogleService($http, $q, $interval, Upload, query, mimeType) {
+  function GoogleService($http, $q, $interval, Upload, query, MimeType) {
     var authData;
 
     return {
@@ -114,7 +108,6 @@
       isAuthenticated: function() {
         return angular.isDefined(OAUTH_TOKEN);
       },
-      mimeType: mimeType,
       query: query,
       about: function() {
         return $http.get(API.ABOUT, angular.copy(OAUTH_TOKEN));

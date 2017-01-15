@@ -2,9 +2,14 @@
   'use strict';
 
   angular.module('materialDrive')
-    .controller('NavigationDialogController', ['$mdDialog', 'google', NavigationDialogController]);
+    .controller('NavigationDialogController', [
+      '$mdDialog',
+      'google',
+      'MimeType',
+      NavigationDialogController
+    ]);
 
-  function NavigationDialogController($mdDialog, google) {
+  function NavigationDialogController($mdDialog, google, MimeType) {
     var self = this;
 
     self.currentFolder = {
@@ -44,7 +49,7 @@
     function getList(id) {
       google.filesList({
         query: google.query.folder.replace('%s', id),
-        mimeType: google.mimeType.folder
+        mimeType: MimeType.folder
       }).then(function (response) {
         var data = response.data;
         self.folderList = data.items;

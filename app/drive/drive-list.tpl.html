@@ -32,10 +32,10 @@
         ng-dblclick="driveCtrl.onItemDoubleClicked(item)"
         ng-click="driveCtrl.onItemClicked(item, true)"
         mtd-right-click="driveCtrl.onItemClicked(item, false)">
-        <md-icon ng-if="item.mimeType === driveCtrl.mimeType.folder" md-font-icon="material-icons md-48">
+        <md-icon ng-if="item.mimeType === driveCtrl.MimeType.folder" md-font-icon="material-icons md-48">
           {{item.shared ? 'folder_shared' : 'folder'}}
         </md-icon>
-        <img ng-if="item.mimeType !== driveCtrl.mimeType.folder" ng-src="{{item.thumbnailLink||item.iconLink}}">
+        <img ng-if="item.mimeType !== driveCtrl.MimeType.folder" ng-src="{{item.thumbnailLink||item.iconLink}}">
         <md-grid-tile-footer class="md-grid-tile-footer-darker"><h3>{{item.title}}</h3></md-grid-tile-footer>
       </md-grid-tile>
     </md-grid-list>
