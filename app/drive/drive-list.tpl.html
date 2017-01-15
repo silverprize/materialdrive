@@ -58,7 +58,7 @@
       <md-list-item class="drive-list-item" ng-class="{selected: item.isSelected}"
         md-virtual-repeat="item in driveCtrl.itemListController"
         md-on-demand="true"
-        ng-dblclick="driveCtrl.onItemDoubleClicked(item)"
+        ng-dblclick="driveCtrl.onItemDoubleClicked($event, item)"
         ng-click="driveCtrl.onItemClicked(item, true)"
         mtd-right-click="driveCtrl.onItemClicked(item, false)"
         aria-label="{{item.title}} selected">

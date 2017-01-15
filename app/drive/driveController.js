@@ -258,7 +258,9 @@
       }
     }
 
-    function onItemDoubleClicked(item) {
+    function onItemDoubleClicked($event, item) {
+      $event.stopImmediatePropagation(); // FIXME: Double click fires event twice, why?
+
       if (item.labels.trashed) {
         return;
       }

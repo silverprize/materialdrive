@@ -59,17 +59,15 @@
       return deferred.promise;
     }
 
-    function searchItemSelected() {
-      if (!self.selectedItem) {
-        return;
-      }
-
-      if (self.selectedItem.mimeType === MimeType.folder) {
-        $state.go('drive.folder', {
-          folderId: self.selectedItem.id
-        });
-      } else {
-        $window.open(self.selectedItem.alternateLink);
+    function searchItemSelected($event, selectedItem) {
+      if ($event.type === 'click' || ($event.type === 'keyup' && $event.keyCode === 13)) {
+        if (selectedItem.mimeType === MimeType.folder) {
+          $state.go('drive.folder', {
+            folderId: selectedItem.id
+          });
+        } else {
+          $window.open(selectedItem.alternateLink);
+        }
       }
     }
   }
