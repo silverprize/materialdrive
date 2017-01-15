@@ -154,7 +154,8 @@
               pageToken: this.nextPageToken,
               maxResults: this.maxResults,
               orderBy: this.orderBy
-            }).success(function(data) {
+            }).then(function(response) {
+              var data = response.data;
               _this.isBusy = false;
               _this.nextPageToken = data.nextPageToken;
               _this.items = _this.items.concat(data.items);
@@ -193,26 +194,29 @@
     }
 
     function makeBreadcrumb() {
-      var getRoot = function() {
-            return $cacheFactory.get('sidenav').get('menuList').filter(function(menu) {
+      var getRoot = function () {
+            return $cacheFactory.get('sidenav').get('menuList').filter(function (menu) {
               return menu.selected;
             })[0];
-          }, getParent, breadcrumb;
+          };
+      var getParent;
+      var breadcrumb;
 
       if (self.currentFolder.isRoot) {
         self.breadcrumb.splice(0, self.breadcrumb.length);
         self.breadcrumb.push(getRoot());
       } else {
         breadcrumb = [self.currentFolder];
-        getParent = function(parent) {
-          google.filesGet(parent.id).success(function(data) {
+        getParent = function (parent) {
+          google.filesGet(parent.id).then(function (response) {
+            var data = response.data;
             if (data.parents[0]) {
               breadcrumb.push(data);
               getParent(data.parents[0]);
             } else {
               self.breadcrumb.splice(0, self.breadcrumb.length);
               self.breadcrumb.push(getRoot());
-              breadcrumb.reverse().forEach(function(item) {
+              breadcrumb.reverse().forEach(function (item) {
                 self.breadcrumb.push(item);
               });
             }
@@ -270,7 +274,8 @@
         title: data.name,
         mimeType: data.mimeType,
         parents: self.currentFolder.isRoot ? '' : self.currentFolder
-      }).success(function(data) {
+      }).then(function(response) {
+        var data = response.data;
         if (data.mimeType !== google.mimeType.folder) {
           $window.open(data.alternateLink);
         }

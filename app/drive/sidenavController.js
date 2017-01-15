@@ -2,19 +2,29 @@
   'use strict';
 
   angular.module('materialDrive')
-    .controller('SidenavController', ['$cacheFactory', 'google', SidenavController]);
+    .controller('SidenavController', [
+      '$cacheFactory',
+      '$mdSidenav',
+      'google',
+      SidenavController
+    ]);
 
-  function SidenavController($cacheFactory, google) {
-    var self = this,
-      cache = $cacheFactory.get('sidenav');
+  function SidenavController($cacheFactory, $mdSidenav, google) {
+    var self = this;
+    var cache = $cacheFactory.get('sidenav');
 
     self.onMenuSelect = onMenuSelect;
 
     self.menuList = cache.get('menuList');
     self.user = cache.get('userInfo');
 
-    google.about().success(function(data) {
-      data.user = angular.extend({picture: {url: 'assets/images/ic_account_circle_white_24px.svg'}}, data.user);
+    google.about().then(function(response) {
+      var data = response.data;
+      data.user = angular.extend({
+        picture: {
+          url: 'assets/images/ic_account_circle_white_24px.svg'
+        }
+      }, data.user);
       self.user = data.user;
       cache.put('userInfo', data.user);
     });
@@ -29,6 +39,8 @@
       self.selectedMenu.selected = false;
       menu.selected = true;
       self.selectedMenu = menu;
+
+      $mdSidenav('sidenav').toggle();
     }
   }
 

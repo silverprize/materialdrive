@@ -45,7 +45,8 @@
       google.filesList({
         query: google.query.folder.replace('%s', id),
         mimeType: google.mimeType.folder
-      }).success(function (data) {
+      }).then(function (response) {
+        var data = response.data;
         self.folderList = data.items;
       });
     }

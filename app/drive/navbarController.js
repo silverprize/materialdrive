@@ -5,8 +5,8 @@
     .controller('NavbarController', ['$scope', '$window', '$state', '$q', '$cacheFactory', '$mdSidenav', 'google', NavbarController]);
 
   function NavbarController($scope, $window, $state, $q, $cacheFactory, $mdSidenav, google) {
-    var self = this,
-      detailsCache = $cacheFactory.get('details');
+    var self = this;
+    var detailsCache = $cacheFactory.get('details');
 
     self.toggleSidenav = toggleSidenav;
     self.toggleDetails = toggleDetails;

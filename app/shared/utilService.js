@@ -12,16 +12,22 @@
             top = 0,
             left = 0;
 
-        while(typeof parentNode.offsetTop !== 'undefined') {
+        do {
           top += parentNode.offsetTop;
           left += parentNode.offsetLeft;
-          parentNode = parentNode.parentNode;
-        }
+          parentNode = parentNode.offsetParent;
+        } while (this.isNull(parentNode));
 
         return {
           top: top,
           left: left
         };
+      },
+      isUndefined: function (val) {
+        return typeof val === 'undefined';
+      },
+      isNull: function (val) {
+        return val === null;
       }
     };
   }
