@@ -20,7 +20,7 @@ Build
 ===
 - Prepare  
 ```
-npm i -g gulp-cli
+npm i -g bower gulp-cli
 npm i && bower install
 ```
 
