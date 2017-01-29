@@ -6,6 +6,7 @@
 
   function MtdRightClick($parse, $rootScope) {
     return {
+      restrict: 'A',
       compile: function($element, attr) {
         var fn = $parse(attr.mtdRightClick, /* interceptorFn */ null, /* expensiveChecks */ true);
         return function EventHandler(scope, element) {

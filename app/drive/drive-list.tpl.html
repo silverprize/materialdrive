@@ -29,8 +29,8 @@
         ng-repeat="item in driveCtrl.itemListController.items"
         md-colspan-sm="1"
         ng-class="{selected: item.isSelected}"
-        ng-dblclick="driveCtrl.onItemDoubleClicked(item)"
         ng-click="driveCtrl.onItemClicked(item, true)"
+        mtd-double-click="driveCtrl.onItemDoubleClicked($event, item)"
         mtd-right-click="driveCtrl.onItemClicked(item, false)">
         <md-icon ng-if="item.mimeType === driveCtrl.MimeType.folder" md-font-icon="material-icons md-48">
           {{item.shared ? 'folder_shared' : 'folder'}}
@@ -58,12 +58,12 @@
       <md-list-item class="drive-list-item" ng-class="{selected: item.isSelected}"
         md-virtual-repeat="item in driveCtrl.itemListController"
         md-on-demand="true"
-        ng-dblclick="driveCtrl.onItemDoubleClicked($event, item)"
         ng-click="driveCtrl.onItemClicked(item, true)"
         mtd-right-click="driveCtrl.onItemClicked(item, false)"
+        mtd-double-click="driveCtrl.onItemDoubleClicked($event, item)"
         aria-label="{{item.title}} selected">
         <img class="icon" ng-src="{{item.iconLink}}">
-        <span class="name" ng-bind="item.title"></span>
+        <p ng-bind="item.title"></p>
         <md-divider></md-divider>
       </md-list-item>
     </md-virtual-repeat-container>
