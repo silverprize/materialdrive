@@ -2,16 +2,16 @@
   'use strict';
 
   angular.module('materialDrive')
-    .directive('mtdDoubleClick', ['$parse', '$rootScope', '$timeout', MtdDoubleClick]);
+    .directive('mtdDoubleClick', ['$parse', '$rootScope', '$timeout', '$window', MtdDoubleClick]);
 
-  function MtdDoubleClick($parse, $rootScope, $timeout) {
+  function MtdDoubleClick($parse, $rootScope, $timeout, $window) {
     return {
       restrict: 'A',
       compile: function($element, attr) {
         var fn = $parse(attr.mtdDoubleClick, /* interceptorFn */ null, /* expensiveChecks */ true);
 
         return function EventHandler(scope, element) {
-          if ('ontouchstart' in window) {
+          if ('ontouchstart' in $window) {
             doubleTab(scope, element);
           } else {
             doubleClick(scope, element);
