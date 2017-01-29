@@ -14,6 +14,7 @@
         '$scope',
         '$document',
         '$compile',
+        '$timeout',
         'Util',
         ContextMenuController
       ],
@@ -21,8 +22,9 @@
       link: link
     };
 
-    function ContextMenuController($scope, $document, $compile, Util) {
+    function ContextMenuController($scope, $document, $compile, $timeout, Util) {
       var self = this;
+      var bodyElem = angular.element($document[0].body);
 
       $scope.onDropdownMenuSelected = function(menu) {
         $scope.onMenuSelected({menu: menu});
@@ -30,17 +32,17 @@
 
       $scope.$on('$destroy', function() {
         self._menuListElem.remove();
+        bodyElem.off('click', onClickOutside);
       });
 
       $scope.contextMenuState = {
         left: 0,
         top: 0,
-        visibility: 'hidden'
+        display: 'none'
       };
 
       self.init = function(elem) {
-        var menuListElem = angular.element('<mtd-dropdown></mtd-dropdown>'),
-            bodyElem = angular.element($document[0].body);
+        var menuListElem = angular.element('<mtd-dropdown></mtd-dropdown>');
 
         menuListElem.attr({
           'class': 'context-menu',
@@ -51,39 +53,48 @@
         $compile(menuListElem)($scope);
         bodyElem.append(menuListElem);
 
-        bodyElem.on('click', function() {
-          $scope.contextMenuState.display = 'none';
-          $scope.$digest();
-        });
+        bodyElem.on('click', onClickOutside);
 
         elem.on('contextmenu', function(event) {
-          var left, top, offset;
+          event.preventDefault();
+
+          var left;
+          var top;
+          var offset;
 
           if ($scope.onPopup()) {
             left = event.clientX;
             top = event.clientY;
-            offset = Util.offset(this);
 
-            if (left + menuListElem[0].clientWidth > offset.left + this.clientWidth) {
-              left -= (left + menuListElem[0].clientWidth) - (offset.left + this.clientWidth);
-            }
-            if (top + menuListElem[0].clientHeight > offset.top + this.clientHeight) {
-              top -= (top + menuListElem[0].clientHeight) - (offset.top + this.clientHeight);
-            }
-
-            $scope.contextMenuState.left = left + 'px';
-            $scope.contextMenuState.top = top + 'px';
-            $scope.contextMenuState.visibility = 'visible';
+            $scope.contextMenuState.visibility = 'hidden';
             $scope.contextMenuState.display = 'block';
-          }
 
-          $scope.$digest();
-          event.preventDefault();
+            $scope.$digest();
+
+            $timeout(function () {
+              offset = Util.offset(this);
+              if (left + menuListElem[0].clientWidth > offset.left + this.clientWidth) {
+                left -= (left + menuListElem[0].clientWidth) - (offset.left + this.clientWidth);
+              }
+              if (top + menuListElem[0].clientHeight > offset.top + this.clientHeight) {
+                top -= (top + menuListElem[0].clientHeight) - (offset.top + this.clientHeight);
+              }
+
+              $scope.contextMenuState.left = left + 'px';
+              $scope.contextMenuState.top = top + 'px';
+              $scope.contextMenuState.visibility = 'visible';
+            }.bind(this));
+          }
         });
 
         self._elem = elem;
         self._menuListElem = menuListElem;
       };
+
+      function onClickOutside() {
+        $scope.contextMenuState.display = 'none';
+        $scope.$digest();
+      }
     }
 
     function link(scope, elem, attrs, ctrl) {

@@ -16,7 +16,7 @@
           top += parentNode.offsetTop;
           left += parentNode.offsetLeft;
           parentNode = parentNode.offsetParent;
-        } while (this.isNull(parentNode));
+        } while (!this.isNull(parentNode));
 
         return {
           top: top,
