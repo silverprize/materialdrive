@@ -75,14 +75,14 @@
       detailsCache = $cacheFactory('details');
     }
 
-    notifier.addListener('newItem', {
+    notifier.addListener('onNewItemCreated', {
       listener: self,
-      callback: onCreateNewItem
+      callback: onNewItemCreated
     });
 
-    notifier.addListener('upload', {
+    notifier.addListener('onFileSelected', {
       listener: self,
-      callback: onUploadFile
+      callback: onFileSelected
     });
 
     $scope.$on('$stateChangeSuccess', function() {
@@ -90,8 +90,8 @@
     });
 
     $scope.$on('$destroy', function() {
-      notifier.removeListener('newItem', self);
-      notifier.removeListener('upload', self);
+      notifier.removeListener('onNewItemCreated', self);
+      notifier.removeListener('onFileSelected', self);
     });
 
     function init($stateParams) {
@@ -282,21 +282,11 @@
       });
     }
 
-    function onCreateNewItem(data) {
-      google.newFile({
-        title: data.name,
-        mimeType: data.mimeType,
-        parents: self.currentFolder.isRoot ? '' : self.currentFolder
-      }).then(function(response) {
-        var data = response.data;
-        if (data.mimeType !== MimeType.folder) {
-          $window.open(data.alternateLink);
-        }
-        init($state.params);
-      });
+    function onNewItemCreated(/*data*/) {
+      init($state.params);
     }
 
-    function onUploadFile(data) {
+    function onFileSelected(data) {
       $mdDialog.show({
         locals: {
           fileList: data.fileList,
@@ -368,13 +358,13 @@
     }
 
     function trashFiles() {
-      var confirm = $mdDialog.confirm().title('Will be removed').ok('Yes').cancel('Cancel'),
-          content = '';
+      var confirm = $mdDialog.confirm().title('Will be removed').ok('Yes').cancel('Cancel');
+      var content = [];
 
       angular.forEach(self.selectedItemMap, function(item) {
-        content = [content, '"', item.title, '", '].join('');
+        content.push('<p>' + item.title + '</p>');
       });
-      confirm.content(content.substring(0, content.lastIndexOf(',')));
+      confirm.htmlContent(content.join(''));
 
       $mdDialog.show(confirm).then(function() {
         var promises = [];
@@ -387,7 +377,7 @@
           emptySelectedItem();
           init($state.params);
         });
-      });
+      }, angular.noop);
     }
 
     function moveToFiles() {

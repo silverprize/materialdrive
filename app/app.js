@@ -4,6 +4,7 @@
   angular.module('materialDrive', [
     'ngMaterial',
     'ngLocale',
+    'ngSanitize',
     'ngFileUpload',
     'ui.router',
     'materialDrive.tpls',

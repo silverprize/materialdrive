@@ -1,8 +1,8 @@
 (function() {
   'use strict';
 
-  var CLIENT_ID = '608120956255-0me03edqv60mf1eilgdjoum9qcmv4deq.apps.googleusercontent.com',
-      SCOPES = [
+  var CLIENT_ID = '608120956255-0me03edqv60mf1eilgdjoum9qcmv4deq.apps.googleusercontent.com';
+  var SCOPES = [
         'https://www.googleapis.com/auth/drive',
         'https://www.googleapis.com/auth/drive.file',
         'https://www.googleapis.com/auth/drive.readonly',
@@ -11,8 +11,8 @@
         'https://www.googleapis.com/auth/drive.apps.readonly',
         'https://www.googleapis.com/auth/userinfo.email',
         'https://www.googleapis.com/auth/userinfo.profile'
-      ],
-      API = {
+      ];
+  var API = {
         ABOUT: 'https://www.googleapis.com/drive/v2/about',
         FILES_LIST: 'https://www.googleapis.com/drive/v2/files',
         FILES_GET: 'https://www.googleapis.com/drive/v2/files/fileId',
@@ -22,11 +22,11 @@
         FILES_DELETE: 'https://www.googleapis.com/drive/v2/files/%s',
         FILES_TRASH: 'https://www.googleapis.com/drive/v2/files/%s/trash',
         FILES_PATCH: 'https://www.googleapis.com/drive/v2/files/%s'
-      },
-      OAUTH_TOKEN;
+      };
+  var authHeaders;
 
   angular.module('materialDrive')
-  .factory('google', ['$http', '$q', '$interval', 'Upload', 'query', 'MimeType', GoogleService])
+  .factory('google', ['$http', '$q', '$interval', 'Upload', 'query', GoogleService])
   .constant('query', {
     incoming: 'trashed = false and not \'me\' in owners and sharedWithMe',
     recent: '(not mimeType = \'application/vnd.google-apps.folder\') and lastViewedByMeDate > \'1970-01-01T00:00:00Z\' and trashed = false',
@@ -36,7 +36,7 @@
     fullText: 'trashed = false and fullText contains \'%s\''
   });
 
-  function GoogleService($http, $q, $interval, Upload, query, MimeType) {
+  function GoogleService($http, $q, $interval, Upload, query) {
     var authData;
 
     return {
@@ -96,21 +96,21 @@
 
         return deferred.promise.then(function(authResult) {
           authData = authResult;
-          OAUTH_TOKEN = {
-            params: {'alt': 'json'},
+          authHeaders = {
+            params: {alt: 'json'},
             headers: {
-              'Authorization': 'Bearer ' + authData.access_token,
+              Authorization: 'Bearer ' + authData.access_token,
               'GData-Version': '3.0'
             }
           };
         });
       },
       isAuthenticated: function() {
-        return angular.isDefined(OAUTH_TOKEN);
+        return angular.isDefined(authHeaders);
       },
       query: query,
       about: function() {
-        return $http.get(API.ABOUT, angular.copy(OAUTH_TOKEN));
+        return $http.get(API.ABOUT, angular.copy(authHeaders));
       },
       filesList: function(args) {
         var query = '?q=' + encodeURIComponent(args.query);
@@ -131,10 +131,10 @@
           query += '&orderBy=' + args.orderBy;
         }
 
-        return $http.get(API.FILES_LIST + query, angular.copy(OAUTH_TOKEN));
+        return $http.get(API.FILES_LIST + query, angular.copy(authHeaders));
       },
       filesGet: function(fileId) {
-        return $http.get([API.FILES_GET , '?fileId=', encodeURIComponent(fileId)].join(''), angular.copy(OAUTH_TOKEN));
+        return $http.get([API.FILES_GET , '?fileId=', encodeURIComponent(fileId)].join(''), angular.copy(authHeaders));
       },
       newFile: function(args) {
         return $http.post(
@@ -143,14 +143,14 @@
             mimeType: args.mimeType,
             parents: args.parents ? [args.parents] : ''
           },
-          angular.copy(OAUTH_TOKEN)
+          angular.copy(authHeaders)
         );
       },
       getUploadEndpoint: function(args) {
         return $http({
           url: API.INSERT_FILE.concat('?uploadType=resumable'),
           method: 'POST',
-          headers: OAUTH_TOKEN.headers,
+          headers: authHeaders.headers,
           data: {
             title: args.file.fileName || args.file.name,
             mimeType: args.file.type || 'application/octet-stream',
@@ -168,15 +168,15 @@
           headers: angular.extend({
             'Content-Range': ['bytes ', offset, '-', (end - 1), '/', args.file.size].join(''),
             'X-Upload-Content-Type': args.file.type
-          }, OAUTH_TOKEN.headers),
+          }, authHeaders.headers),
           data: args.file.slice(offset, end)
         });
       },
       duplicateFile: function(args) {
-        return $http.post(API.FILES_COPY.replace('%s', args.fileId), null, angular.copy(OAUTH_TOKEN));
+        return $http.post(API.FILES_COPY.replace('%s', args.fileId), null, angular.copy(authHeaders));
       },
       moveToTrash: function(args) {
-        return $http.post(API.FILES_TRASH.replace('%s', args.fileId), null, angular.copy(OAUTH_TOKEN));
+        return $http.post(API.FILES_TRASH.replace('%s', args.fileId), null, angular.copy(authHeaders));
       },
       moveTo: function(args) {
         return $http.patch([
@@ -185,7 +185,7 @@
           '&removeParents=', args.fromFolderId
         ].join(''),
         null,
-        angular.copy(OAUTH_TOKEN));
+        angular.copy(authHeaders));
       }
     };
   }

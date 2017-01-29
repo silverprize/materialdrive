@@ -27,7 +27,8 @@
     "angular-aria": "~1.6.1",
     "angular-ui-router": "~1.0.0-rc.1",
     "angular-material": "~1.1.1",
-    "github-fork-ribbon-css": "^0.2.0"
+    "github-fork-ribbon-css": "^0.2.0",
+    "angular-sanitize": "^1.6.1"
   },
   "resolutions": {
     "angular": "~1.6.1"

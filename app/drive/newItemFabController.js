@@ -3,14 +3,16 @@
 
   angular.module('materialDrive')
     .controller('NewItemFabController', [
+      '$window',
       '$mdDialog',
+      '$state',
       'google',
       'notifier',
       'MimeType',
       NewItemFabController
     ]);
 
-  function NewItemFabController($mdDialog, google, notifier, MimeType) {
+  function NewItemFabController($window, $mdDialog, $state, google, notifier, MimeType) {
     var self = this;
 
     self.isExpanded = false;
@@ -50,14 +52,14 @@
         return;
       }
 
-      notifier.notify('upload', {
+      notifier.notify('onFileSelected', {
         fileList: $files
       });
     };
 
-    self.menuClick = function($event, $index) {
-      var clickedMenu = self.menuList[$index];
-      $mdDialog.show({
+    self.onMenuClick = function($event, $menuIndex, currentFolder) {
+      var menuItem = self.menuList[$menuIndex];
+      var dialogOption = {
         controller: 'NameDialogController',
         controllerAs: 'vm',
         templateUrl: 'app/dialog/name-dialog.tpl.html',
@@ -65,17 +67,41 @@
         clickOutsideToClose: true,
         targetEvent: $event,
         locals: {
-          item: clickedMenu
-        },
-        onComplete: function(scope, elem/*, options*/) {
-          elem.find('input').focus();
+          item: menuItem
         }
-      }).then(function(name) {
-        notifier.notify('newItem', {
-          name: name,
-          mimeType: clickedMenu.mimeType
+      };
+
+      if (menuItem.mimeType === MimeType.folder) {
+        $mdDialog.show(dialogOption).then(function(name) {
+          google.newFile({
+            title: name,
+            mimeType: menuItem.mimeType,
+            parents: currentFolder.isRoot ? undefined : currentFolder
+          }).then(function() {
+            notifier.notify('onNewItemCreated');
+          });
         });
-      });
+      } else {
+        dialogOption.locals.onOk = onFileOk;
+        $mdDialog.show(dialogOption);
+      }
+
+      function onFileOk(name) {
+        $window.callback = function () {
+          return google.newFile({
+            title: name,
+            mimeType: menuItem.mimeType,
+            parents: currentFolder.isRoot ? undefined : currentFolder
+          }).then(function(response) {
+            notifier.notify('onNewItemCreated');
+
+            var data = response.data;
+            return data.alternateLink;
+          });
+        };
+
+        $window.open($state.href('new'), '_blank');
+      }
     };
   }
 

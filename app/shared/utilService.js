@@ -23,11 +23,19 @@
           left: left
         };
       },
-      isUndefined: function (val) {
-        return typeof val === 'undefined';
-      },
       isNull: function (val) {
         return val === null;
+      },
+      queryStringify: function (params) {
+        var queryString = [];
+
+        angular.forEach(params, function (value, key) {
+          if (!angular.isUndefined(params[key])) {
+            queryString.push(key + '=' + encodeURIComponent(value));
+          }
+        });
+
+        return queryString.join('&');
       }
     };
   }

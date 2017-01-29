@@ -75,6 +75,19 @@
         controller: ['$scope', '$stateParams', function($scope, $stateParams) {
           $scope.driveCtrl.init($stateParams);
         }]
+      })
+      .state('new', {
+        url: '/new?name&mimeType&parents',
+        template: '',
+        controller: ['$scope', '$stateParams', '$window', function($scope, $stateParams, $window) {
+          if (!$window.opener || !$window.opener.callback) {
+            return;
+          }
+
+          $window.opener.callback().then(function (url) {
+            $window.location.replace(url);
+          });
+        }]
       });
   }
 
@@ -82,8 +95,8 @@
     $httpProvider.interceptors.push(['$injector', '$q', function($injector, $q) {
       return {
         responseError: function(rejection) {
-          var $state = $injector.get('$state'),
-            google = $injector.get('google');
+          var $state = $injector.get('$state');
+          var google = $injector.get('google');
 
           if (rejection.status === 401) {
             google.authorize(true).then(function() {

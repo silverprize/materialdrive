@@ -27,7 +27,8 @@
         </md-fab-trigger>
         <md-fab-actions>
           <div ng-repeat="menu in ctrl.menuList">
-            <md-button aria-label="{{::menu.name}}" class="md-fab md-mini" ng-class="menu.icon.bg" ng-click="ctrl.menuClick($event, $index)">
+            <md-button aria-label="{{::menu.name}}" class="md-fab md-mini" ng-class="menu.icon.bg"
+              ng-click="ctrl.onMenuClick($event, $index, driveCtrl.currentFolder)">
               <md-tooltip md-direction="left">{{::menu.name}}</md-tooltip>
               <md-icon md-font-set="fa" md-font-icon="{{menu.icon.name}}"></md-icon>
             </md-button>

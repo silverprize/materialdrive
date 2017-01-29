@@ -8,6 +8,9 @@
     var self = this;
 
     $scope.ok = function() {
+      if (self.onOk) {
+        self.onOk(self.fileName);
+      }
       $mdDialog.hide(self.fileName);
     };
 
