@@ -8,14 +8,15 @@
     <md-toolbar ng-controller="NavbarController as navbarCtrl" class="navbar md-whiteframe-z2 md-tall" ng-include="'app/drive/navbar.tpl.html'"></md-toolbar>
 
     <md-content class="md-sidenav-left md-whiteframe-z2"
-                mtd-context-menu
-                menu-list="driveCtrl.contextMenuList"
-                on-menu-selected="driveCtrl.onContextMenuSelected(menu)"
-                on-popup="driveCtrl.onContextMenuPopup()"
-                layout="column"
-                flex
-                md-scroll-y
-                ui-view>
+      style="z-index: 2;"
+      mtd-context-menu
+      menu-list="driveCtrl.contextMenuList"
+      on-menu-selected="driveCtrl.onContextMenuSelected(menu)"
+      on-popup="driveCtrl.onContextMenuPopup()"
+      layout="column"
+      flex
+      md-scroll-y
+      ui-view>
     </md-content>
 
     <div ng-controller="NewItemFabController as ctrl" class="fab-container">
