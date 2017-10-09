@@ -71,7 +71,7 @@
     });
 
     function init($stateParams) {
-      var query = (google.query[$stateParams.category] || google.query.folder).replace('%s', $stateParams.folderId || SidenavMenus[0].href),
+      var query = (google.query[$stateParams.category] || google.query.folder).replace('%s', $stateParams.folderId || SidenavMenus[0].id),
           promises = [],
           menuList = sidenavCache.get('menuList');
 

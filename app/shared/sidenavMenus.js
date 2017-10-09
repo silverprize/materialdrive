@@ -2,27 +2,27 @@
     var menusList = [{
       icon: 'folder',
       label: 'My Drive',
-      href: 'root',
+      id: 'root',
       index: 0
     }, {
       icon: 'people',
       label: 'Share with me',
-      href: 'incoming',
+      id: 'incoming',
       index: 1
     }, {
       icon: 'history',
       label: 'Recent',
-      href: 'recent',
+      id: 'recent',
       index: 2
     }, {
       icon: 'star',
       label: 'Starred',
-      href: 'starred',
+      id: 'starred',
       index: 3
     }, {
       icon: 'delete',
       label: 'Trash',
-      href: 'trash',
+      id: 'trash',
       index: 4
     }];
 
