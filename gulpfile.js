@@ -17,7 +17,7 @@ var runSequence = require('run-sequence');
 var html2jsFileName;
 
 gulp.task('clean', function(cb) {
-  del([
+  return del([
     './build',
     './assets/css'
   ], cb);
@@ -45,11 +45,9 @@ gulp.task('jshint', function() {
 
 gulp.task('html2js', function() {
   return gulp.src('app/**/*.html')
-    .pipe(html2js({
-      outputModuleName: 'materialDrive.tpls',
-      useStrict: true
+    .pipe(html2js('app.tpls.js', {
+      name: 'materialDrive.tpls'
     }))
-    .pipe(concat('app.tpls.js'))
     .pipe(uglify())
     .pipe(rev())
     .pipe(rename(function(data) {

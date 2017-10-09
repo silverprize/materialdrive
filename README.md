@@ -18,9 +18,26 @@ Available features
 - Infinite scroll
 - List view / Grid view
 
+
+Configuration
+===
+#### - History mode
+History work in hashmode as default. if you want to run on HTML5?  
+you must uncomment some codes.  
+- `<base>` tag in /index.html.  
+- `.config(['$locationProvider', SetupHtml5Mode])` in /app/module.config.js.  
+
+#### - Set Google client id to yours
+Change value of `var CLIENT_ID` in /app/shared/googleService.js
+
+#### - Customize Sidenav
+Modify value of `var menuList` in /app/shared/sidenavMenus.js.
+
+
 Build
 ===
-- Prepare  
+- Prepare
+  
 ```
 npm i -g bower gulp-cli
 npm i && bower install

@@ -6,17 +6,14 @@
       '$mdDialog',
       'google',
       'MimeType',
+      'SidenavMenus',
       NavigationDialogController
     ]);
 
-  function NavigationDialogController($mdDialog, google, MimeType) {
+  function NavigationDialogController($mdDialog, google, MimeType, SidenavMenus) {
     var self = this;
 
-    self.currentFolder = {
-      title: 'My Drive',
-      id: 'root',
-      isRoot: true
-    };
+    self.currentFolder = angular.copy(SidenavMenus[0], {isRoot: true});
 
     self.path = [self.currentFolder];
 

@@ -13,10 +13,11 @@
       'notifier',
       'google',
       'MimeType',
+      'SidenavMenus',
       DriveController
     ]);
 
-  function DriveController($scope, $state, $window, $q, $mdDialog, $cacheFactory, $mdMedia, notifier, google, MimeType) {
+  function DriveController($scope, $state, $window, $q, $mdDialog, $cacheFactory, $mdMedia, notifier, google, MimeType, SidenavMenus) {
     var self = this;
     var driveCache = $cacheFactory.get('drive');
     var sidenavCache = $cacheFactory.get('sidenav');
@@ -43,32 +44,7 @@
 
     if (!sidenavCache) {
       sidenavCache = $cacheFactory('sidenav');
-      sidenavCache.put('menuList', [{
-        icon: 'folder',
-        label: 'My Drive',
-        href: 'mydrive',
-        index: 0
-      }, {
-        icon: 'people',
-        label: 'Share with me',
-        href: 'incoming',
-        index: 1
-      }, {
-        icon: 'history',
-        label: 'Recent',
-        href: 'recent',
-        index: 2
-      }, {
-        icon: 'star',
-        label: 'Starred',
-        href: 'starred',
-        index: 3
-      }, {
-        icon: 'delete',
-        label: 'Trash',
-        href: 'trash',
-        index: 4
-      }]);
+      sidenavCache.put('menuList', angular.copy(SidenavMenus));
     }
 
     if (!detailsCache) {
@@ -95,9 +71,13 @@
     });
 
     function init($stateParams) {
-      var query = (google.query[$stateParams.category] || google.query.folder).replace('%s', $stateParams.folderId || 'root'),
+      var query = (google.query[$stateParams.category] || google.query.folder).replace('%s', $stateParams.folderId || SidenavMenus[0].href),
           promises = [],
           menuList = sidenavCache.get('menuList');
+
+      menuList.forEach(function (menu) {
+        menu.selected = false;
+      });
 
       switch ($stateParams.category) {
         case 'incoming':
@@ -332,7 +312,7 @@
         trashFiles();
         break;
       case 'Move to':
-        moveToFiles();
+        moveFiles();
         break;
       }
     }
@@ -380,7 +360,7 @@
       }, angular.noop);
     }
 
-    function moveToFiles() {
+    function moveFiles() {
       $mdDialog.show({
         controller: 'NavigationDialogController',
         controllerAs: 'vm',
